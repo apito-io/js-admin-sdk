@@ -1,4 +1,4 @@
-# Contributing to @apito/js-internal-sdk
+# Contributing to @apito-io/js-admin-sdk
 
 Thank you for your interest in contributing to the Apito JavaScript SDK! This document provides guidelines for contributing to this project.
 
@@ -6,15 +6,15 @@ Thank you for your interest in contributing to the Apito JavaScript SDK! This do
 
 ### Prerequisites
 
-- Node.js 16 or higher
+- Node.js 18 or higher
 - npm, yarn, or pnpm
 
 ### Setup
 
 ```bash
 # Clone the repository
-git clone https://gitlab.com/apito.io/js-internal-sdk.git
-cd js-internal-sdk
+git clone https://github.com/apito-io/js-admin-sdk.git
+cd js-admin-sdk
 
 # Install dependencies
 npm install
@@ -279,7 +279,7 @@ js-internal-sdk/
 
 ## 🆘 Getting Help
 
-- **Issues**: [GitLab Issues](https://gitlab.com/apito.io/js-internal-sdk/issues)
+- **Issues**: [GitHub Issues](https://github.com/apito-io/js-admin-sdk/issues)
 - **Documentation**: [docs.apito.io](https://docs.apito.io)
 - **Discord**: [Join our community](https://discord.gg/apito)
 - **Email**: support@apito.io

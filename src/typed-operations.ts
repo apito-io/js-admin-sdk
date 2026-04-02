@@ -1,4 +1,5 @@
 import {
+  DefaultDocumentStructure,
   TypedDocumentStructure,
   TypedSearchResult,
   CreateAndUpdateRequest,
@@ -12,6 +13,23 @@ import { ApitoClient } from './client';
 export class TypedOperations {
   constructor(private client: ApitoClient) {}
 
+  private static toTypedDocument<T>(raw: DefaultDocumentStructure): TypedDocumentStructure<T> {
+    const data = JSON.parse(JSON.stringify(raw.data)) as T;
+    return {
+      _key: raw._key,
+      _id: raw._id,
+      data,
+      meta: raw.meta,
+      id: raw.id,
+      expire_at: raw.expire_at,
+      relation_doc_id: raw.relation_doc_id,
+      last_revision_doc_id: raw.last_revision_doc_id,
+      type: raw.type,
+      tenant_id: raw.tenant_id,
+      tenant_model: raw.tenant_model,
+    };
+  }
+
   /**
    * Get a single resource with type safety
    */
@@ -21,7 +39,7 @@ export class TypedOperations {
     singlePageData: boolean = false
   ): Promise<TypedDocumentStructure<T>> {
     const result = await this.client.getSingleResource(model, id, singlePageData);
-    return result as TypedDocumentStructure<T>;
+    return TypedOperations.toTypedDocument<T>(result);
   }
 
   /**
@@ -34,7 +52,7 @@ export class TypedOperations {
   ): Promise<TypedSearchResult<T>> {
     const result = await this.client.searchResources(model, filter, aggregate);
     return {
-      results: result.results as TypedDocumentStructure<T>[],
+      results: result.results.map((doc) => TypedOperations.toTypedDocument<T>(doc)),
       count: result.count,
     };
   }
@@ -48,7 +66,7 @@ export class TypedOperations {
   ): Promise<TypedSearchResult<T>> {
     const result = await this.client.getRelationDocuments(id, connection);
     return {
-      results: result.results as TypedDocumentStructure<T>[],
+      results: result.results.map((doc) => TypedOperations.toTypedDocument<T>(doc)),
       count: result.count,
     };
   }
@@ -60,7 +78,7 @@ export class TypedOperations {
     request: CreateAndUpdateRequest
   ): Promise<TypedDocumentStructure<T>> {
     const result = await this.client.createNewResource(request);
-    return result as TypedDocumentStructure<T>;
+    return TypedOperations.toTypedDocument<T>(result);
   }
 
   /**
@@ -70,6 +88,6 @@ export class TypedOperations {
     request: CreateAndUpdateRequest
   ): Promise<TypedDocumentStructure<T>> {
     const result = await this.client.updateResource(request);
-    return result as TypedDocumentStructure<T>;
+    return TypedOperations.toTypedDocument<T>(result);
   }
 }

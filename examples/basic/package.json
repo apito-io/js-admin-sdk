@@ -9,6 +9,6 @@
     "dev": "node --watch index.js"
   },
   "dependencies": {
-    "@apito/apito-sdk": "file:../../"
+    "@apito-io/js-admin-sdk": "file:../../"
   }
 }

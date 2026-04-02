@@ -1,7 +1,7 @@
 {
-  "name": "@apito/js-internal-sdk",
-  "version": "1.2.0",
-  "description": "A comprehensive JavaScript SDK for communicating with Apito GraphQL API endpoints",
+  "name": "@apito-io/js-admin-sdk",
+  "version": "2.0.0",
+  "description": "Admin JavaScript SDK for Apito GraphQL API (mirrors go-internal-sdk)",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -17,7 +17,7 @@
     "src"
   ],
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "scripts": {
     "start": "tsup --watch",
@@ -42,29 +42,29 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/apito.io/js-internal-sdk.git"
+    "url": "https://github.com/apito-io/js-admin-sdk.git"
   },
   "bugs": {
-    "url": "https://gitlab.com/apito.io/js-internal-sdk/issues"
+    "url": "https://github.com/apito-io/js-admin-sdk/issues"
   },
   "homepage": "https://docs.apito.io",
   "dependencies": {
-    "axios": "^1.7.2"
+    "axios": "^1.14.0"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.14",
-    "@types/node": "^20.14.10",
-    "@typescript-eslint/eslint-plugin": "^7.3.1",
-    "@typescript-eslint/parser": "^7.3.1",
-    "eslint": "^8.56.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.1.3",
-    "jest": "^29.7.0",
-    "prettier": "^3.2.5",
-    "size-limit": "^11.0.2",
-    "ts-jest": "^29.1.2",
-    "tsup": "^8.0.2",
-    "typescript": "^5.5.3"
+    "@types/jest": "^30.0.0",
+    "@types/node": "^22.19.3",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.2",
+    "eslint-plugin-prettier": "^5.5.5",
+    "jest": "^30.3.0",
+    "prettier": "^3.8.1",
+    "size-limit": "^12.0.1",
+    "ts-jest": "^29.4.9",
+    "tsup": "^8.5.1",
+    "typescript": "~5.9.3"
   },
   "size-limit": [
     {
@@ -75,5 +75,8 @@
       "path": "dist/index.mjs",
       "limit": "50 KB"
     }
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

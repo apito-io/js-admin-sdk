@@ -40,6 +40,9 @@ coverage/
 # Dependency directories
 jspm_packages/
 
+# pnpm (this project uses npm / package-lock.json for CI)
+pnpm-lock.yaml
+
 # Optional npm cache directory
 .npm
 

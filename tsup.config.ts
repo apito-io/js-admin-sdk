@@ -11,6 +11,6 @@ export default defineConfig({
   target: 'es2020',
   outDir: 'dist',
   banner: {
-    js: '// @apito/js-apito-sdk - A comprehensive JavaScript SDK for Apito GraphQL API',
+    js: '// @apito-io/js-admin-sdk - Admin SDK for Apito GraphQL API',
   },
 });

@@ -2,7 +2,7 @@
  * Apito JavaScript SDK
  * A comprehensive JavaScript SDK for communicating with Apito GraphQL API endpoints
  * 
- * @module apito-sdk
+ * @module @apito-io/js-admin-sdk
  */
 
 // Export main client and types

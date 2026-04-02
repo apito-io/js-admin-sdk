@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-04-02
+
+### Changed
+
+- **BREAKING**: npm package renamed from `@apito-io/js-internal-sdk` to `@apito-io/js-admin-sdk`
+- GitHub repository identity: `github.com/apito-io/js-admin-sdk` (clone directory: `js-admin-sdk`)
+- Pairing: plugin build SDK is published as `@apito-io/js-plugin-build-sdk` ([`js-plugin-build-sdk`](https://github.com/apito-io/js-plugin-build-sdk))
+
+## [1.2.1] - 2026-04-02
+
+### Changed
+
+- Publish to npm as `@apito-io/js-internal-sdk` (aligned with `@apito-io/js-apito-plugin-sdk` scope)
+- Repository metadata targets `github.com/apito-io/js-internal-sdk`
+- GitHub Actions: CI on pull requests, publish and GitHub Release on `v*` tags ([`.github/workflows/publish.yml`](.github/workflows/publish.yml))
+- Dependabot weekly npm updates ([`.github/dependabot.yml`](.github/dependabot.yml))
+- Dev dependency refresh (Jest 30, current TypeScript 5.9.x, `npm audit` clean)
+
+### Added
+
+- [`RELEASE.md`](RELEASE.md) release checklist; [`release.sh`](release.sh) helper to tag and push
+
 ## [1.2.0] - 2025-10-19
 
 ### Changed

@@ -203,10 +203,25 @@ export class ApitoClient implements InjectedDBOperationInterface {
       }
     `;
 
-    const variables = {
-      model,
-      ...filter,
-    };
+    // Only forward keys declared on the GraphQL operation (matches go-internal-sdk)
+    const variables: Record<string, any> = { model };
+    if (filter && typeof filter === 'object') {
+      if (filter._key !== undefined) {
+        variables._key = filter._key;
+      }
+      if (filter.page !== undefined) {
+        variables.page = filter.page;
+      }
+      if (filter.limit !== undefined) {
+        variables.limit = filter.limit;
+      }
+      if (filter.where !== undefined) {
+        variables.where = filter.where;
+      }
+      if (filter.search !== undefined) {
+        variables.search = filter.search;
+      }
+    }
 
     const response = await this.executeGraphQL(query, variables);
 

@@ -13,11 +13,13 @@ export interface MetaField {
 
 export interface DefaultDocumentStructure {
   _key?: string;
+  _id?: string;
   data: any;
   meta?: MetaField;
   id: string;
   expire_at?: string | number;
   relation_doc_id?: string;
+  last_revision_doc_id?: string;
   type?: string;
   tenant_id?: string;
   tenant_model?: string;
@@ -30,11 +32,13 @@ export interface SearchResult {
 
 export interface TypedDocumentStructure<T> {
   _key?: string;
+  _id?: string;
   data: T;
   meta?: MetaField;
   id: string;
   expire_at?: string | number;
   relation_doc_id?: string;
+  last_revision_doc_id?: string;
   type?: string;
   tenant_id?: string;
   tenant_model?: string;
@@ -151,6 +155,10 @@ export class GraphQLError extends ApitoError {
   ) {
     super(message, 'GRAPHQL_ERROR');
     this.name = 'GraphQLError';
+  }
+
+  get partialData(): any {
+    return this.response?.data;
   }
 }
 

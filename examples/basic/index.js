@@ -1,4 +1,4 @@
-import { ApitoClient } from '@apito/apito-sdk';
+import { ApitoClient } from '@apito-io/js-admin-sdk';
 
 // Example configuration - replace with your actual values
 const client = new ApitoClient({

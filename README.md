@@ -1,6 +1,6 @@
-# Apito JavaScript SDK
+# Apito Admin JavaScript SDK
 
-[![npm version](https://badge.fury.io/js/%40apito%2Fapito-sdk.svg)](https://badge.fury.io/js/%40apito%2Fapito-sdk)
+[![npm version](https://badge.fury.io/js/%40apito-io%2Fjs-admin-sdk.svg)](https://badge.fury.io/js/%40apito-io%2Fjs-admin-sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A comprehensive JavaScript SDK for communicating with Apito GraphQL API endpoints. This SDK provides both type-safe and flexible interfaces for interacting with Apito's backend services.
@@ -19,19 +19,19 @@ A comprehensive JavaScript SDK for communicating with Apito GraphQL API endpoint
 ## 📦 Installation
 
 ```bash
-npm install @apito/apito-sdk
+npm install @apito-io/js-admin-sdk
 ```
 
 or
 
 ```bash
-yarn add @apito/apito-sdk
+yarn add @apito-io/js-admin-sdk
 ```
 
 ## 🎯 Quick Start
 
 ```javascript
-import { ApitoClient } from '@apito/apito-sdk';
+import { ApitoClient } from '@apito-io/js-admin-sdk';
 
 // Create a new client
 const client = new ApitoClient({
@@ -87,7 +87,7 @@ console.log(todo.data.title);
 ```
 
 #### `searchResources(model, filter?, aggregate?)`
-Search resources in a model with filtering.
+Search resources in a model with filtering. Only these `filter` fields are sent to GraphQL (same as the Go internal SDK): `_key`, `page`, `limit`, `where`, `search`. The `aggregate` argument is reserved for a future schema option and is not sent today.
 
 ```javascript
 const results = await client.searchResources('todos', {
@@ -150,7 +150,7 @@ const relatedUsers = await client.getRelationDocuments('todo-123', {
 For type-safe operations, use the `TypedOperations` class:
 
 ```javascript
-import { TypedOperations } from '@apito/apito-sdk';
+import { TypedOperations } from '@apito-io/js-admin-sdk';
 
 const typed = new TypedOperations(client);
 
@@ -183,7 +183,7 @@ console.log(typedTodo.data.status); // 'todo' | 'in_progress' | 'completed'
 The SDK provides comprehensive error handling:
 
 ```javascript
-import { ApitoError, ValidationError, GraphQLError } from '@apito/apito-sdk';
+import { ApitoError, ValidationError, GraphQLError } from '@apito-io/js-admin-sdk';
 
 try {
   const result = await client.getSingleResource('todos', 'invalid-id');
@@ -215,7 +215,7 @@ APITO_TIMEOUT=30000
 ```
 
 ```javascript
-import { ApitoClient } from '@apito/apito-sdk';
+import { ApitoClient } from '@apito-io/js-admin-sdk';
 
 const client = new ApitoClient({
   baseURL: process.env.APITO_BASE_URL,
@@ -230,7 +230,7 @@ const client = new ApitoClient({
 ### Basic CRUD Operations
 
 ```javascript
-import { ApitoClient } from '@apito/apito-sdk';
+import { ApitoClient } from '@apito-io/js-admin-sdk';
 
 const client = new ApitoClient({
   baseURL: 'https://api.apito.io/graphql',
@@ -298,13 +298,22 @@ const createdTodos = await Promise.all(
 );
 ```
 
+## Parity with the Go internal SDK
+
+This client mirrors the Go `go-internal-sdk` package and the `InternalSDKOperation` interface from `github.com/apito-io/types`.
+
+- **Tenant header:** In Go, set `context.WithValue(ctx, "tenant_id", id)` before calls. In JavaScript, set `tenantId` on `ClientConfig`, or rely on `generateTenantToken`, which sends `X-Apito-Tenant-ID` for that mutation.
+- **GraphQL errors:** The Go client returns `(response, err)` when the response includes `errors`. This SDK throws `GraphQLError` with `graphQLErrors` and the full payload on `response`; use `error.partialData` to read `data` when the server returns partial success.
+- **`searchResources` filter:** Only `_key`, `page`, `limit`, `where`, and `search` are forwarded. Extra keys are ignored so unknown GraphQL variables cannot break the request.
+- **`TypedOperations`:** `data` is deep-cloned via `JSON.parse(JSON.stringify(...))`, matching the Go SDK’s marshal/unmarshal approach for typed document `data`.
+
 ## 🏗️ Development
 
 ### Building from Source
 
 ```bash
-git clone https://github.com/apito-io/js-apito-sdk.git
-cd js-apito-sdk
+git clone https://github.com/apito-io/js-admin-sdk.git
+cd js-admin-sdk
 npm install
 npm run build
 ```
@@ -330,13 +339,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🔗 Links
 
 - [Apito Documentation](https://docs.apito.io)
-- [npm Package](https://www.npmjs.com/package/@apito/apito-sdk)
-- [GitHub Repository](https://github.com/apito-io/js-apito-sdk)
-- [Issues](https://github.com/apito-io/js-apito-sdk/issues)
+- [npm Package](https://www.npmjs.com/package/@apito-io/js-admin-sdk)
+- [GitHub Repository](https://github.com/apito-io/js-admin-sdk)
+- [Issues](https://github.com/apito-io/js-admin-sdk/issues)
 
 ## 🆘 Support
 
 - 📧 Email: support@apito.io
 - 💬 Discord: [Join our community](https://discord.gg/apito)
 - 📖 Documentation: [docs.apito.io](https://docs.apito.io)
-- 🐛 Bug Reports: [GitHub Issues](https://github.com/apito-io/js-apito-sdk/issues)
+- 🐛 Bug Reports: [GitHub Issues](https://github.com/apito-io/js-admin-sdk/issues)
