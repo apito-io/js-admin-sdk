@@ -1,3 +1,6 @@
+# Local npm auth (never commit)
+.npmrc
+
 # Dependencies
 node_modules/
 .pnp
