@@ -42,7 +42,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/apito-io/js-admin-sdk.git"
+    "url": "git+https://github.com/apito-io/js-admin-sdk.git"
   },
   "bugs": {
     "url": "https://github.com/apito-io/js-admin-sdk/issues"

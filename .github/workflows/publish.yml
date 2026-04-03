@@ -81,9 +81,16 @@ jobs:
             echo "Version in package.json already matches tag version ($VERSION)"
           fi
 
+      # Scoped packages: pin scope to registry + token. A bare 404 on PUT usually means
+      # the token cannot publish to @apito-io (wrong/missing secret, read-only token, or user not in org).
       - name: Setup npm auth
         run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+          if [ -z "${NODE_AUTH_TOKEN}" ]; then
+            echo "::error::NPM_TOKEN secret is empty. Add a valid npm automation token with publish access to @apito-io."
+            exit 1
+          fi
+          printf '%s\n' '@apito-io:registry=https://registry.npmjs.org/' '//registry.npmjs.org/:_authToken='"${NODE_AUTH_TOKEN}" > .npmrc
+          npm whoami
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
