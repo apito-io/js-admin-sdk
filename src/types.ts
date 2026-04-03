@@ -115,6 +115,11 @@ export interface ConnectionOptions {
 
 // Plugin interface matching the Go SDK
 export interface InjectedDBOperationInterface {
+  executeGraphQL(
+    query: string,
+    variables?: Record<string, any>,
+    options?: { tenantId?: string }
+  ): Promise<GraphQLResponse>;
   generateTenantToken(token: string, tenantId: string): Promise<string>;
   getSingleResource(model: string, id: string, singlePageData?: boolean): Promise<DefaultDocumentStructure>;
   searchResources(model: string, filter?: Record<string, any>, aggregate?: boolean): Promise<SearchResult>;

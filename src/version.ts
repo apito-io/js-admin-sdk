@@ -1,7 +1,7 @@
 /**
  * Apito JavaScript internal SDK version (kept in sync with package.json for releases)
  */
-export const Version = '2.0.0';
+export const Version = '2.1.0';
 
 /**
  * GetVersion returns the current version of the SDK

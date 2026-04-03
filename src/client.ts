@@ -44,9 +44,10 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /**
-   * Execute a GraphQL query or mutation
+   * Execute an arbitrary GraphQL query or mutation against the Apito admin (system) endpoint.
+   * Use for plugin-registered operations (e.g. processLedger, plg_closeOrder) when not wrapped by dedicated SDK methods.
    */
-  private async executeGraphQL<T = any>(
+  async executeGraphQL(
     query: string,
     variables?: Record<string, any>,
     options?: { tenantId?: string }
