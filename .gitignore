@@ -45,6 +45,7 @@ jspm_packages/
 
 # pnpm (this project uses npm / package-lock.json for CI)
 pnpm-lock.yaml
+.pnpm-store/
 
 # Optional npm cache directory
 .npm
