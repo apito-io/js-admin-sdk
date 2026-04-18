@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.2] - 2026-04-18
+
+### Fixed
+
+- `generateTenantToken`: align GraphQL with the engine (`tenant_id` + required `duration` as `YYYY-MM-DD`); remove obsolete `token` mutation argument. Default expiry is one calendar year ahead in UTC. Legacy first parameter is ignored (auth uses `X-Apito-Key` / client `apiKey`).
+
 ## [2.1.1] - 2026-04-02
 
 ### Fixed

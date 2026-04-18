@@ -120,6 +120,7 @@ export interface InjectedDBOperationInterface {
     variables?: Record<string, any>,
     options?: { tenantId?: string }
   ): Promise<GraphQLResponse>;
+  /** @param token Legacy; ignored. Auth uses client API key. */
   generateTenantToken(token: string, tenantId: string): Promise<string>;
   getSingleResource(model: string, id: string, singlePageData?: boolean): Promise<DefaultDocumentStructure>;
   searchResources(model: string, filter?: Record<string, any>, aggregate?: boolean): Promise<SearchResult>;

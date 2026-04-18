@@ -96,18 +96,28 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /**
-   * Generate a new tenant token for the specified tenant ID
+   * Generate a tenant-scoped API key for {@link tenantId}.
+   *
+   * `token` is legacy and ignored; the engine authenticates via `X-Apito-Key` (client `apiKey`).
+   * Expiry is sent as a calendar day `YYYY-MM-DD`; defaults to one year ahead in UTC (same default as Go admin/internal SDK).
    */
   async generateTenantToken(token: string, tenantId: string): Promise<string> {
+    void token;
+
+    const d = new Date();
+    const duration = `${d.getUTCFullYear() + 1}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(
+      d.getUTCDate()
+    ).padStart(2, '0')}`;
+
     const query = `
-      mutation GenerateTenantToken($token: String!, $tenantId: String!) {
-        generateTenantToken(token: $token, tenant_id: $tenantId) {
+      mutation GenerateTenantToken($tenantId: String!, $duration: String!) {
+        generateTenantToken(tenant_id: $tenantId, duration: $duration) {
           token
         }
       }
     `;
 
-    const variables = { token, tenantId };
+    const variables = { tenantId, duration };
     const response = await this.executeGraphQL(query, variables, { tenantId });
 
     const data = response.data?.generateTenantToken;
