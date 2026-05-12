@@ -1,0 +1,14 @@
+{
+  "name": "apito-sdk-tenant-users-example",
+  "version": "1.0.0",
+  "description": "Pro: tenant catalog users (search + optional login)",
+  "main": "index.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node index.mjs",
+    "dev": "node --watch index.mjs"
+  },
+  "dependencies": {
+    "@apito-io/js-admin-sdk": "file:../../"
+  }
+}

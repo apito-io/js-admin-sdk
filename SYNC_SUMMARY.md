@@ -149,7 +149,7 @@ mutation DeleteData($model: String!, $_id: String!) { ... }
 
 ```typescript
 export interface InjectedDBOperationInterface {
-  generateTenantToken(token: string, tenantId: string): Promise<string>;
+  generateTenantToken(tenantId: string, duration?: string, role?: string): Promise<string>;
   getSingleResource(
     model: string,
     id: string,

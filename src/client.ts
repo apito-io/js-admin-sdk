@@ -11,6 +11,11 @@ import {
   ApitoError,
   ValidationError,
   InjectedDBOperationInterface,
+  TenantLoginResponse,
+  TenantUser,
+  TenantUsersResponse,
+  TenantByDomainResponse,
+  TenantCatalogSearchRow,
 } from './types';
 
 /**
@@ -32,7 +37,9 @@ export class ApitoClient implements InjectedDBOperationInterface {
       timeout: config.timeout || 30000,
       headers: {
         'Content-Type': 'application/json',
-        'X-Apito-Key': this.apiKey,
+        ...(this.apiKey.startsWith('cli-') || this.apiKey.startsWith('sdk-')
+          ? { 'X-Apito-Sync-Key': this.apiKey }
+          : { 'X-Apito-Key': this.apiKey }),
       },
       ...config.httpClient,
     });
@@ -60,7 +67,9 @@ export class ApitoClient implements InjectedDBOperationInterface {
 
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
-        'X-Apito-Key': this.apiKey,
+        ...(this.apiKey.startsWith('cli-') || this.apiKey.startsWith('sdk-')
+          ? { 'X-Apito-Sync-Key': this.apiKey }
+          : { 'X-Apito-Key': this.apiKey }),
       };
 
       if (options?.tenantId || this.tenantId) {
@@ -96,28 +105,35 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /**
-   * Generate a tenant-scoped API key for {@link tenantId}.
+   * Generate a tenant-scoped API key. Matches engine `generateTenantToken`: `tenant_id`, `duration`, optional `role`.
+   * Auth uses `X-Apito-Key` (client `apiKey`).
    *
-   * `token` is legacy and ignored; the engine authenticates via `X-Apito-Key` (client `apiKey`).
-   * Expiry is sent as a calendar day `YYYY-MM-DD`; defaults to one year ahead in UTC (same default as Go admin/internal SDK).
+   * @param tenantId Catalog tenant id (`tenant_id` in the mutation).
+   * @param duration Expiry calendar day `YYYY-MM-DD`. If omitted/empty, defaults to one year ahead in UTC.
+   * @param role Optional token role; if omitted/empty, the engine defaults to `admin`.
    */
-  async generateTenantToken(token: string, tenantId: string): Promise<string> {
-    void token;
-
-    const d = new Date();
-    const duration = `${d.getUTCFullYear() + 1}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(
-      d.getUTCDate()
-    ).padStart(2, '0')}`;
+  async generateTenantToken(tenantId: string, duration?: string, role?: string): Promise<string> {
+    let dur = (duration ?? '').trim();
+    if (!dur) {
+      const d = new Date();
+      dur = `${d.getUTCFullYear() + 1}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(
+        d.getUTCDate()
+      ).padStart(2, '0')}`;
+    }
 
     const query = `
-      mutation GenerateTenantToken($tenantId: String!, $duration: String!) {
-        generateTenantToken(tenant_id: $tenantId, duration: $duration) {
+      mutation GenerateTenantToken($tenantId: String!, $duration: String!, $role: String) {
+        generateTenantToken(tenant_id: $tenantId, duration: $duration, role: $role) {
           token
         }
       }
     `;
 
-    const variables = { tenantId, duration };
+    const variables: Record<string, any> = {
+      tenantId,
+      duration: dur,
+      role: role !== undefined && role.trim() !== '' ? role.trim() : null,
+    };
     const response = await this.executeGraphQL(query, variables, { tenantId });
 
     const data = response.data?.generateTenantToken;
@@ -126,6 +142,184 @@ export class ApitoClient implements InjectedDBOperationInterface {
     }
 
     return data.token;
+  }
+
+  /**
+   * Tenant catalog login (system GraphQL). Returns a tenant-scoped `ak_` API token on success.
+   */
+  async loginTenantUser(
+    username: string,
+    password: string,
+    projectId: string
+  ): Promise<TenantLoginResponse> {
+    const query = `
+      query LoginTenantUser($project_id: String!, $username: String!, $password: String!) {
+        loginTenantUser(project_id: $project_id, username: $username, password: $password) {
+          token
+          user {
+            id
+            username
+            email
+            role
+            provider
+            tenant_id
+            status
+            created_at
+            updated_at
+          }
+        }
+      }
+    `;
+    const variables: Record<string, any> = { project_id: projectId, username, password };
+    const response = await this.executeGraphQL(query, variables);
+    const raw = response.data?.loginTenantUser;
+    if (!raw?.token) {
+      throw new ValidationError('Invalid response format for loginTenantUser');
+    }
+    return {
+      token: raw.token as string,
+      user: raw.user as TenantUser | undefined,
+    };
+  }
+
+  /**
+   * Google ID token login for tenant users (project must have google_client_id set).
+   */
+  async loginTenantUserGoogle(projectId: string, idToken: string): Promise<TenantLoginResponse> {
+    const query = `
+      mutation LoginTenantUserGoogle($project_id: String!, $id_token: String!) {
+        loginTenantUserGoogle(project_id: $project_id, id_token: $id_token) {
+          token
+          user {
+            id
+            username
+            email
+            role
+            provider
+            tenant_id
+            status
+            created_at
+            updated_at
+          }
+        }
+      }
+    `;
+    const variables = { project_id: projectId, id_token: idToken };
+    const response = await this.executeGraphQL(query, variables);
+    const raw = response.data?.loginTenantUserGoogle;
+    if (!raw?.token) {
+      throw new ValidationError('Invalid response format for loginTenantUserGoogle');
+    }
+    return {
+      token: raw.token as string,
+      user: raw.user as TenantUser | undefined,
+    };
+  }
+
+  /**
+   * Search tenant users for a project.
+   */
+  async searchTenantUsers(
+    projectId: string,
+    limit?: number,
+    offset?: number
+  ): Promise<TenantUsersResponse> {
+    const query = `
+      query SearchTenantUsers($project_id: String!, $limit: Int, $offset: Int) {
+        searchTenantUsers(project_id: $project_id, limit: $limit, offset: $offset) {
+          count
+          users {
+            id
+            username
+            email
+            role
+            provider
+            tenant_id
+            status
+            created_at
+            updated_at
+          }
+        }
+      }
+    `;
+    const variables: Record<string, any> = { project_id: projectId };
+    if (limit !== undefined) variables.limit = limit;
+    if (offset !== undefined) variables.offset = offset;
+    const response = await this.executeGraphQL(query, variables);
+    const raw = response.data?.searchTenantUsers;
+    if (!raw) {
+      throw new ValidationError('Invalid response format for searchTenantUsers');
+    }
+    let count = 0;
+    if (typeof raw.count === 'number') {
+      count = raw.count;
+    }
+    const users = (raw.users ?? []) as TenantUser[];
+    return { users, count };
+  }
+
+  /**
+   * Resolve the single SaaS catalog tenant for an exact domain match in the project (`tenant` null if none).
+   */
+  async searchTenantsByDomain(projectId: string, domain: string): Promise<TenantByDomainResponse> {
+    const query = `
+      query SearchTenantsByDomain($project_id: String!, $domain: String!) {
+        searchTenantsByDomain(project_id: $project_id, domain: $domain) {
+          tenant {
+            id
+            name
+            status
+            domain
+            data
+          }
+        }
+      }
+    `;
+    const variables: Record<string, any> = {
+      project_id: projectId,
+      domain,
+    };
+    const response = await this.executeGraphQL(query, variables);
+    const raw = response.data?.searchTenantsByDomain;
+    if (!raw) {
+      throw new ValidationError('Invalid response format for searchTenantsByDomain');
+    }
+    const tenant = (raw.tenant ?? null) as TenantCatalogSearchRow | null;
+    return { tenant };
+  }
+
+  /**
+   * Create a tenant catalog user (local password).
+   */
+  async createTenantUser(
+    projectId: string,
+    username: string,
+    email: string,
+    password: string,
+    role: string
+  ): Promise<TenantUser> {
+    const query = `
+      mutation CreateTenantUser($project_id: String!, $username: String!, $password: String!, $role: String, $email: String) {
+        createTenantUser(project_id: $project_id, username: $username, password: $password, role: $role, email: $email) {
+          id
+          username
+          email
+          role
+          provider
+          tenant_id
+          status
+          created_at
+          updated_at
+        }
+      }
+    `;
+    const variables = { project_id: projectId, username, password, email, role };
+    const response = await this.executeGraphQL(query, variables);
+    const u = response.data?.createTenantUser;
+    if (!u?.id) {
+      throw new ValidationError('Invalid response format for createTenantUser');
+    }
+    return u as TenantUser;
   }
 
   /**

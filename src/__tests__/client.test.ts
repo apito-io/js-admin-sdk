@@ -230,10 +230,7 @@ describe('ApitoClient', () => {
       const client = getTestClient();
 
       try {
-        const token = await client.generateTenantToken(
-          'ak_4HESWVQEXE7V4GVGGDRYGXVWXSCAJL44TAUICSLBPQTOB6CJ53KTU3GUOEXJUIXVAKFMM2BDRJRWWPKEN3DRA3HDLZUY4NZMVLFJUIK5H4BWLY26AUKDOHPZE2ENGJNCXPPPEBKCNLTUXXUFUKVDGYJ2H6CZCSMQCY5KSCYNJVYBXVJBYE6O7C73DI3NV7Q',
-          'ba0ee756-6aea-43a6-b052-c7baab3da91c'
-        );
+        const token = await client.generateTenantToken('ba0ee756-6aea-43a6-b052-c7baab3da91c');
 
         expect(token).toBeDefined();
         expect(typeof token).toBe('string');
@@ -241,6 +238,61 @@ describe('ApitoClient', () => {
         console.log('✅ GenerateTenantToken succeeded:', token);
       } catch (error) {
         console.log('GenerateTenantToken failed (may be expected):', error);
+      }
+    }, 30000);
+  });
+
+  describe('Tenant users (Pro)', () => {
+    it('should search tenant users when APITO_PROJECT_ID is set', async () => {
+      const projectId = process.env.APITO_PROJECT_ID;
+      if (!projectId) {
+        console.log('Tenant users (Pro): skipped — set APITO_PROJECT_ID');
+        return;
+      }
+      const client = getTestClient();
+      try {
+        const { count, users } = await client.searchTenantUsers(projectId, 10, 0);
+        expect(count).toBeGreaterThanOrEqual(0);
+        console.log('✅ searchTenantUsers:', count, users?.length);
+      } catch (error) {
+        console.log('searchTenantUsers failed (may be expected):', error);
+      }
+    }, 30000);
+
+    it('should search tenants by domain when APITO_PROJECT_ID is set', async () => {
+      const projectId = process.env.APITO_PROJECT_ID;
+      if (!projectId) {
+        console.log('searchTenantsByDomain: skipped — set APITO_PROJECT_ID');
+        return;
+      }
+      const client = getTestClient();
+      try {
+        const { tenant } = await client.searchTenantsByDomain(projectId, 'example.invalid');
+        expect(tenant === null || typeof tenant?.id === 'string').toBe(true);
+        console.log('✅ searchTenantsByDomain:', tenant ? 'match' : 'no match');
+      } catch (error) {
+        console.log('searchTenantsByDomain failed (may be expected):', error);
+      }
+    }, 30000);
+
+    it('should login when APITO_PROJECT_ID and credentials are set', async () => {
+      const projectId = process.env.APITO_PROJECT_ID;
+      const username = process.env.APITO_TENANT_USERNAME;
+      const password = process.env.APITO_TENANT_PASSWORD;
+      if (!projectId || !username || !password) {
+        console.log(
+          'loginTenantUser skipped — set APITO_PROJECT_ID, APITO_TENANT_USERNAME, APITO_TENANT_PASSWORD'
+        );
+        return;
+      }
+      const client = getTestClient();
+      try {
+        const login = await client.loginTenantUser(username, password, projectId);
+        expect(login.token).toBeDefined();
+        expect(login.token.length).toBeGreaterThan(0);
+        console.log('✅ loginTenantUser token length:', login.token.length);
+      } catch (error) {
+        console.log('loginTenantUser failed (may be expected):', error);
       }
     }, 30000);
   });

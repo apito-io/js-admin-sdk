@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2026-05-09
+
+### Changed (breaking)
+
+- **`generateTenantToken`**: signature is now **`(tenantId, duration?, role?)`**, aligned with engine `generateTenantToken` (`tenant_id`, `duration`, optional `role`). Removed the unused legacy **`token`** first argument; GraphQL mutation now passes optional **`role`**.
+
+## [2.4.0] - 2026-05-09
+
+### Changed (breaking)
+
+- **`searchTenantsByDomain`**: now `(projectId, domain)` only; returns **`TenantByDomainResponse`** `{ tenant: ... | null }` (exact match, no pagination). Replaces list + `count`.
+
+### Engine parity (documented)
+
+- System GraphQL **`createTenant`** / **`updateTenant`**: optional **`domain`** is validated for uniqueness within the project (see README).
+
+## [2.3.0] - 2026-05-09
+
+### Added
+
+- **Pro tenant catalog search by domain**: `searchTenantsByDomain`; types `TenantCatalogSearchRow`, `TenantsByDomainResponse`.
+
+## [2.2.0] - 2026-05-08
+
+### Added
+
+- **Pro tenant catalog users** (parity with Go SDK): `loginTenantUser`, `loginTenantUserGoogle`, `searchTenantUsers`, `createTenantUser`; types `TenantUser`, `TenantLoginResponse`, `TenantUsersResponse`.
+- **`examples/tenant_users`**: Node example listing tenant users (and optional password login) via the same env vars as the Go sample.
+
+### Tests
+
+- Jest: **`Tenant users (Pro)`** block in `src/__tests__/client.test.ts` — integration-style calls when `process.env.APITO_PROJECT_ID` is set; otherwise logs and continues.
+
 ## [2.1.2] - 2026-04-18
 
 ### Fixed

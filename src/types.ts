@@ -86,6 +86,42 @@ export interface CreateAndUpdateRequest {
   forceUpdate?: boolean;
 }
 
+/** Tenant catalog user from engine system DB (pro_tenant_users). */
+export interface TenantUser {
+  id: string;
+  username: string;
+  email?: string;
+  role: string;
+  tenant_id: string;
+  provider?: string;
+  status?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface TenantLoginResponse {
+  token: string;
+  user?: TenantUser;
+}
+
+export interface TenantUsersResponse {
+  users: TenantUser[];
+  count: number;
+}
+
+/** One SaaS catalog tenant row from searchTenantsByDomain. */
+export interface TenantCatalogSearchRow {
+  id: string;
+  name: string;
+  status?: string;
+  domain?: string;
+  data?: string;
+}
+
+export interface TenantByDomainResponse {
+  tenant: TenantCatalogSearchRow | null;
+}
+
 export interface ClientConfig {
   baseURL: string;
   apiKey: string;
@@ -121,7 +157,18 @@ export interface InjectedDBOperationInterface {
     options?: { tenantId?: string }
   ): Promise<GraphQLResponse>;
   /** @param token Legacy; ignored. Auth uses client API key. */
-  generateTenantToken(token: string, tenantId: string): Promise<string>;
+  generateTenantToken(tenantId: string, duration?: string, role?: string): Promise<string>;
+  loginTenantUser(username: string, password: string, projectId: string): Promise<TenantLoginResponse>;
+  loginTenantUserGoogle(projectId: string, idToken: string): Promise<TenantLoginResponse>;
+  searchTenantUsers(projectId: string, limit?: number, offset?: number): Promise<TenantUsersResponse>;
+  searchTenantsByDomain(projectId: string, domain: string): Promise<TenantByDomainResponse>;
+  createTenantUser(
+    projectId: string,
+    username: string,
+    email: string,
+    password: string,
+    role: string
+  ): Promise<TenantUser>;
   getSingleResource(model: string, id: string, singlePageData?: boolean): Promise<DefaultDocumentStructure>;
   searchResources(model: string, filter?: Record<string, any>, aggregate?: boolean): Promise<SearchResult>;
   getRelationDocuments(id: string, connection: Record<string, any>): Promise<SearchResult>;

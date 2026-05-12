@@ -145,6 +145,34 @@ const relatedUsers = await client.getRelationDocuments('todo-123', {
 });
 ```
 
+### Pro: tenant catalog users (Apito Pro)
+
+These calls use the same admin client and system GraphQL endpoint as the rest of the SDK. They mirror the Go SDK and require a **Pro** Apito engine. Pass `projectId`; each returned user includes `tenant_id`.
+
+| Method | Description |
+|--------|-------------|
+| `searchTenantUsers(projectId, limit?, offset?)` | List users registered for a project. |
+| `searchTenantsByDomain(projectId, domain)` | Exact domain lookup in project scope; returns `{ tenant }` (null if no match). |
+| `createTenantUser(projectId, username, email, password, role)` | Create a local-password user in project scope. |
+| `loginTenantUser(username, password, projectId)` | Password login in project scope; response may include a tenant-scoped token. |
+| `loginTenantUserGoogle(projectId, idToken)` | Google ID token login in project scope. |
+
+On the engine system GraphQL API, `createTenant` accepts an optional `domain`; when set, the domain must be unused in the project (otherwise the mutation fails). `updateTenant` enforces the same when setting `domain` to a non-empty value. Call those mutations via `executeGraphQL` if needed.
+
+```javascript
+const projectId = 'your-project-id';
+
+const { users, count } = await client.searchTenantUsers(projectId, 50, 0);
+console.log('users:', count, users.map((u) => u.username));
+
+const login = await client.loginTenantUser('admin', 'your-password', projectId);
+if (login.token) {
+  console.log('tenant-scoped token:', login.token);
+}
+```
+
+Runnable sample: `examples/tenant_users` (set `APITO_BASE_URL`, `APITO_API_KEY`, `APITO_PROJECT_ID`).
+
 ### Typed Operations
 
 For type-safe operations, use the `TypedOperations` class:
@@ -302,7 +330,8 @@ const createdTodos = await Promise.all(
 
 This client mirrors the Go `go-internal-sdk` package and the `InternalSDKOperation` interface from `github.com/apito-io/types`.
 
-- **Tenant header:** In Go, set `context.WithValue(ctx, "tenant_id", id)` before calls. In JavaScript, set `tenantId` on `ClientConfig`, or rely on `generateTenantToken`, which sends `X-Apito-Tenant-ID` for that mutation.
+- **Tenant header:** In Go, set `context.WithValue(ctx, "tenant_id", id)` before calls. In JavaScript, set `tenantId` on `ClientConfig`, or pass `{ tenantId }` to `executeGraphQL` options where relevant.
+- **`generateTenantToken(tenantId, duration?, role?)`:** Matches engine `generateTenantToken` — `tenant_id`, `duration` (`YYYY-MM-DD`; omit for default one year ahead in UTC), optional `role` (omit for engine default `admin`). Sends `X-Apito-Tenant-ID` for the mutation. Auth uses the client `apiKey`.
 - **GraphQL errors:** The Go client returns `(response, err)` when the response includes `errors`. This SDK throws `GraphQLError` with `graphQLErrors` and the full payload on `response`; use `error.partialData` to read `data` when the server returns partial success.
 - **`searchResources` filter:** Only `_key`, `page`, `limit`, `where`, and `search` are forwarded. Extra keys are ignored so unknown GraphQL variables cannot break the request.
 - **`TypedOperations`:** `data` is deep-cloned via `JSON.parse(JSON.stringify(...))`, matching the Go SDK’s marshal/unmarshal approach for typed document `data`.
@@ -330,6 +359,14 @@ npm test
 cd examples/basic
 npm install
 npm start
+```
+
+Pro tenant-user listing (optional `APITO_TENANT_USERNAME` / `APITO_TENANT_PASSWORD` for login):
+
+```bash
+cd examples/tenant_users
+npm install
+APITO_BASE_URL=http://localhost:5050/system/graphql APITO_API_KEY=... APITO_PROJECT_ID=... npm start
 ```
 
 ## 📄 License
