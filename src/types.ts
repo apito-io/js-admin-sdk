@@ -89,14 +89,48 @@ export interface CreateAndUpdateRequest {
 /** Tenant catalog user from engine system DB (pro_tenant_users). */
 export interface TenantUser {
   id: string;
-  username: string;
   email?: string;
+  phone?: string;
   role: string;
   tenant_id: string;
   provider?: string;
   status?: string;
   created_at?: string;
   updated_at?: string;
+}
+
+/** Login via system GraphQL `loginTenantUser`. Password path: use `email` or `phone` per project settings. Google OAuth code path: `authMethod: 'google'`, `code`, `state` from redirect (get `state` first via `tenantGoogleOAuthState`). */
+export interface TenantLoginParams {
+  projectId: string;
+  /** Required for general (password) login. */
+  password?: string;
+  email?: string;
+  phone?: string;
+  /** `general` (default) or `google`. */
+  authMethod?: string;
+  /** Google authorization code (with `authMethod: 'google'`). */
+  code?: string;
+  /** OAuth state from `tenantGoogleOAuthState` or callback (with `authMethod: 'google'`). */
+  state?: string;
+}
+
+export interface TenantGoogleOAuthStateResponse {
+  state: string;
+}
+
+export interface CreateTenantUserParams {
+  password: string;
+  role?: string;
+  email?: string;
+  phone?: string;
+}
+
+/** Optional fields for `updateTenantUser`; omitted keys are not sent. */
+export interface UpdateTenantUserParams {
+  email?: string;
+  phone?: string;
+  password?: string;
+  role?: string;
 }
 
 export interface TenantLoginResponse {
@@ -158,17 +192,13 @@ export interface InjectedDBOperationInterface {
   ): Promise<GraphQLResponse>;
   /** @param token Legacy; ignored. Auth uses client API key. */
   generateTenantToken(tenantId: string, duration?: string, role?: string): Promise<string>;
-  loginTenantUser(username: string, password: string, projectId: string): Promise<TenantLoginResponse>;
-  loginTenantUserGoogle(projectId: string, idToken: string): Promise<TenantLoginResponse>;
+  loginTenantUser(params: TenantLoginParams): Promise<TenantLoginResponse>;
+  tenantGoogleOAuthState(projectId: string): Promise<TenantGoogleOAuthStateResponse>;
   searchTenantUsers(projectId: string, limit?: number, offset?: number): Promise<TenantUsersResponse>;
   searchTenantsByDomain(projectId: string, domain: string): Promise<TenantByDomainResponse>;
-  createTenantUser(
-    projectId: string,
-    username: string,
-    email: string,
-    password: string,
-    role: string
-  ): Promise<TenantUser>;
+  createTenantUser(projectId: string, params: CreateTenantUserParams): Promise<TenantUser>;
+  updateTenantUser(userId: string, params: UpdateTenantUserParams): Promise<TenantUser>;
+  deleteTenantUser(userId: string): Promise<boolean>;
   getSingleResource(model: string, id: string, singlePageData?: boolean): Promise<DefaultDocumentStructure>;
   searchResources(model: string, filter?: Record<string, any>, aggregate?: boolean): Promise<SearchResult>;
   getRelationDocuments(id: string, connection: Record<string, any>): Promise<SearchResult>;

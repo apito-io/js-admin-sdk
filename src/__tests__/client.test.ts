@@ -277,17 +277,23 @@ describe('ApitoClient', () => {
 
     it('should login when APITO_PROJECT_ID and credentials are set', async () => {
       const projectId = process.env.APITO_PROJECT_ID;
-      const username = process.env.APITO_TENANT_USERNAME;
+      const email = process.env.APITO_TENANT_EMAIL ?? '';
+      const phone = process.env.APITO_TENANT_PHONE ?? '';
       const password = process.env.APITO_TENANT_PASSWORD;
-      if (!projectId || !username || !password) {
+      if (!projectId || !(email.trim() || phone.trim()) || !password) {
         console.log(
-          'loginTenantUser skipped — set APITO_PROJECT_ID, APITO_TENANT_USERNAME, APITO_TENANT_PASSWORD'
+          'loginTenantUser skipped — set APITO_PROJECT_ID, APITO_TENANT_PASSWORD, and APITO_TENANT_EMAIL and/or APITO_TENANT_PHONE'
         );
         return;
       }
       const client = getTestClient();
       try {
-        const login = await client.loginTenantUser(username, password, projectId);
+        const login = await client.loginTenantUser({
+          projectId,
+          password,
+          ...(email.trim() ? { email: email.trim() } : {}),
+          ...(phone.trim() ? { phone: phone.trim() } : {}),
+        });
         expect(login.token).toBeDefined();
         expect(login.token.length).toBeGreaterThan(0);
         console.log('✅ loginTenantUser token length:', login.token.length);

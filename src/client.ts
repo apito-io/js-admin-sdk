@@ -16,6 +16,9 @@ import {
   TenantUsersResponse,
   TenantByDomainResponse,
   TenantCatalogSearchRow,
+  TenantLoginParams,
+  CreateTenantUserParams,
+  UpdateTenantUserParams,
 } from './types';
 
 /**
@@ -145,21 +148,46 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /**
-   * Tenant catalog login (system GraphQL). Returns a tenant-scoped `ak_` API token on success.
+   * Tenant catalog login (system GraphQL `loginTenantUser`). Password path: pass `password` and `email` or `phone` per project Authentication settings. Google OAuth path: `authMethod: 'google'` with `code` and `state` from the redirect; call `tenantGoogleOAuthState(projectId)` before opening Google to obtain `state`.
    */
-  async loginTenantUser(
-    username: string,
-    password: string,
-    projectId: string
-  ): Promise<TenantLoginResponse> {
+  async loginTenantUser(params: TenantLoginParams): Promise<TenantLoginResponse> {
+    const authMethod = (params.authMethod ?? 'general').trim().toLowerCase() || 'general';
+    const variables: Record<string, any> = {
+      project_id: params.projectId,
+    };
+
+    if (authMethod === 'google') {
+      variables.auth_method = 'google';
+      const code = (params.code ?? '').trim();
+      const state = (params.state ?? '').trim();
+      if (!code || !state) {
+        throw new ValidationError('code and state are required for Google login');
+      }
+      variables.code = code;
+      variables.state = state;
+    } else {
+      const password = (params.password ?? '').trim();
+      if (!password) {
+        throw new ValidationError('password is required');
+      }
+      variables.password = password;
+      const email = (params.email ?? '').trim();
+      const phone = (params.phone ?? '').trim();
+      if (!email && !phone) {
+        throw new ValidationError('email or phone is required');
+      }
+      if (email) variables.email = email;
+      if (phone) variables.phone = phone;
+    }
+
     const query = `
-      query LoginTenantUser($project_id: String!, $username: String!, $password: String!) {
-        loginTenantUser(project_id: $project_id, username: $username, password: $password) {
+      query LoginTenantUser($project_id: String!, $password: String, $auth_method: String, $email: String, $phone: String, $code: String, $state: String) {
+        loginTenantUser(project_id: $project_id, password: $password, auth_method: $auth_method, email: $email, phone: $phone, code: $code, state: $state) {
           token
           user {
             id
-            username
             email
+            phone
             role
             provider
             tenant_id
@@ -170,7 +198,6 @@ export class ApitoClient implements InjectedDBOperationInterface {
         }
       }
     `;
-    const variables: Record<string, any> = { project_id: projectId, username, password };
     const response = await this.executeGraphQL(query, variables);
     const raw = response.data?.loginTenantUser;
     if (!raw?.token) {
@@ -183,37 +210,24 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /**
-   * Google ID token login for tenant users (project must have google_client_id set).
+   * Signed OAuth state for tenant Google login (system query `tenantGoogleOAuthState`). Use in the authorize URL together with project `google_client_id` and the configured redirect URI.
    */
-  async loginTenantUserGoogle(projectId: string, idToken: string): Promise<TenantLoginResponse> {
+  async tenantGoogleOAuthState(projectId: string): Promise<{ state: string }> {
     const query = `
-      mutation LoginTenantUserGoogle($project_id: String!, $id_token: String!) {
-        loginTenantUserGoogle(project_id: $project_id, id_token: $id_token) {
-          token
-          user {
-            id
-            username
-            email
-            role
-            provider
-            tenant_id
-            status
-            created_at
-            updated_at
-          }
+      query TenantGoogleOAuthState($project_id: String!) {
+        tenantGoogleOAuthState(project_id: $project_id) {
+          state
         }
       }
     `;
-    const variables = { project_id: projectId, id_token: idToken };
+    const variables = { project_id: projectId };
     const response = await this.executeGraphQL(query, variables);
-    const raw = response.data?.loginTenantUserGoogle;
-    if (!raw?.token) {
-      throw new ValidationError('Invalid response format for loginTenantUserGoogle');
+    const raw = response.data?.tenantGoogleOAuthState;
+    const state = typeof raw?.state === 'string' ? raw.state.trim() : '';
+    if (!state) {
+      throw new ValidationError('Invalid response format for tenantGoogleOAuthState');
     }
-    return {
-      token: raw.token as string,
-      user: raw.user as TenantUser | undefined,
-    };
+    return { state };
   }
 
   /**
@@ -230,8 +244,8 @@ export class ApitoClient implements InjectedDBOperationInterface {
           count
           users {
             id
-            username
             email
+            phone
             role
             provider
             tenant_id
@@ -289,21 +303,22 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /**
-   * Create a tenant catalog user (local password).
+   * Create a tenant catalog user (local password). Use `email` and/or `phone` per engine validation for the project identifier mode.
    */
   async createTenantUser(
     projectId: string,
-    username: string,
-    email: string,
-    password: string,
-    role: string
+    params: CreateTenantUserParams
   ): Promise<TenantUser> {
+    const password = (params.password ?? '').trim();
+    if (!password) {
+      throw new ValidationError('password is required');
+    }
     const query = `
-      mutation CreateTenantUser($project_id: String!, $username: String!, $password: String!, $role: String, $email: String) {
-        createTenantUser(project_id: $project_id, username: $username, password: $password, role: $role, email: $email) {
+      mutation CreateTenantUser($project_id: String!, $password: String!, $role: String, $email: String, $phone: String) {
+        createTenantUser(project_id: $project_id, password: $password, role: $role, email: $email, phone: $phone) {
           id
-          username
           email
+          phone
           role
           provider
           tenant_id
@@ -313,13 +328,87 @@ export class ApitoClient implements InjectedDBOperationInterface {
         }
       }
     `;
-    const variables = { project_id: projectId, username, password, email, role };
+    const variables: Record<string, any> = {
+      project_id: projectId,
+      password,
+    };
+    const role = (params.role ?? '').trim();
+    if (role) variables.role = role;
+    const email = (params.email ?? '').trim();
+    if (email) variables.email = email;
+    const phone = (params.phone ?? '').trim();
+    if (phone) variables.phone = phone;
     const response = await this.executeGraphQL(query, variables);
     const u = response.data?.createTenantUser;
     if (!u?.id) {
       throw new ValidationError('Invalid response format for createTenantUser');
     }
     return u as TenantUser;
+  }
+
+  /**
+   * Update a tenant catalog user. Project scope is implied by the API key. Only include fields to change.
+   */
+  async updateTenantUser(userId: string, params: UpdateTenantUserParams): Promise<TenantUser> {
+    const uid = (userId ?? '').trim();
+    if (!uid) {
+      throw new ValidationError('userId is required');
+    }
+    if (
+      params.email === undefined &&
+      params.phone === undefined &&
+      params.password === undefined &&
+      params.role === undefined
+    ) {
+      throw new ValidationError('at least one field must be provided');
+    }
+    const query = `
+      mutation UpdateTenantUser($user_id: String!, $email: String, $phone: String, $password: String, $role: String) {
+        updateTenantUser(user_id: $user_id, email: $email, phone: $phone, password: $password, role: $role) {
+          id
+          email
+          phone
+          role
+          provider
+          tenant_id
+          status
+          created_at
+          updated_at
+        }
+      }
+    `;
+    const variables: Record<string, any> = { user_id: uid };
+    if (params.email !== undefined) variables.email = params.email;
+    if (params.phone !== undefined) variables.phone = params.phone;
+    if (params.password !== undefined) variables.password = params.password;
+    if (params.role !== undefined) variables.role = params.role;
+    const response = await this.executeGraphQL(query, variables);
+    const u = response.data?.updateTenantUser;
+    if (!u?.id) {
+      throw new ValidationError('Invalid response format for updateTenantUser');
+    }
+    return u as TenantUser;
+  }
+
+  /**
+   * Delete a tenant catalog user by id. Project scope is implied by the API key.
+   */
+  async deleteTenantUser(userId: string): Promise<boolean> {
+    const uid = (userId ?? '').trim();
+    if (!uid) {
+      throw new ValidationError('userId is required');
+    }
+    const query = `
+      mutation DeleteTenantUser($user_id: String!) {
+        deleteTenantUser(user_id: $user_id)
+      }
+    `;
+    const response = await this.executeGraphQL(query, { user_id: uid });
+    const ok = response.data?.deleteTenantUser;
+    if (typeof ok !== 'boolean') {
+      throw new ValidationError('Invalid response format for deleteTenantUser');
+    }
+    return ok;
   }
 
   /**

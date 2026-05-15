@@ -150,6 +150,13 @@ mutation DeleteData($model: String!, $_id: String!) { ... }
 ```typescript
 export interface InjectedDBOperationInterface {
   generateTenantToken(tenantId: string, duration?: string, role?: string): Promise<string>;
+  loginTenantUser(params: TenantLoginParams): Promise<TenantLoginResponse>;
+  tenantGoogleOAuthState(projectId: string): Promise<TenantGoogleOAuthStateResponse>;
+  searchTenantUsers(projectId: string, limit?: number, offset?: number): Promise<TenantUsersResponse>;
+  searchTenantsByDomain(projectId: string, domain: string): Promise<TenantByDomainResponse>;
+  createTenantUser(projectId: string, params: CreateTenantUserParams): Promise<TenantUser>;
+  updateTenantUser(userId: string, params: UpdateTenantUserParams): Promise<TenantUser>;
+  deleteTenantUser(userId: string): Promise<boolean>;
   getSingleResource(
     model: string,
     id: string,

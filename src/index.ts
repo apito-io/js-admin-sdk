@@ -24,6 +24,9 @@ export type {
   ApitoError,
   ValidationError,
   InjectedDBOperationInterface,
+  TenantLoginParams,
+  CreateTenantUserParams,
+  UpdateTenantUserParams,
 } from './types';
 
 // Default export for convenience

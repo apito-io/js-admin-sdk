@@ -151,11 +151,13 @@ These calls use the same admin client and system GraphQL endpoint as the rest of
 
 | Method | Description |
 |--------|-------------|
-| `searchTenantUsers(projectId, limit?, offset?)` | List users registered for a project. |
+| `searchTenantUsers(projectId, limit?, offset?)` | List users registered for a project (each row has `email`, `phone`, `tenant_id`). |
 | `searchTenantsByDomain(projectId, domain)` | Exact domain lookup in project scope; returns `{ tenant }` (null if no match). |
-| `createTenantUser(projectId, username, email, password, role)` | Create a local-password user in project scope. |
-| `loginTenantUser(username, password, projectId)` | Password login in project scope; response may include a tenant-scoped token. |
-| `loginTenantUserGoogle(projectId, idToken)` | Google ID token login in project scope. |
+| `createTenantUser(projectId, params)` | Create a local-password user; `params`: `{ password, role?, email?, phone? }` (engine validates required identifier per project). |
+| `loginTenantUser(params)` | General: `{ projectId, password, email? or phone? }`. Google OAuth **code** flow: **`tenantGoogleOAuthState(projectId)`** then redirect; on callback **`loginTenantUser({ projectId, authMethod: 'google', code, state })`**. |
+| `tenantGoogleOAuthState(projectId)` | Returns **`{ state }`** for the Google authorize URL (project must have client id, secret, redirect URI configured). |
+| `updateTenantUser(userId, params)` | Mutate `email`, `phone`, `password`, and/or `role` (omit fields you do not want to send). |
+| `deleteTenantUser(userId)` | Remove a tenant catalog user. |
 
 On the engine system GraphQL API, `createTenant` accepts an optional `domain`; when set, the domain must be unused in the project (otherwise the mutation fails). `updateTenant` enforces the same when setting `domain` to a non-empty value. Call those mutations via `executeGraphQL` if needed.
 
@@ -163,9 +165,17 @@ On the engine system GraphQL API, `createTenant` accepts an optional `domain`; w
 const projectId = 'your-project-id';
 
 const { users, count } = await client.searchTenantUsers(projectId, 50, 0);
-console.log('users:', count, users.map((u) => u.username));
+console.log(
+  'users:',
+  count,
+  users.map((u) => u.email || u.phone || u.id),
+);
 
-const login = await client.loginTenantUser('admin', 'your-password', projectId);
+const login = await client.loginTenantUser({
+  projectId,
+  password: 'your-password',
+  email: 'user@example.com', // use phone: '+15551234567' when project is phone mode
+});
 if (login.token) {
   console.log('tenant-scoped token:', login.token);
 }
@@ -361,7 +371,7 @@ npm install
 npm start
 ```
 
-Pro tenant-user listing (optional `APITO_TENANT_USERNAME` / `APITO_TENANT_PASSWORD` for login):
+Pro tenant-user listing (optional `APITO_TENANT_EMAIL` / `APITO_TENANT_PHONE` + `APITO_TENANT_PASSWORD` for login):
 
 ```bash
 cd examples/tenant_users

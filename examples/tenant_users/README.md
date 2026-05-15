@@ -4,12 +4,13 @@ Mirrors the Go SDK [`examples/tenant_users`](https://github.com/apito-io/go-admi
 
 ## Environment
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `APITO_API_KEY` | yes | Admin API key |
-| `APITO_PROJECT_ID` | yes | Project id |
-| `APITO_BASE_URL` | no | Default `http://localhost:5050/system/graphql` |
-| `APITO_TENANT_USERNAME` | no | With `APITO_TENANT_PASSWORD`, runs `loginTenantUser` after search |
+| Variable             | Required | Description                                                         |
+| -------------------- | -------- | ------------------------------------------------------------------- |
+| `APITO_API_KEY`      | yes      | Admin API key                                                       |
+| `APITO_PROJECT_ID`   | yes      | Project id                                                          |
+| `APITO_BASE_URL`     | no       | Default `http://localhost:5050/system/graphql`                      |
+| `APITO_TENANT_EMAIL` | no       | With `APITO_TENANT_PASSWORD`, runs login for email-sign-in projects |
+| `APITO_TENANT_PHONE` | no       | With `APITO_TENANT_PASSWORD`, runs login for phone-sign-in projects |
 
 ## Run
 
@@ -21,5 +22,5 @@ APITO_API_KEY=... APITO_PROJECT_ID=... npm start
 With login:
 
 ```bash
-APITO_TENANT_USERNAME=admin APITO_TENANT_PASSWORD=... npm start
+APITO_TENANT_EMAIL=user@example.com APITO_TENANT_PASSWORD=... npm start
 ```

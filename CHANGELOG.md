@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2026-05-08
+
+### Changed (breaking)
+
+- **Tenant Google login** no longer uses **`loginTenantUserGoogle`**. Use **`loginTenantUser`** with **`authMethod: 'google'`**, **`code`**, and **`state`** after the browser returns from Google OAuth. Call **`tenantGoogleOAuthState(projectId)`** first to obtain **`state`** for the authorize URL.
+- **`TenantLoginParams`**: **`password`** optional when using Google flow; added **`code`**, **`state`**.
+
+### Removed
+
+- **`loginTenantUserGoogle`** (engine removed the mutation).
+
+## [2.6.0] - 2026-05-09
+
+### Changed (breaking)
+
+- **Tenant catalog users** aligned with Apito Engine Pro GraphQL: **`TenantUser`** includes **`phone`** ( **`username`** removed). **`loginTenantUser`** now takes **`TenantLoginParams`**: **`{ projectId, password, email?, phone?, authMethod? }`** matching system **`loginTenantUser`** (email vs phone per project Authentication settings).
+- **`createTenantUser`** is now **`(projectId, CreateTenantUserParams)`** (**`password`**, optional **`role`**, **`email`**, **`phone`**); **`username`** argument removed.
+
+### Added
+
+- **`updateTenantUser`**, **`deleteTenantUser`** (system **`updateTenantUser`** / **`deleteTenantUser`**; project scope comes from the API key).
+
+### Migration examples
+
+Use `loginTenantUser({ projectId, password, email: 'you@corp.com' })` or `{ phone: '+1...' }` per catalog sign-in mode. Use `createTenantUser(projectId, { password: '…', email: '…', role: 'member' })`.
+
 ## [2.5.0] - 2026-05-09
 
 ### Changed (breaking)
