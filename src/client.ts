@@ -20,12 +20,10 @@ import {
   CreateUserParams,
   UpdateUserParams,
   GoogleOAuthStateResponse,
-  ProjectStorageSettings,
-  UpdateProjectStorageInput,
-  SystemFile,
-  SystemFilesListResponse,
-  SystemFileUploadParams,
-  DeleteSystemFilesResponse,
+  File,
+  FilesListResponse,
+  UploadFileParams,
+  DeleteFilesResponse,
 } from './types';
 
 function deriveRestBaseURL(graphqlURL: string): string {
@@ -504,62 +502,8 @@ export class ApitoClient implements InjectedDBOperationInterface {
     return ok;
   }
 
-  /** Read project storage settings via getProject. */
-  async getProjectStorageSettings(projectId: string): Promise<ProjectStorageSettings> {
-    const query = `
-      query GetProjectStorageSettings($_id: String!) {
-        getProject(_id: $_id) {
-          storage_settings {
-            use_free_cloud_storage
-            endpoint
-            region
-            bucket
-            access_key_id
-            has_secret_access_key
-            public_base_url
-            force_path_style
-          }
-        }
-      }
-    `;
-    const response = await this.executeGraphQL(query, { _id: projectId });
-    const settings = response.data?.getProject?.storage_settings;
-    if (!settings) {
-      throw new ValidationError('Invalid response format for getProjectStorageSettings');
-    }
-    return settings as ProjectStorageSettings;
-  }
-
-  /** Persist project storage settings. */
-  async updateProjectStorageSettings(
-    input: UpdateProjectStorageInput
-  ): Promise<ProjectStorageSettings> {
-    const query = `
-      mutation UpdateProjectStorageSettings($input: UpdateProjectStorageInput!) {
-        updateProjectStorageSettings(input: $input) {
-          storage_settings {
-            use_free_cloud_storage
-            endpoint
-            region
-            bucket
-            access_key_id
-            has_secret_access_key
-            public_base_url
-            force_path_style
-          }
-        }
-      }
-    `;
-    const response = await this.executeGraphQL(query, { input });
-    const settings = response.data?.updateProjectStorageSettings?.storage_settings;
-    if (!settings) {
-      throw new ValidationError('Invalid response format for updateProjectStorageSettings');
-    }
-    return settings as ProjectStorageSettings;
-  }
-
   /** Upload a file via POST /system/files/upload. */
-  async uploadSystemFile(params: SystemFileUploadParams): Promise<SystemFile> {
+  async uploadFile(params: UploadFileParams): Promise<File> {
     const size =
       params.content instanceof ArrayBuffer
         ? params.content.byteLength
@@ -576,23 +520,23 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (params.fileType?.trim()) {
       form.append('file_type', params.fileType.trim());
     }
-    const body = await this.executeREST<{ file: SystemFile }>('POST', '/files/upload', {
+    const body = await this.executeREST<{ file: File }>('POST', '/files/upload', {
       formData: form,
     });
     if (!body.file?.id) {
-      throw new ValidationError('Invalid response format for uploadSystemFile');
+      throw new ValidationError('Invalid response format for uploadFile');
     }
     return body.file;
   }
 
   /** List files via GET /system/files/list. */
-  async listSystemFiles(
+  async listFiles(
     fileType?: string,
     limit?: number,
     offset?: number
-  ): Promise<SystemFilesListResponse> {
+  ): Promise<FilesListResponse> {
     const body = await this.executeREST<{
-      files: SystemFile[];
+      files: File[];
       total: number;
     }>('GET', '/files/list', {
       query: {
@@ -608,15 +552,15 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /** Delete files via POST /system/files/delete. */
-  async deleteSystemFiles(ids: string[]): Promise<DeleteSystemFilesResponse> {
+  async deleteFiles(ids: string[]): Promise<DeleteFilesResponse> {
     if (!ids?.length) {
       throw new ValidationError('ids are required');
     }
-    const body = await this.executeREST<DeleteSystemFilesResponse>('POST', '/files/delete', {
+    const body = await this.executeREST<DeleteFilesResponse>('POST', '/files/delete', {
       jsonBody: { ids },
       allowFailure: true,
     });
-    const result: DeleteSystemFilesResponse = {
+    const result: DeleteFilesResponse = {
       success: !!body.success,
       deleted_ids: body.deleted_ids ?? [],
       storage_failed: body.storage_failed,

@@ -160,22 +160,15 @@ These calls use the admin client and system GraphQL endpoint. They mirror the Go
 | `resetUserPassword(userId, password)` | Admin password reset. |
 | `deleteUser(userId)` | Remove a project user. |
 
-### Project storage settings (system GraphQL)
-
-| Method | Description |
-|--------|-------------|
-| `getProjectStorageSettings(projectId)` | Read S3/storage settings (secrets not returned). |
-| `updateProjectStorageSettings(input)` | Persist storage settings. |
-
-### System files (REST)
+### Files (REST)
 
 REST base is derived from `baseURL` by stripping `/graphql`, or set `restBaseURL` on the client config.
 
 | Method | Description |
 |--------|-------------|
-| `uploadSystemFile(params)` | POST `/files/upload` (multipart). |
-| `listSystemFiles(fileType?, limit?, offset?)` | GET `/files/list`. |
-| `deleteSystemFiles(ids)` | POST `/files/delete`. |
+| `uploadFile(params)` | POST `/files/upload` (multipart). |
+| `listFiles(fileType?, limit?, offset?)` | GET `/files/list`. |
+| `deleteFiles(ids)` | POST `/files/delete`. |
 
 On the engine system GraphQL API, `createTenant` accepts an optional `domain`; when set, the domain must be unused in the project (otherwise the mutation fails). `updateTenant` enforces the same when setting `domain` to a non-empty value. Call those mutations via `executeGraphQL` if needed.
 
@@ -199,7 +192,7 @@ if (login.token) {
 }
 ```
 
-Runnable samples: `examples/users`, `examples/system_files` (set `APITO_BASE_URL`, `APITO_API_KEY`, `APITO_PROJECT_ID`).
+Runnable samples: `examples/users`, `examples/files` (set `APITO_BASE_URL`, `APITO_API_KEY`, `APITO_PROJECT_ID`).
 
 ### Typed Operations
 

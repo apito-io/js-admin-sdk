@@ -11,9 +11,8 @@
 
 ### Added
 
-- `getProjectStorageSettings`, `updateProjectStorageSettings` (GraphQL).
-- `uploadSystemFile`, `listSystemFiles`, `deleteSystemFiles` (REST; `restBaseURL` on `ClientConfig`).
-- Examples: `examples/users/`, `examples/system_files/` (removed `examples/tenant_users/`).
+- `uploadFile`, `listFiles`, `deleteFiles` (REST; `restBaseURL` on `ClientConfig`).
+- Examples: `examples/users/`, `examples/files/` (removed `examples/tenant_users/`).
 
 ---
 

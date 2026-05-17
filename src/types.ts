@@ -138,29 +138,7 @@ export interface UsersResponse {
   count: number;
 }
 
-export interface ProjectStorageSettings {
-  use_free_cloud_storage: boolean;
-  endpoint?: string | null;
-  region?: string | null;
-  bucket?: string | null;
-  access_key_id?: string | null;
-  has_secret_access_key: boolean;
-  public_base_url?: string | null;
-  force_path_style?: boolean | null;
-}
-
-export interface UpdateProjectStorageInput {
-  use_free_cloud_storage?: boolean;
-  endpoint?: string;
-  region?: string;
-  bucket?: string;
-  access_key_id?: string;
-  secret_access_key?: string;
-  public_base_url?: string;
-  force_path_style?: boolean;
-}
-
-export interface SystemFile {
+export interface File {
   id: string;
   file_type: string;
   file_name: string;
@@ -172,18 +150,18 @@ export interface SystemFile {
   created_at?: string;
 }
 
-export interface SystemFilesListResponse {
-  files: SystemFile[];
+export interface FilesListResponse {
+  files: File[];
   total: number;
 }
 
-export interface SystemFileUploadParams {
+export interface UploadFileParams {
   fileName: string;
   content: Uint8Array | ArrayBuffer;
   fileType?: string;
 }
 
-export interface DeleteSystemFilesResponse {
+export interface DeleteFilesResponse {
   success: boolean;
   deleted_ids: string[];
   storage_failed?: string[];
@@ -249,11 +227,9 @@ export interface InjectedDBOperationInterface {
   updateUser(userId: string, params: UpdateUserParams): Promise<User>;
   resetUserPassword(userId: string, password: string): Promise<boolean>;
   deleteUser(userId: string): Promise<boolean>;
-  getProjectStorageSettings(projectId: string): Promise<ProjectStorageSettings>;
-  updateProjectStorageSettings(input: UpdateProjectStorageInput): Promise<ProjectStorageSettings>;
-  uploadSystemFile(params: SystemFileUploadParams): Promise<SystemFile>;
-  listSystemFiles(fileType?: string, limit?: number, offset?: number): Promise<SystemFilesListResponse>;
-  deleteSystemFiles(ids: string[]): Promise<DeleteSystemFilesResponse>;
+  uploadFile(params: UploadFileParams): Promise<File>;
+  listFiles(fileType?: string, limit?: number, offset?: number): Promise<FilesListResponse>;
+  deleteFiles(ids: string[]): Promise<DeleteFilesResponse>;
   getSingleResource(model: string, id: string, singlePageData?: boolean): Promise<DefaultDocumentStructure>;
   searchResources(model: string, filter?: Record<string, any>, aggregate?: boolean): Promise<SearchResult>;
   getRelationDocuments(id: string, connection: Record<string, any>): Promise<SearchResult>;

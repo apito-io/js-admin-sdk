@@ -11,7 +11,7 @@ if (!apiKey) {
 
 const client = new ApitoClient({ baseURL, apiKey });
 
-const { files, total } = await client.listSystemFiles(undefined, 20, 0);
+const { files, total } = await client.listFiles(undefined, 20, 0);
 console.log(`Files (total=${total}):`);
 for (const f of files) {
   console.log(`  - ${f.file_name} (${f.id}) ${f.url}`);
@@ -20,7 +20,7 @@ for (const f of files) {
 const path = process.env.APITO_UPLOAD_FILE;
 if (path) {
   const content = readFileSync(path);
-  const uploaded = await client.uploadSystemFile({
+  const uploaded = await client.uploadFile({
     fileName: path.split('/').pop() || 'upload',
     content,
   });

@@ -28,10 +28,10 @@ export type {
   CreateUserParams,
   UpdateUserParams,
   User,
-  ProjectStorageSettings,
-  UpdateProjectStorageInput,
-  SystemFile,
-  SystemFileUploadParams,
+  File,
+  UploadFileParams,
+  FilesListResponse,
+  DeleteFilesResponse,
 } from './types';
 
 // Default export for convenience
