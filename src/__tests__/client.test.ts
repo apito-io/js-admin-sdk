@@ -39,8 +39,8 @@ interface Product {
   created_at: string;
 }
 
-// User interface for testing typed operations
-interface User {
+// Sample document shape for typed operation tests (not engine User type)
+interface ExampleProfileUser {
   email: string;
   first_name: string;
   last_name: string;
@@ -251,11 +251,11 @@ describe('ApitoClient', () => {
       }
       const client = getTestClient();
       try {
-        const { count, users } = await client.searchTenantUsers(projectId, 10, 0);
+        const { count, users } = await client.searchUsers(projectId, 10, 0);
         expect(count).toBeGreaterThanOrEqual(0);
-        console.log('✅ searchTenantUsers:', count, users?.length);
+        console.log('✅ searchUsers:', count, users?.length);
       } catch (error) {
-        console.log('searchTenantUsers failed (may be expected):', error);
+        console.log('searchUsers failed (may be expected):', error);
       }
     }, 30000);
 
@@ -282,13 +282,13 @@ describe('ApitoClient', () => {
       const password = process.env.APITO_TENANT_PASSWORD;
       if (!projectId || !(email.trim() || phone.trim()) || !password) {
         console.log(
-          'loginTenantUser skipped — set APITO_PROJECT_ID, APITO_TENANT_PASSWORD, and APITO_TENANT_EMAIL and/or APITO_TENANT_PHONE'
+          'loginUser skipped — set APITO_PROJECT_ID, APITO_TENANT_PASSWORD, and APITO_TENANT_EMAIL and/or APITO_TENANT_PHONE'
         );
         return;
       }
       const client = getTestClient();
       try {
-        const login = await client.loginTenantUser({
+        const login = await client.loginUser({
           projectId,
           password,
           ...(email.trim() ? { email: email.trim() } : {}),
@@ -296,9 +296,9 @@ describe('ApitoClient', () => {
         });
         expect(login.token).toBeDefined();
         expect(login.token.length).toBeGreaterThan(0);
-        console.log('✅ loginTenantUser token length:', login.token.length);
+        console.log('✅ loginUser token length:', login.token.length);
       } catch (error) {
-        console.log('loginTenantUser failed (may be expected):', error);
+        console.log('loginUser failed (may be expected):', error);
       }
     }, 30000);
   });

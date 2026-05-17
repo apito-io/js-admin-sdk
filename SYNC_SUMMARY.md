@@ -1,8 +1,25 @@
-# JS Internal SDK Synchronization Summary
+# JS Admin SDK Synchronization Summary
 
-**Date**: October 19, 2025  
-**Version**: 1.2.0  
-**Status**: ✅ Complete
+## [3.0.0] — 2026-05-17 (Go admin-sdk v2.0.0)
+
+**Status**: Complete — aligned with engine User/ProUser open-core migration and storage system.
+
+### Breaking (User API)
+
+- Renamed all `*TenantUser*` types/methods to `*User*` (`loginUser`, `searchUsers`, `createUser`, `updateUser`, `deleteUser`, `googleOAuthState`, `resetUserPassword`).
+- `updateUser` no longer accepts `password`.
+
+### Added
+
+- `getProjectStorageSettings`, `updateProjectStorageSettings` (GraphQL).
+- `uploadSystemFile`, `listSystemFiles`, `deleteSystemFiles` (REST; `restBaseURL` on `ClientConfig`).
+- Examples: `examples/users/`, `examples/system_files/` (removed `examples/tenant_users/`).
+
+---
+
+## [1.2.0] — October 19, 2025
+
+**Status**: Complete
 
 ## Overview
 

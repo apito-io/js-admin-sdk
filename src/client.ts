@@ -11,15 +11,30 @@ import {
   ApitoError,
   ValidationError,
   InjectedDBOperationInterface,
-  TenantLoginResponse,
-  TenantUser,
-  TenantUsersResponse,
+  LoginUserResponse,
+  User,
+  UsersResponse,
   TenantByDomainResponse,
   TenantCatalogSearchRow,
-  TenantLoginParams,
-  CreateTenantUserParams,
-  UpdateTenantUserParams,
+  LoginUserParams,
+  CreateUserParams,
+  UpdateUserParams,
+  GoogleOAuthStateResponse,
+  ProjectStorageSettings,
+  UpdateProjectStorageInput,
+  SystemFile,
+  SystemFilesListResponse,
+  SystemFileUploadParams,
+  DeleteSystemFilesResponse,
 } from './types';
+
+function deriveRestBaseURL(graphqlURL: string): string {
+  const u = graphqlURL.trim().replace(/\/$/, '');
+  if (u.endsWith('/graphql')) {
+    return u.slice(0, -'/graphql'.length);
+  }
+  return u;
+}
 
 /**
  * Apito SDK Client - JavaScript implementation matching the Go SDK
@@ -27,11 +42,13 @@ import {
 export class ApitoClient implements InjectedDBOperationInterface {
   private httpClient: AxiosInstance;
   private baseURL: string;
+  private restBaseURL: string;
   private apiKey: string;
   private tenantId?: string;
 
   constructor(config: ClientConfig) {
     this.baseURL = config.baseURL;
+    this.restBaseURL = (config.restBaseURL ?? '').trim() || deriveRestBaseURL(config.baseURL);
     this.apiKey = config.apiKey;
     this.tenantId = config.tenantId;
 
@@ -147,10 +164,73 @@ export class ApitoClient implements InjectedDBOperationInterface {
     return data.token;
   }
 
+  private authHeaders(tenantId?: string): Record<string, string> {
+    const headers: Record<string, string> = {
+      ...(this.apiKey.startsWith('cli-') || this.apiKey.startsWith('sdk-')
+        ? { 'X-Apito-Sync-Key': this.apiKey }
+        : { 'X-Apito-Key': this.apiKey }),
+    };
+    const tid = tenantId ?? this.tenantId;
+    if (tid) {
+      headers['X-Apito-Tenant-ID'] = tid;
+    }
+    return headers;
+  }
+
+  private async executeREST<T>(
+    method: 'GET' | 'POST',
+    path: string,
+    options?: {
+      query?: Record<string, string | number | undefined>;
+      jsonBody?: Record<string, unknown>;
+      formData?: FormData;
+      allowFailure?: boolean;
+    }
+  ): Promise<T> {
+    const url = new URL(`${this.restBaseURL.replace(/\/$/, '')}${path}`);
+    if (options?.query) {
+      for (const [k, v] of Object.entries(options.query)) {
+        if (v !== undefined && v !== '') {
+          url.searchParams.set(k, String(v));
+        }
+      }
+    }
+    const headers = this.authHeaders();
+    let data: FormData | Record<string, unknown> | undefined;
+    if (options?.formData) {
+      data = options.formData;
+    } else if (options?.jsonBody) {
+      headers['Content-Type'] = 'application/json';
+      data = options.jsonBody;
+    }
+    try {
+      const response = await this.httpClient.request({
+        method,
+        url: url.toString(),
+        headers,
+        data,
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+      });
+      const body = response.data as Record<string, unknown>;
+      if (body.success === false && !options?.allowFailure) {
+        throw new ValidationError(String(body.message ?? 'request failed'));
+      }
+      return body as T;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const msg =
+          (error.response?.data as { message?: string })?.message ?? error.message;
+        throw new ApitoError(msg, 'HTTP_ERROR', error.response?.status, error.response?.data);
+      }
+      throw error;
+    }
+  }
+
   /**
-   * Tenant catalog login (system GraphQL `loginTenantUser`). Password path: pass `password` and `email` or `phone` per project Authentication settings. Google OAuth path: `authMethod: 'google'` with `code` and `state` from the redirect; call `tenantGoogleOAuthState(projectId)` before opening Google to obtain `state`.
+   * Project user login (system GraphQL `loginUser`). Password path: pass `password` and `email` or `phone` per project Authentication settings. Google OAuth path: `authMethod: 'google'` with `code` and `state` from the redirect; call `googleOAuthState(projectId)` before opening Google to obtain `state`.
    */
-  async loginTenantUser(params: TenantLoginParams): Promise<TenantLoginResponse> {
+  async loginUser(params: LoginUserParams): Promise<LoginUserResponse> {
     const authMethod = (params.authMethod ?? 'general').trim().toLowerCase() || 'general';
     const variables: Record<string, any> = {
       project_id: params.projectId,
@@ -181,8 +261,8 @@ export class ApitoClient implements InjectedDBOperationInterface {
     }
 
     const query = `
-      query LoginTenantUser($project_id: String!, $password: String, $auth_method: String, $email: String, $phone: String, $code: String, $state: String) {
-        loginTenantUser(project_id: $project_id, password: $password, auth_method: $auth_method, email: $email, phone: $phone, code: $code, state: $state) {
+      query LoginUser($project_id: String!, $password: String, $auth_method: String, $email: String, $phone: String, $code: String, $state: String) {
+        loginUser(project_id: $project_id, password: $password, auth_method: $auth_method, email: $email, phone: $phone, code: $code, state: $state) {
           token
           user {
             id
@@ -199,48 +279,48 @@ export class ApitoClient implements InjectedDBOperationInterface {
       }
     `;
     const response = await this.executeGraphQL(query, variables);
-    const raw = response.data?.loginTenantUser;
+    const raw = response.data?.loginUser;
     if (!raw?.token) {
-      throw new ValidationError('Invalid response format for loginTenantUser');
+      throw new ValidationError('Invalid response format for loginUser');
     }
     return {
       token: raw.token as string,
-      user: raw.user as TenantUser | undefined,
+      user: raw.user as User | undefined,
     };
   }
 
   /**
-   * Signed OAuth state for tenant Google login (system query `tenantGoogleOAuthState`). Use in the authorize URL together with project `google_client_id` and the configured redirect URI.
+   * Signed OAuth state for Google login (system query `googleOAuthState`). Use in the authorize URL together with project `google_client_id` and the configured redirect URI.
    */
-  async tenantGoogleOAuthState(projectId: string): Promise<{ state: string }> {
+  async googleOAuthState(projectId: string): Promise<GoogleOAuthStateResponse> {
     const query = `
-      query TenantGoogleOAuthState($project_id: String!) {
-        tenantGoogleOAuthState(project_id: $project_id) {
+      query GoogleOAuthState($project_id: String!) {
+        googleOAuthState(project_id: $project_id) {
           state
         }
       }
     `;
     const variables = { project_id: projectId };
     const response = await this.executeGraphQL(query, variables);
-    const raw = response.data?.tenantGoogleOAuthState;
+    const raw = response.data?.googleOAuthState;
     const state = typeof raw?.state === 'string' ? raw.state.trim() : '';
     if (!state) {
-      throw new ValidationError('Invalid response format for tenantGoogleOAuthState');
+      throw new ValidationError('Invalid response format for googleOAuthState');
     }
     return { state };
   }
 
   /**
-   * Search tenant users for a project.
+   * Search project end-users.
    */
-  async searchTenantUsers(
+  async searchUsers(
     projectId: string,
     limit?: number,
     offset?: number
-  ): Promise<TenantUsersResponse> {
+  ): Promise<UsersResponse> {
     const query = `
-      query SearchTenantUsers($project_id: String!, $limit: Int, $offset: Int) {
-        searchTenantUsers(project_id: $project_id, limit: $limit, offset: $offset) {
+      query SearchUsers($project_id: String!, $limit: Int, $offset: Int) {
+        searchUsers(project_id: $project_id, limit: $limit, offset: $offset) {
           count
           users {
             id
@@ -260,15 +340,15 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (limit !== undefined) variables.limit = limit;
     if (offset !== undefined) variables.offset = offset;
     const response = await this.executeGraphQL(query, variables);
-    const raw = response.data?.searchTenantUsers;
+    const raw = response.data?.searchUsers;
     if (!raw) {
-      throw new ValidationError('Invalid response format for searchTenantUsers');
+      throw new ValidationError('Invalid response format for searchUsers');
     }
     let count = 0;
     if (typeof raw.count === 'number') {
       count = raw.count;
     }
-    const users = (raw.users ?? []) as TenantUser[];
+    const users = (raw.users ?? []) as User[];
     return { users, count };
   }
 
@@ -303,19 +383,16 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /**
-   * Create a tenant catalog user (local password). Use `email` and/or `phone` per engine validation for the project identifier mode.
+   * Create a project user (local password). Use `email` and/or `phone` per engine validation for the project identifier mode.
    */
-  async createTenantUser(
-    projectId: string,
-    params: CreateTenantUserParams
-  ): Promise<TenantUser> {
+  async createUser(projectId: string, params: CreateUserParams): Promise<User> {
     const password = (params.password ?? '').trim();
     if (!password) {
       throw new ValidationError('password is required');
     }
     const query = `
-      mutation CreateTenantUser($project_id: String!, $password: String!, $role: String, $email: String, $phone: String) {
-        createTenantUser(project_id: $project_id, password: $password, role: $role, email: $email, phone: $phone) {
+      mutation CreateUser($project_id: String!, $password: String!, $role: String, $email: String, $phone: String) {
+        createUser(project_id: $project_id, password: $password, role: $role, email: $email, phone: $phone) {
           id
           email
           phone
@@ -339,32 +416,27 @@ export class ApitoClient implements InjectedDBOperationInterface {
     const phone = (params.phone ?? '').trim();
     if (phone) variables.phone = phone;
     const response = await this.executeGraphQL(query, variables);
-    const u = response.data?.createTenantUser;
+    const u = response.data?.createUser;
     if (!u?.id) {
-      throw new ValidationError('Invalid response format for createTenantUser');
+      throw new ValidationError('Invalid response format for createUser');
     }
-    return u as TenantUser;
+    return u as User;
   }
 
   /**
-   * Update a tenant catalog user. Project scope is implied by the API key. Only include fields to change.
+   * Update a project user. Project scope is implied by the API key. Only include fields to change.
    */
-  async updateTenantUser(userId: string, params: UpdateTenantUserParams): Promise<TenantUser> {
+  async updateUser(userId: string, params: UpdateUserParams): Promise<User> {
     const uid = (userId ?? '').trim();
     if (!uid) {
       throw new ValidationError('userId is required');
     }
-    if (
-      params.email === undefined &&
-      params.phone === undefined &&
-      params.password === undefined &&
-      params.role === undefined
-    ) {
+    if (params.email === undefined && params.phone === undefined && params.role === undefined) {
       throw new ValidationError('at least one field must be provided');
     }
     const query = `
-      mutation UpdateTenantUser($user_id: String!, $email: String, $phone: String, $password: String, $role: String) {
-        updateTenantUser(user_id: $user_id, email: $email, phone: $phone, password: $password, role: $role) {
+      mutation UpdateUser($user_id: String!, $email: String, $phone: String, $role: String) {
+        updateUser(user_id: $user_id, email: $email, phone: $phone, role: $role) {
           id
           email
           phone
@@ -380,35 +452,180 @@ export class ApitoClient implements InjectedDBOperationInterface {
     const variables: Record<string, any> = { user_id: uid };
     if (params.email !== undefined) variables.email = params.email;
     if (params.phone !== undefined) variables.phone = params.phone;
-    if (params.password !== undefined) variables.password = params.password;
     if (params.role !== undefined) variables.role = params.role;
     const response = await this.executeGraphQL(query, variables);
-    const u = response.data?.updateTenantUser;
+    const u = response.data?.updateUser;
     if (!u?.id) {
-      throw new ValidationError('Invalid response format for updateTenantUser');
+      throw new ValidationError('Invalid response format for updateUser');
     }
-    return u as TenantUser;
+    return u as User;
+  }
+
+  /** Set a new password for a project user (admin mutation resetUserPassword). */
+  async resetUserPassword(userId: string, password: string): Promise<boolean> {
+    const uid = (userId ?? '').trim();
+    if (!uid) {
+      throw new ValidationError('userId is required');
+    }
+    if (!(password ?? '').trim()) {
+      throw new ValidationError('password is required');
+    }
+    const query = `
+      mutation ResetUserPassword($user_id: String!, $password: String!) {
+        resetUserPassword(user_id: $user_id, password: $password)
+      }
+    `;
+    const response = await this.executeGraphQL(query, { user_id: uid, password });
+    const ok = response.data?.resetUserPassword;
+    if (typeof ok !== 'boolean') {
+      throw new ValidationError('Invalid response format for resetUserPassword');
+    }
+    return ok;
   }
 
   /**
-   * Delete a tenant catalog user by id. Project scope is implied by the API key.
+   * Delete a project user by id. Project scope is implied by the API key.
    */
-  async deleteTenantUser(userId: string): Promise<boolean> {
+  async deleteUser(userId: string): Promise<boolean> {
     const uid = (userId ?? '').trim();
     if (!uid) {
       throw new ValidationError('userId is required');
     }
     const query = `
-      mutation DeleteTenantUser($user_id: String!) {
-        deleteTenantUser(user_id: $user_id)
+      mutation DeleteUser($user_id: String!) {
+        deleteUser(user_id: $user_id)
       }
     `;
     const response = await this.executeGraphQL(query, { user_id: uid });
-    const ok = response.data?.deleteTenantUser;
+    const ok = response.data?.deleteUser;
     if (typeof ok !== 'boolean') {
-      throw new ValidationError('Invalid response format for deleteTenantUser');
+      throw new ValidationError('Invalid response format for deleteUser');
     }
     return ok;
+  }
+
+  /** Read project storage settings via getProject. */
+  async getProjectStorageSettings(projectId: string): Promise<ProjectStorageSettings> {
+    const query = `
+      query GetProjectStorageSettings($_id: String!) {
+        getProject(_id: $_id) {
+          storage_settings {
+            use_free_cloud_storage
+            endpoint
+            region
+            bucket
+            access_key_id
+            has_secret_access_key
+            public_base_url
+            force_path_style
+          }
+        }
+      }
+    `;
+    const response = await this.executeGraphQL(query, { _id: projectId });
+    const settings = response.data?.getProject?.storage_settings;
+    if (!settings) {
+      throw new ValidationError('Invalid response format for getProjectStorageSettings');
+    }
+    return settings as ProjectStorageSettings;
+  }
+
+  /** Persist project storage settings. */
+  async updateProjectStorageSettings(
+    input: UpdateProjectStorageInput
+  ): Promise<ProjectStorageSettings> {
+    const query = `
+      mutation UpdateProjectStorageSettings($input: UpdateProjectStorageInput!) {
+        updateProjectStorageSettings(input: $input) {
+          storage_settings {
+            use_free_cloud_storage
+            endpoint
+            region
+            bucket
+            access_key_id
+            has_secret_access_key
+            public_base_url
+            force_path_style
+          }
+        }
+      }
+    `;
+    const response = await this.executeGraphQL(query, { input });
+    const settings = response.data?.updateProjectStorageSettings?.storage_settings;
+    if (!settings) {
+      throw new ValidationError('Invalid response format for updateProjectStorageSettings');
+    }
+    return settings as ProjectStorageSettings;
+  }
+
+  /** Upload a file via POST /system/files/upload. */
+  async uploadSystemFile(params: SystemFileUploadParams): Promise<SystemFile> {
+    const size =
+      params.content instanceof ArrayBuffer
+        ? params.content.byteLength
+        : params.content.byteLength;
+    if (!params.content || size === 0) {
+      throw new ValidationError('file content is required');
+    }
+    const fileName = (params.fileName ?? '').trim() || 'upload';
+    const form = new FormData();
+    const bytes =
+      params.content instanceof ArrayBuffer ? new Uint8Array(params.content) : params.content;
+    const blob = new Blob([bytes as BlobPart]);
+    form.append('file', blob, fileName);
+    if (params.fileType?.trim()) {
+      form.append('file_type', params.fileType.trim());
+    }
+    const body = await this.executeREST<{ file: SystemFile }>('POST', '/files/upload', {
+      formData: form,
+    });
+    if (!body.file?.id) {
+      throw new ValidationError('Invalid response format for uploadSystemFile');
+    }
+    return body.file;
+  }
+
+  /** List files via GET /system/files/list. */
+  async listSystemFiles(
+    fileType?: string,
+    limit?: number,
+    offset?: number
+  ): Promise<SystemFilesListResponse> {
+    const body = await this.executeREST<{
+      files: SystemFile[];
+      total: number;
+    }>('GET', '/files/list', {
+      query: {
+        file_type: fileType,
+        limit,
+        offset,
+      },
+    });
+    return {
+      files: body.files ?? [],
+      total: body.total ?? 0,
+    };
+  }
+
+  /** Delete files via POST /system/files/delete. */
+  async deleteSystemFiles(ids: string[]): Promise<DeleteSystemFilesResponse> {
+    if (!ids?.length) {
+      throw new ValidationError('ids are required');
+    }
+    const body = await this.executeREST<DeleteSystemFilesResponse>('POST', '/files/delete', {
+      jsonBody: { ids },
+      allowFailure: true,
+    });
+    const result: DeleteSystemFilesResponse = {
+      success: !!body.success,
+      deleted_ids: body.deleted_ids ?? [],
+      storage_failed: body.storage_failed,
+      message: body.message,
+    };
+    if (!result.success && result.message) {
+      throw new ValidationError(result.message);
+    }
+    return result;
   }
 
   /**

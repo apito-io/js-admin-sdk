@@ -145,33 +145,51 @@ const relatedUsers = await client.getRelationDocuments('todo-123', {
 });
 ```
 
-### Pro: tenant catalog users (Apito Pro)
+### Project users (system GraphQL)
 
-These calls use the same admin client and system GraphQL endpoint as the rest of the SDK. They mirror the Go SDK and require a **Pro** Apito engine. Pass `projectId`; each returned user includes `tenant_id`.
+These calls use the admin client and system GraphQL endpoint. They mirror the Go SDK. Pass `projectId`; on Pro/SaaS engines each user may include `tenant_id`.
 
 | Method | Description |
 |--------|-------------|
-| `searchTenantUsers(projectId, limit?, offset?)` | List users registered for a project (each row has `email`, `phone`, `tenant_id`). |
+| `searchUsers(projectId, limit?, offset?)` | List project end-users (`email`, `phone`, optional `tenant_id`). |
 | `searchTenantsByDomain(projectId, domain)` | Exact domain lookup in project scope; returns `{ tenant }` (null if no match). |
-| `createTenantUser(projectId, params)` | Create a local-password user; `params`: `{ password, role?, email?, phone? }` (engine validates required identifier per project). |
-| `loginTenantUser(params)` | General: `{ projectId, password, email? or phone? }`. Google OAuth **code** flow: **`tenantGoogleOAuthState(projectId)`** then redirect; on callback **`loginTenantUser({ projectId, authMethod: 'google', code, state })`**. |
-| `tenantGoogleOAuthState(projectId)` | Returns **`{ state }`** for the Google authorize URL (project must have client id, secret, redirect URI configured). |
-| `updateTenantUser(userId, params)` | Mutate `email`, `phone`, `password`, and/or `role` (omit fields you do not want to send). |
-| `deleteTenantUser(userId)` | Remove a tenant catalog user. |
+| `createUser(projectId, params)` | Create a local-password user; `params`: `{ password, role?, email?, phone? }`. |
+| `loginUser(params)` | General: `{ projectId, password, email? or phone? }`. Google: **`googleOAuthState(projectId)`** then **`loginUser({ projectId, authMethod: 'google', code, state })`**. |
+| `googleOAuthState(projectId)` | Returns **`{ state }`** for the Google authorize URL. |
+| `updateUser(userId, params)` | Mutate `email`, `phone`, and/or `role` only. |
+| `resetUserPassword(userId, password)` | Admin password reset. |
+| `deleteUser(userId)` | Remove a project user. |
+
+### Project storage settings (system GraphQL)
+
+| Method | Description |
+|--------|-------------|
+| `getProjectStorageSettings(projectId)` | Read S3/storage settings (secrets not returned). |
+| `updateProjectStorageSettings(input)` | Persist storage settings. |
+
+### System files (REST)
+
+REST base is derived from `baseURL` by stripping `/graphql`, or set `restBaseURL` on the client config.
+
+| Method | Description |
+|--------|-------------|
+| `uploadSystemFile(params)` | POST `/files/upload` (multipart). |
+| `listSystemFiles(fileType?, limit?, offset?)` | GET `/files/list`. |
+| `deleteSystemFiles(ids)` | POST `/files/delete`. |
 
 On the engine system GraphQL API, `createTenant` accepts an optional `domain`; when set, the domain must be unused in the project (otherwise the mutation fails). `updateTenant` enforces the same when setting `domain` to a non-empty value. Call those mutations via `executeGraphQL` if needed.
 
 ```javascript
 const projectId = 'your-project-id';
 
-const { users, count } = await client.searchTenantUsers(projectId, 50, 0);
+const { users, count } = await client.searchUsers(projectId, 50, 0);
 console.log(
   'users:',
   count,
   users.map((u) => u.email || u.phone || u.id),
 );
 
-const login = await client.loginTenantUser({
+const login = await client.loginUser({
   projectId,
   password: 'your-password',
   email: 'user@example.com', // use phone: '+15551234567' when project is phone mode
@@ -181,7 +199,7 @@ if (login.token) {
 }
 ```
 
-Runnable sample: `examples/tenant_users` (set `APITO_BASE_URL`, `APITO_API_KEY`, `APITO_PROJECT_ID`).
+Runnable samples: `examples/users`, `examples/system_files` (set `APITO_BASE_URL`, `APITO_API_KEY`, `APITO_PROJECT_ID`).
 
 ### Typed Operations
 
@@ -374,7 +392,7 @@ npm start
 Pro tenant-user listing (optional `APITO_TENANT_EMAIL` / `APITO_TENANT_PHONE` + `APITO_TENANT_PASSWORD` for login):
 
 ```bash
-cd examples/tenant_users
+cd examples/users
 npm install
 APITO_BASE_URL=http://localhost:5050/system/graphql APITO_API_KEY=... APITO_PROJECT_ID=... npm start
 ```

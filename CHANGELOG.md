@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-05-17
+
+### Changed (breaking)
+
+- **Tenant-user API renamed to User API** — aligned with engine open-core migration. All `*TenantUser*` types and methods renamed (e.g. `loginUser`, `searchUsers`, `createUser`, `updateUser`, `deleteUser`).
+- **`googleOAuthState`** replaces `tenantGoogleOAuthState`.
+- **`updateUser`** no longer accepts `password`; use **`resetUserPassword`**.
+
+### Added
+
+- **`resetUserPassword(userId, password)`**
+- **`getProjectStorageSettings`**, **`updateProjectStorageSettings`**
+- **`uploadSystemFile`**, **`listSystemFiles`**, **`deleteSystemFiles`** — `/system/files` REST (`restBaseURL` optional)
+- Examples: `examples/users/`, `examples/system_files/` (replaces `examples/tenant_users/`)
+
+### Migration
+
+| v2.7.x | v3.0.0 |
+|--------|--------|
+| `loginTenantUser` | `loginUser` |
+| `TenantGoogleOAuthState` / `tenantGoogleOAuthState` | `googleOAuthState` |
+| `searchTenantUsers` | `searchUsers` |
+| `createTenantUser` | `createUser` |
+| `updateTenantUser` (+ password) | `updateUser` + `resetUserPassword` |
+| `deleteTenantUser` | `deleteUser` |
+| `TenantUser` | `User` |
+
 ## [2.7.0] - 2026-05-08
 
 ### Changed (breaking)
