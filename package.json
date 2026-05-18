@@ -1,15 +1,19 @@
 {
   "name": "@apito-io/js-admin-sdk",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Admin JavaScript SDK for Apito GraphQL API (mirrors go-internal-sdk)",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "workerd": "./dist/index.mjs",
+      "worker": "./dist/index.mjs",
+      "browser": "./dist/index.mjs",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "default": "./dist/index.mjs"
     }
   },
   "files": [
@@ -21,7 +25,7 @@
   },
   "scripts": {
     "start": "tsup --watch",
-    "build": "tsup",
+    "build": "tsup && cp dist/index.d.mts dist/index.d.ts",
     "test": "jest --passWithNoTests",
     "lint": "eslint src --ext .ts",
     "prepare": "tsup",
@@ -73,7 +77,7 @@
     },
     {
       "path": "dist/index.mjs",
-      "limit": "50 KB"
+      "limit": "120 KB"
     }
   ],
   "publishConfig": {

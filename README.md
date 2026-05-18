@@ -28,6 +28,40 @@ or
 yarn add @apito-io/js-admin-sdk
 ```
 
+### Astro / Cloudflare Workers
+
+API routes and middleware run in **workerd**, which has no Node `require`. Use the SDK as **ESM only**:
+
+```typescript
+import { ApitoClient } from '@apito-io/js-admin-sdk';
+```
+
+From **v3.2.0**, `dist/index.mjs` bundles axios for browser/worker runtimes so you do not pull axios’s Node CJS build (`require is not defined`).
+
+**Tips if a bundler still resolves the wrong build:**
+
+- Do **not** add `@apito-io/js-admin-sdk` to `vite.ssr.noExternal` (that can force the CJS entry).
+- Optional Vite aliases in `astro.config.mjs`:
+
+```javascript
+import path from 'node:path';
+
+export default defineConfig({
+  vite: {
+    resolve: {
+      alias: {
+        '@apito-io/js-admin-sdk': path.resolve(
+          'node_modules/@apito-io/js-admin-sdk/dist/index.mjs'
+        ),
+      },
+    },
+    optimizeDeps: { exclude: ['@apito-io/js-admin-sdk'] },
+  },
+});
+```
+
+Node scripts can still use `require('@apito-io/js-admin-sdk')` (CJS build, axios as peer dependency).
+
 ## 🎯 Quick Start
 
 ```javascript

@@ -193,10 +193,12 @@ export class ApitoClient implements InjectedDBOperationInterface {
         }
       }
     }
-    const headers = this.authHeaders();
+    const headers: Record<string, string | boolean> = { ...this.authHeaders() };
     let data: FormData | Record<string, unknown> | undefined;
     if (options?.formData) {
       data = options.formData;
+      // Instance default is application/json; that prevents Echo from parsing multipart.
+      headers['Content-Type'] = false;
     } else if (options?.jsonBody) {
       headers['Content-Type'] = 'application/json';
       data = options.jsonBody;
@@ -205,7 +207,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
       const response = await this.httpClient.request({
         method,
         url: url.toString(),
-        headers,
+        headers: headers as Record<string, string>,
         data,
         maxBodyLength: Infinity,
         maxContentLength: Infinity,

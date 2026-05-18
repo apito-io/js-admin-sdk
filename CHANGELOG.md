@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2026-05-18
+
+### Fixed
+
+- **Astro / Cloudflare Workers (`require is not defined`)** — ESM build (`dist/index.mjs`) now bundles axios for browser/worker runtimes. `package.json` `exports` prefer ESM for `workerd`, `worker`, `browser`, and `default`. Node CJS (`dist/index.js`) still externalizes axios for `require()`.
+
+### Added
+
+- README section: **Astro / Cloudflare Workers** (import ESM, Vite alias tips).
+
 ## [3.1.0] - 2026-05-17
 
 ### Changed (breaking)
