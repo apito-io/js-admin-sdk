@@ -1,5 +1,11 @@
 # JS Admin SDK Synchronization Summary
 
+## [3.3.0] — 2026-05-28 (Go admin-sdk v2.2.0)
+
+**Status**: Complete — documents engine project DB `files` migration; exports `FILES_*_PATH` constants. REST contract unchanged (`/system/files/*`).
+
+---
+
 ## [3.0.0] — 2026-05-17 (Go admin-sdk v2.0.0)
 
 **Status**: Complete — aligned with engine User/ProUser open-core migration and storage system.

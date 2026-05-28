@@ -139,6 +139,7 @@ export interface UsersResponse {
 }
 
 export interface File {
+  /** Project-scoped file id (metadata in project DB files table). */
   id: string;
   file_type: string;
   file_name: string;

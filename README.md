@@ -196,13 +196,17 @@ These calls use the admin client and system GraphQL endpoint. They mirror the Go
 
 ### Files (REST)
 
-REST base is derived from `baseURL` by stripping `/graphql`, or set `restBaseURL` on the client config.
+REST base is derived from `baseURL` by stripping `/graphql`, or set `restBaseURL` on the client config (typically `http://host:5050/system`).
+
+File **metadata** is stored in the **project database** `files` table (not the system DB). On Pro/SaaS engines, pass `tenantId` on the client or `X-Apito-Tenant-ID` so list/upload/delete target the tenant project DB. REST paths are unchanged: full URLs are `/system/files/upload`, `/system/files/list`, and `/system/files/delete`.
 
 | Method | Description |
 |--------|-------------|
 | `uploadFile(params)` | POST `/files/upload` (multipart). |
 | `listFiles(fileType?, limit?, offset?)` | GET `/files/list`. |
 | `deleteFiles(ids)` | POST `/files/delete`. |
+
+Path constants: `FILES_UPLOAD_PATH`, `FILES_LIST_PATH`, `FILES_DELETE_PATH`.
 
 On the engine system GraphQL API, `createTenant` accepts an optional `domain`; when set, the domain must be unused in the project (otherwise the mutation fails). `updateTenant` enforces the same when setting `domain` to a non-empty value. Call those mutations via `executeGraphQL` if needed.
 

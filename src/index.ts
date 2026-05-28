@@ -9,6 +9,11 @@
 export { ApitoClient, createClient } from './client';
 export { TypedOperations } from './typed-operations';
 export { Version, getVersion } from './version';
+export {
+  FILES_DELETE_PATH,
+  FILES_LIST_PATH,
+  FILES_UPLOAD_PATH,
+} from './filesPaths';
 export * from './types';
 
 // Re-export commonly used types for convenience

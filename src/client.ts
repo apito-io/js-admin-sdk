@@ -25,6 +25,7 @@ import {
   UploadFileParams,
   DeleteFilesResponse,
 } from './types';
+import { FILES_DELETE_PATH, FILES_LIST_PATH, FILES_UPLOAD_PATH } from './filesPaths';
 
 function deriveRestBaseURL(graphqlURL: string): string {
   const u = graphqlURL.trim().replace(/\/$/, '');
@@ -504,7 +505,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
     return ok;
   }
 
-  /** Upload a file via POST /system/files/upload. */
+  /** Upload a project file via POST /system/files/upload (metadata in project DB). */
   async uploadFile(params: UploadFileParams): Promise<File> {
     const size =
       params.content instanceof ArrayBuffer
@@ -522,7 +523,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (params.fileType?.trim()) {
       form.append('file_type', params.fileType.trim());
     }
-    const body = await this.executeREST<{ file: File }>('POST', '/files/upload', {
+    const body = await this.executeREST<{ file: File }>('POST', FILES_UPLOAD_PATH, {
       formData: form,
     });
     if (!body.file?.id) {
@@ -531,7 +532,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
     return body.file;
   }
 
-  /** List files via GET /system/files/list. */
+  /** List project files via GET /system/files/list. */
   async listFiles(
     fileType?: string,
     limit?: number,
@@ -540,7 +541,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
     const body = await this.executeREST<{
       files: File[];
       total: number;
-    }>('GET', '/files/list', {
+    }>('GET', FILES_LIST_PATH, {
       query: {
         file_type: fileType,
         limit,
@@ -553,12 +554,12 @@ export class ApitoClient implements InjectedDBOperationInterface {
     };
   }
 
-  /** Delete files via POST /system/files/delete. */
+  /** Delete project files via POST /system/files/delete. */
   async deleteFiles(ids: string[]): Promise<DeleteFilesResponse> {
     if (!ids?.length) {
       throw new ValidationError('ids are required');
     }
-    const body = await this.executeREST<DeleteFilesResponse>('POST', '/files/delete', {
+    const body = await this.executeREST<DeleteFilesResponse>('POST', FILES_DELETE_PATH, {
       jsonBody: { ids },
       allowFailure: true,
     });
