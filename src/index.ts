@@ -15,6 +15,11 @@ export {
   FILES_UPLOAD_PATH,
 } from './filesPaths';
 export * from './types';
+export * from './naming/apitoGraphqlNames';
+export { DocumentBuilder } from './naming/documentBuilder';
+export { parseIntrospection, introspectionToSdl } from './naming/schemaReader';
+export type { ApitoSchema, ApitoSchemaModel, ApitoSchemaField } from './naming/schemaReader';
+export * from './generated';
 
 // Re-export commonly used types for convenience
 export type {

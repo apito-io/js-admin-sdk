@@ -156,10 +156,11 @@ We use semantic versioning (semver):
 
 ### Release Steps
 
-1. Update version in `package.json`
-2. Update `CHANGELOG.md`
-3. Create release tag
-4. Publish to npm
+1. Update version in `package.json` and `src/version.ts`
+2. If engine schema changed: refresh `schema/apito_introspection.json`, run `npm run gen`, commit `codegen/` and `src/generated/`
+3. Update `CHANGELOG.md` and [SYNC_SUMMARY.md](SYNC_SUMMARY.md)
+4. Create release tag
+5. Publish to npm
 
 ```bash
 # Version bump

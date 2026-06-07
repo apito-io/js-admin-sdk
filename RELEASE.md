@@ -37,4 +37,6 @@ git tag v2.0.0
 git push && git push --tags
 ```
 
+If the release includes engine schema changes consumed by this SDK, refresh `schema/apito_introspection.json` and run `npm run gen` before tagging; commit generated `codegen/` and `src/generated/` output.
+
 Ensure the tag version matches `package.json` (the workflow aligns them if needed).

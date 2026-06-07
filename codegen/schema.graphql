@@ -1,0 +1,6028 @@
+# AUTO-GENERATED — DO NOT EDIT
+
+input VENDOR_PROFILE__FIELD__PHOTO_URL__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input DEVICELIST_OR_CONDITION {
+  label: DEVICE__FIELD__LABEL__COMMON_FILTER_CONDITION
+  auth_uid: DEVICE__FIELD__AUTH_UID__COMMON_FILTER_CONDITION
+  device_key: DEVICE__FIELD__DEVICE_KEY__COMMON_FILTER_CONDITION
+  platform: DEVICE__FIELD__PLATFORM__COMMON_FILTER_CONDITION
+  app_version: DEVICE__FIELD__APP_VERSION__COMMON_FILTER_CONDITION
+  last_seen_at: DEVICE__FIELD__LAST_SEEN_AT__COMMON_FILTER_CONDITION
+  vendor_uid: DEVICE__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  push_token: DEVICE__FIELD__PUSH_TOKEN__COMMON_FILTER_CONDITION
+  tenant_id: DEVICE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input Subscription_Request_Relation_Connect_Payload {
+  tenant_id: String
+}
+
+input Vendor_Profile_Relation_Disconnect_Payload {
+  ownerProfile_id: String
+}
+
+input Pro_Access_Request_Update_Payload {
+  city: String
+  request_status: String
+  source: String
+  created_at: String
+  updated_at: String
+  vendor_uid: String
+  email: String
+  country_code: String
+}
+
+enum loan_MODEL_TYPE_ENUM {
+  payment
+  business
+  customer
+  loan_installment
+}
+
+input PAYMENT__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input BUSINESSCUSTOMERLIST_INPUT_SORT_PAYLOAD {
+  name: SORT_ENUM
+  customer_uid: SORT_ENUM
+  guarantor_phone: SORT_ENUM
+  business_id: SORT_ENUM
+  phone: SORT_ENUM
+  address: SORT_ENUM
+  active_loans_count: SORT_ENUM
+  vendor_id: SORT_ENUM
+  tenant_id: SORT_ENUM
+  nid_number: SORT_ENUM
+  notes: SORT_ENUM
+  guarantor_name: SORT_ENUM
+  updated_at: SORT_ENUM
+  customer_id: SORT_ENUM
+  total_outstanding: SORT_ENUM
+  created_at: SORT_ENUM
+}
+
+type loan_has_one_customer_connection {
+}
+
+input LOANLIST_INPUT_SORT_PAYLOAD {
+  interest_rate: SORT_ENUM
+  paid_installments: SORT_ENUM
+  loan_id: SORT_ENUM
+  total_interest: SORT_ENUM
+  down_payment: SORT_ENUM
+  updated_at: SORT_ENUM
+  customer_id: SORT_ENUM
+  created_by: SORT_ENUM
+  total_outstanding: SORT_ENUM
+  customer_phone: SORT_ENUM
+  remaining_installments: SORT_ENUM
+  principal_amount: SORT_ENUM
+  business_id: SORT_ENUM
+  first_payment_date: SORT_ENUM
+  grand_total: SORT_ENUM
+  notes: SORT_ENUM
+  next_due_date: SORT_ENUM
+  total_paid: SORT_ENUM
+  item_description: SORT_ENUM
+  installment_amount: SORT_ENUM
+  item_name: SORT_ENUM
+  start_date: SORT_ENUM
+  created_at: SORT_ENUM
+  installment_count: SORT_ENUM
+  closed_at: SORT_ENUM
+  total_amount: SORT_ENUM
+  tenant_id: SORT_ENUM
+  customer_name: SORT_ENUM
+  vendor_id: SORT_ENUM
+}
+
+input TENANT_LIST_COUNT_OR_CONDITION {
+  phone: TENANT__FIELD__PHONE__COMMON_FILTER_CONDITION
+  owner_uid: TENANT__FIELD__OWNER_UID__COMMON_FILTER_CONDITION
+  legacy_vendor_id: TENANT__FIELD__LEGACY_VENDOR_ID__COMMON_FILTER_CONDITION
+  subscription_plan: TENANT__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  plan_expiry: TENANT__FIELD__PLAN_EXPIRY__COMMON_FILTER_CONDITION
+  name: TENANT__FIELD__NAME__COMMON_FILTER_CONDITION
+}
+
+type customer_has_one_business_connection {
+}
+
+input PRO_ACCESS_REQUEST__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  before: String
+  after: String
+  between: [String]
+}
+
+input FEATURE_FLAG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+enum device_MODEL_TYPE_ENUM {
+  tenant
+}
+
+type Device_Raw_Model {
+}
+
+input REPORT_CACHE_LIST_COUNT_OR_CONDITION {
+  business_id: REPORT_CACHE__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  tenant_id: REPORT_CACHE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  monthly_collected: REPORT_CACHE__FIELD__MONTHLY_COLLECTED__COMMON_FILTER_CONDITION
+  overdue_amount: REPORT_CACHE__FIELD__OVERDUE_AMOUNT__COMMON_FILTER_CONDITION
+  updated_at: REPORT_CACHE__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+}
+
+input LOANINSTALLMENTLIST_GROUPBY_INPUT {
+  value: String
+  key: String
+}
+
+input LOAN_CONNECTION_FILTER_CONDITION {
+  connection_type: CONNECTION_TYPE_ENUM
+  _id: String
+  to_model: loan_MODEL_TYPE_ENUM
+  relation_type: RELATION_TYPE_ENUM
+}
+
+input SUBSCRIPTION_REQUEST__FIELD__APPROVED_AT__COMMON_FILTER_CONDITION {
+  after: String
+  between: [String]
+  eq: String
+  ne: String
+  before: String
+}
+
+input VENDOR_PROFILE__FIELD__PHONE__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+type VendorProfileList {
+}
+
+input IN_APP_NOTIFICATION__FIELD__TITLE__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input AUDIT_LOG__FIELD__ACTION__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+type loan_has_one_business_connection {
+}
+
+input SUBSCRIPTION_REQUEST__FIELD__TENANT_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+type SubscriptionRequest {
+}
+
+type Create_Business {
+}
+
+input AUDIT_LOG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input BUSINESSLOANLIST_INPUT_WHERE_PAYLOAD {
+  paid_installments: LOAN__FIELD__PAID_INSTALLMENTS__COMMON_FILTER_CONDITION
+  total_paid: LOAN__FIELD__TOTAL_PAID__COMMON_FILTER_CONDITION
+  created_at: LOAN__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  total_interest: LOAN__FIELD__TOTAL_INTEREST__COMMON_FILTER_CONDITION
+  installment_type: LOAN__FIELD__INSTALLMENT_TYPE__COMMON_FILTER_CONDITION
+  OR: BUSINESSLOANLIST_OR_CONDITION
+  total_outstanding: LOAN__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  loan_id: LOAN__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  created_by: LOAN__FIELD__CREATED_BY__COMMON_FILTER_CONDITION
+  total_amount: LOAN__FIELD__TOTAL_AMOUNT__COMMON_FILTER_CONDITION
+  item_description: LOAN__FIELD__ITEM_DESCRIPTION__COMMON_FILTER_CONDITION
+  closed_at: LOAN__FIELD__CLOSED_AT__COMMON_FILTER_CONDITION
+  tenant_id: LOAN__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  interest_type: LOAN__FIELD__INTEREST_TYPE__COMMON_FILTER_CONDITION
+  vendor_id: LOAN__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  loan_status: LOAN__FIELD__LOAN_STATUS__COMMON_FILTER_CONDITION
+  first_payment_date: LOAN__FIELD__FIRST_PAYMENT_DATE__COMMON_FILTER_CONDITION
+  principal_amount: LOAN__FIELD__PRINCIPAL_AMOUNT__COMMON_FILTER_CONDITION
+  grand_total: LOAN__FIELD__GRAND_TOTAL__COMMON_FILTER_CONDITION
+  remaining_installments: LOAN__FIELD__REMAINING_INSTALLMENTS__COMMON_FILTER_CONDITION
+  installment_amount: LOAN__FIELD__INSTALLMENT_AMOUNT__COMMON_FILTER_CONDITION
+  down_payment: LOAN__FIELD__DOWN_PAYMENT__COMMON_FILTER_CONDITION
+  customer_phone: LOAN__FIELD__CUSTOMER_PHONE__COMMON_FILTER_CONDITION
+  business_id: LOAN__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  notes: LOAN__FIELD__NOTES__COMMON_FILTER_CONDITION
+  installment_count: LOAN__FIELD__INSTALLMENT_COUNT__COMMON_FILTER_CONDITION
+  updated_at: LOAN__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  start_date: LOAN__FIELD__START_DATE__COMMON_FILTER_CONDITION
+  interest_rate: LOAN__FIELD__INTEREST_RATE__COMMON_FILTER_CONDITION
+  next_due_date: LOAN__FIELD__NEXT_DUE_DATE__COMMON_FILTER_CONDITION
+  customer_name: LOAN__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  item_name: LOAN__FIELD__ITEM_NAME__COMMON_FILTER_CONDITION
+  customer_id: LOAN__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+}
+
+input VENDOR_PROFILE__FIELD__PRO_REQUEST_EMAIL__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input VENDOR_PROFILE_TENANT_WHERE_RELATION_FILTER_CONDITION {
+  name: TENANT__FIELD__NAME__COMMON_FILTER_CONDITION
+  phone: TENANT__FIELD__PHONE__COMMON_FILTER_CONDITION
+  owner_uid: TENANT__FIELD__OWNER_UID__COMMON_FILTER_CONDITION
+  legacy_vendor_id: TENANT__FIELD__LEGACY_VENDOR_ID__COMMON_FILTER_CONDITION
+  subscription_plan: TENANT__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  plan_expiry: TENANT__FIELD__PLAN_EXPIRY__COMMON_FILTER_CONDITION
+}
+
+input LOANLIST_INPUT_WHERE_PAYLOAD {
+  customer_phone: LOAN__FIELD__CUSTOMER_PHONE__COMMON_FILTER_CONDITION
+  loan_id: LOAN__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  paid_installments: LOAN__FIELD__PAID_INSTALLMENTS__COMMON_FILTER_CONDITION
+  business_id: LOAN__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  updated_at: LOAN__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  item_name: LOAN__FIELD__ITEM_NAME__COMMON_FILTER_CONDITION
+  OR: LOANLIST_OR_CONDITION
+  total_outstanding: LOAN__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  tenant_id: LOAN__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  closed_at: LOAN__FIELD__CLOSED_AT__COMMON_FILTER_CONDITION
+  principal_amount: LOAN__FIELD__PRINCIPAL_AMOUNT__COMMON_FILTER_CONDITION
+  total_interest: LOAN__FIELD__TOTAL_INTEREST__COMMON_FILTER_CONDITION
+  total_paid: LOAN__FIELD__TOTAL_PAID__COMMON_FILTER_CONDITION
+  loan_status: LOAN__FIELD__LOAN_STATUS__COMMON_FILTER_CONDITION
+  installment_type: LOAN__FIELD__INSTALLMENT_TYPE__COMMON_FILTER_CONDITION
+  total_amount: LOAN__FIELD__TOTAL_AMOUNT__COMMON_FILTER_CONDITION
+  interest_type: LOAN__FIELD__INTEREST_TYPE__COMMON_FILTER_CONDITION
+  created_by: LOAN__FIELD__CREATED_BY__COMMON_FILTER_CONDITION
+  down_payment: LOAN__FIELD__DOWN_PAYMENT__COMMON_FILTER_CONDITION
+  grand_total: LOAN__FIELD__GRAND_TOTAL__COMMON_FILTER_CONDITION
+  customer_name: LOAN__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  vendor_id: LOAN__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  interest_rate: LOAN__FIELD__INTEREST_RATE__COMMON_FILTER_CONDITION
+  first_payment_date: LOAN__FIELD__FIRST_PAYMENT_DATE__COMMON_FILTER_CONDITION
+  item_description: LOAN__FIELD__ITEM_DESCRIPTION__COMMON_FILTER_CONDITION
+  created_at: LOAN__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  remaining_installments: LOAN__FIELD__REMAINING_INSTALLMENTS__COMMON_FILTER_CONDITION
+  installment_count: LOAN__FIELD__INSTALLMENT_COUNT__COMMON_FILTER_CONDITION
+  installment_amount: LOAN__FIELD__INSTALLMENT_AMOUNT__COMMON_FILTER_CONDITION
+  notes: LOAN__FIELD__NOTES__COMMON_FILTER_CONDITION
+  next_due_date: LOAN__FIELD__NEXT_DUE_DATE__COMMON_FILTER_CONDITION
+  start_date: LOAN__FIELD__START_DATE__COMMON_FILTER_CONDITION
+  customer_id: LOAN__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+}
+
+input LOAN_INSTALLMENT_LIST_COUNT_INPUT_WHERE_PAYLOAD {
+  payment_id: LOAN_INSTALLMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  installment_id: LOAN_INSTALLMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  vendor_id: LOAN_INSTALLMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  OR: LOAN_INSTALLMENT_LIST_COUNT_OR_CONDITION
+  business_id: LOAN_INSTALLMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  installment_number: LOAN_INSTALLMENT__FIELD__INSTALLMENT_NUMBER__COMMON_FILTER_CONDITION
+  due_date: LOAN_INSTALLMENT__FIELD__DUE_DATE__COMMON_FILTER_CONDITION
+  paid_at: LOAN_INSTALLMENT__FIELD__PAID_AT__COMMON_FILTER_CONDITION
+  tenant_id: LOAN_INSTALLMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  amount: LOAN_INSTALLMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  paid_amount: LOAN_INSTALLMENT__FIELD__PAID_AMOUNT__COMMON_FILTER_CONDITION
+  loan_id: LOAN_INSTALLMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  installment_status: LOAN_INSTALLMENT__FIELD__INSTALLMENT_STATUS__COMMON_FILTER_CONDITION
+}
+
+type Loan_List_Aggregate_Group_By {
+}
+
+input TENANT_BUSINESS_WHERE_RELATION_FILTER_CONDITION {
+  currency: BUSINESS__FIELD__CURRENCY__COMMON_FILTER_CONDITION
+  owner_id: BUSINESS__FIELD__OWNER_ID__COMMON_FILTER_CONDITION
+  tenant_id: BUSINESS__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  archived_at: BUSINESS__FIELD__ARCHIVED_AT__COMMON_FILTER_CONDITION
+  address: BUSINESS__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  created_at: BUSINESS__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  legacy_id: BUSINESS__FIELD__LEGACY_ID__COMMON_FILTER_CONDITION
+  name: BUSINESS__FIELD__NAME__COMMON_FILTER_CONDITION
+  logo_url: BUSINESS__FIELD__LOGO_URL__COMMON_FILTER_CONDITION
+}
+
+type in_app_notification_has_one_tenant_connection {
+}
+
+enum tenant_MODEL_TYPE_ENUM {
+  subscription_request
+  feature_flag
+  pro_access_request
+  audit_log
+  vendor_profile
+  business
+  in_app_notification
+  device
+}
+
+input REPORTCACHELIST_OR_CONDITION {
+  monthly_collected: REPORT_CACHE__FIELD__MONTHLY_COLLECTED__COMMON_FILTER_CONDITION
+  overdue_amount: REPORT_CACHE__FIELD__OVERDUE_AMOUNT__COMMON_FILTER_CONDITION
+  updated_at: REPORT_CACHE__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  business_id: REPORT_CACHE__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  tenant_id: REPORT_CACHE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input In_App_Notification_Update_Payload {
+  tenant_id: String
+  vendor_id: String
+  title: String
+  body: String
+  read: Boolean
+  created_at: String
+}
+
+input REPORT_CACHE__FIELD__OVERDUE_AMOUNT__COMMON_FILTER_CONDITION {
+  gt: Float
+  gte: Float
+  eq: Float
+  ne: Float
+  lt: Float
+  lte: Float
+}
+
+input CUSTOMER_DOCUMENT_LIST_COUNT_GROUPBY_INPUT {
+  value: String
+  key: String
+}
+
+type InAppNotificationList {
+}
+
+input Business_Update_Payload {
+  logo_url: String
+  name: String
+  address: String
+  archived_at: String
+  tenant_id: String
+  created_at: String
+  currency: String
+  legacy_id: String
+  owner_id: String
+}
+
+input Audit_Log_Update_Payload {
+  payload: update_audit_log_payload_MultilineInput
+  action: String
+  vendor_id: String
+  tenant_id: String
+  by: String
+  at: String
+}
+
+input Customer_Document_List_Upsert_Payload {
+  uploaded_at: String
+  business_id: String
+  vendor_id: String
+  _connect: Customer_Document_List_Connect
+  customer_id: String
+  file_name: String
+  storage_url: String
+  _id: String
+  tenant_id: String
+  mime_type: String
+}
+
+input CUSTOMER__FIELD__ADDRESS__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+type payment_has_one_customer_connection {
+}
+
+input VENDOR_PROFILE_LIST_COUNT_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input Loan_List_Upsert_Payload {
+  customer_id: String
+  loan_status: String
+  item_description: String
+  down_payment: Float
+  interest_type: String
+  start_date: String
+  created_by: String
+  created_at: String
+  item_name: String
+  principal_amount: Float
+  tenant_id: String
+  grand_total: Float
+  next_due_date: String
+  total_outstanding: Float
+  vendor_id: String
+  installment_amount: Float
+  updated_at: String
+  installment_count: Int
+  closed_at: String
+  _connect: Loan_List_Connect
+  loan_id: String
+  total_paid: Float
+  _id: String
+  installment_type: String
+  business_id: String
+  paid_installments: Int
+  interest_rate: Float
+  first_payment_date: String
+  customer_phone: String
+  total_interest: Float
+  notes: String
+  customer_name: String
+  remaining_installments: Int
+  total_amount: Float
+}
+
+input TENANT__FIELD__PLAN_EXPIRY__COMMON_FILTER_CONDITION {
+  ne: String
+  before: String
+  after: String
+  between: [String]
+  eq: String
+}
+
+input TENANTBUSINESSLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input VENDOR_PROFILE__FIELD__LANGUAGE__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input IN_APP_NOTIFICATION_LIST_COUNT_INPUT_WHERE_PAYLOAD {
+  OR: IN_APP_NOTIFICATION_LIST_COUNT_OR_CONDITION
+  body: IN_APP_NOTIFICATION__FIELD__BODY__COMMON_FILTER_CONDITION
+  read: IN_APP_NOTIFICATION__FIELD__READ__COMMON_FILTER_CONDITION
+  created_at: IN_APP_NOTIFICATION__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  tenant_id: IN_APP_NOTIFICATION__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  vendor_id: IN_APP_NOTIFICATION__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  title: IN_APP_NOTIFICATION__FIELD__TITLE__COMMON_FILTER_CONDITION
+}
+
+input CUSTOMER_DOCUMENT_LIST_COUNT_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input REPORTCACHELIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input FEATUREFLAGLIST_INPUT_SORT_PAYLOAD {
+  key: SORT_ENUM
+  tenant_id: SORT_ENUM
+}
+
+input Pro_Access_Request_List_Connect {
+  tenant_id: String
+}
+
+input PAYMENT_CONNECTION_FILTER_CONDITION {
+  connection_type: CONNECTION_TYPE_ENUM
+  _id: String
+  to_model: payment_MODEL_TYPE_ENUM
+  relation_type: RELATION_TYPE_ENUM
+}
+
+input LOAN__FIELD__TENANT_ID__COMMON_FILTER_CONDITION {
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+}
+
+input LOAN__FIELD__FIRST_PAYMENT_DATE__COMMON_FILTER_CONDITION {
+  after: String
+  between: [String]
+  eq: String
+  ne: String
+  before: String
+}
+
+input CUSTOMERCUSTOMERDOCUMENTLIST_INPUT_WHERE_PAYLOAD {
+  storage_url: CUSTOMER_DOCUMENT__FIELD__STORAGE_URL__COMMON_FILTER_CONDITION
+  customer_id: CUSTOMER_DOCUMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER_DOCUMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER_DOCUMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  file_name: CUSTOMER_DOCUMENT__FIELD__FILE_NAME__COMMON_FILTER_CONDITION
+  OR: CUSTOMERCUSTOMERDOCUMENTLIST_OR_CONDITION
+  mime_type: CUSTOMER_DOCUMENT__FIELD__MIME_TYPE__COMMON_FILTER_CONDITION
+  uploaded_at: CUSTOMER_DOCUMENT__FIELD__UPLOADED_AT__COMMON_FILTER_CONDITION
+  tenant_id: CUSTOMER_DOCUMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input TENANTDEVICELIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input Device_Relation_Disconnect_Payload {
+  tenant_id: String
+}
+
+type Create_Device {
+}
+
+input Tenant_List_Upsert_Payload {
+  logo: tenant_logo_SingleMediaInput
+  phone: String
+  owner_uid: String
+  plan_expiry: String
+  _connect: Tenant_List_Connect
+  name: String
+  subscription_plan: String
+  legacy_vendor_id: String
+  _id: String
+}
+
+input LOAN__FIELD__TOTAL_PAID__COMMON_FILTER_CONDITION {
+  eq: Float
+  ne: Float
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+}
+
+input PAYMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+type tenant_has_many_tenantProAccessRequestList_connections {
+}
+
+input BUSINESS_CONNECTION_FILTER_CONDITION {
+  _id: String
+  to_model: business_MODEL_TYPE_ENUM
+  relation_type: RELATION_TYPE_ENUM
+  connection_type: CONNECTION_TYPE_ENUM
+}
+
+input LOANINSTALLMENTLIST_INPUT_WHERE_PAYLOAD {
+  paid_amount: LOAN_INSTALLMENT__FIELD__PAID_AMOUNT__COMMON_FILTER_CONDITION
+  installment_number: LOAN_INSTALLMENT__FIELD__INSTALLMENT_NUMBER__COMMON_FILTER_CONDITION
+  payment_id: LOAN_INSTALLMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  installment_id: LOAN_INSTALLMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  business_id: LOAN_INSTALLMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  amount: LOAN_INSTALLMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  vendor_id: LOAN_INSTALLMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  due_date: LOAN_INSTALLMENT__FIELD__DUE_DATE__COMMON_FILTER_CONDITION
+  tenant_id: LOAN_INSTALLMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  paid_at: LOAN_INSTALLMENT__FIELD__PAID_AT__COMMON_FILTER_CONDITION
+  loan_id: LOAN_INSTALLMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  installment_status: LOAN_INSTALLMENT__FIELD__INSTALLMENT_STATUS__COMMON_FILTER_CONDITION
+  OR: LOANINSTALLMENTLIST_OR_CONDITION
+}
+
+input VENDORPROFILELIST_INPUT_SORT_PAYLOAD {
+  country_code: SORT_ENUM
+  pro_request_email: SORT_ENUM
+  staff_vendor_id: SORT_ENUM
+  updated_at: SORT_ENUM
+  staff_role: SORT_ENUM
+  shop_address: SORT_ENUM
+  district: SORT_ENUM
+  name: SORT_ENUM
+  photo_url: SORT_ENUM
+  language: SORT_ENUM
+  city: SORT_ENUM
+  created_at: SORT_ENUM
+  uid: SORT_ENUM
+  phone: SORT_ENUM
+  upazila: SORT_ENUM
+  tenant_id: SORT_ENUM
+}
+
+input VENDORPROFILELIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input BUSINESS_LIST_COUNT_INPUT_WHERE_PAYLOAD {
+  tenant_id: BUSINESS__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  OR: BUSINESS_LIST_COUNT_OR_CONDITION
+  logo_url: BUSINESS__FIELD__LOGO_URL__COMMON_FILTER_CONDITION
+  legacy_id: BUSINESS__FIELD__LEGACY_ID__COMMON_FILTER_CONDITION
+  address: BUSINESS__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  owner_id: BUSINESS__FIELD__OWNER_ID__COMMON_FILTER_CONDITION
+  created_at: BUSINESS__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  archived_at: BUSINESS__FIELD__ARCHIVED_AT__COMMON_FILTER_CONDITION
+  name: BUSINESS__FIELD__NAME__COMMON_FILTER_CONDITION
+  currency: BUSINESS__FIELD__CURRENCY__COMMON_FILTER_CONDITION
+}
+
+input CUSTOMER__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION {
+  gte: Float
+  eq: Float
+  ne: Float
+  lt: Float
+  lte: Float
+  gt: Float
+}
+
+input BUSINESS__FIELD__TENANT_ID__COMMON_FILTER_CONDITION {
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+}
+
+input FEATURE_FLAG_TENANT_WHERE_RELATION_FILTER_CONDITION {
+  phone: TENANT__FIELD__PHONE__COMMON_FILTER_CONDITION
+  owner_uid: TENANT__FIELD__OWNER_UID__COMMON_FILTER_CONDITION
+  legacy_vendor_id: TENANT__FIELD__LEGACY_VENDOR_ID__COMMON_FILTER_CONDITION
+  subscription_plan: TENANT__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  plan_expiry: TENANT__FIELD__PLAN_EXPIRY__COMMON_FILTER_CONDITION
+  name: TENANT__FIELD__NAME__COMMON_FILTER_CONDITION
+}
+
+input LOAN_INSTALLMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input DEVICE__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input TENANTSUBSCRIPTIONREQUESTLIST_KEY_CONDITION {
+  in: [String]
+  eq: String
+  ne: String
+}
+
+input CUSTOMER_LIST_COUNT_GROUPBY_INPUT {
+  value: String
+  key: String
+}
+
+type Upsert_TenantList {
+}
+
+input CUSTOMER_DOCUMENT__FIELD__UPLOADED_AT__COMMON_FILTER_CONDITION {
+  after: String
+  between: [String]
+  eq: String
+  ne: String
+  before: String
+}
+
+input PRO_ACCESS_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input LOAN_INSTALLMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION {
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+}
+
+input PRO_ACCESS_REQUEST_LIST_COUNT_INPUT_SORT_PAYLOAD {
+  country_code: SORT_ENUM
+  city: SORT_ENUM
+  source: SORT_ENUM
+  created_at: SORT_ENUM
+  updated_at: SORT_ENUM
+  vendor_uid: SORT_ENUM
+  email: SORT_ENUM
+}
+
+input CUSTOMERDOCUMENTLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+type Create_Tenant {
+}
+
+scalar ID
+
+scalar Float
+
+input CUSTOMER__FIELD__NOTES__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+input BUSINESS__FIELD__OWNER_ID__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+type Customer_List_Connection {
+}
+
+input LOAN_LIST_COUNT_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input PAYMENTLIST_KEY_CONDITION {
+  ne: String
+  in: [String]
+  eq: String
+}
+
+type Upsert_BusinessList {
+}
+
+input IN_APP_NOTIFICATION_TENANT_WHERE_RELATION_FILTER_CONDITION {
+  owner_uid: TENANT__FIELD__OWNER_UID__COMMON_FILTER_CONDITION
+  legacy_vendor_id: TENANT__FIELD__LEGACY_VENDOR_ID__COMMON_FILTER_CONDITION
+  subscription_plan: TENANT__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  plan_expiry: TENANT__FIELD__PLAN_EXPIRY__COMMON_FILTER_CONDITION
+  name: TENANT__FIELD__NAME__COMMON_FILTER_CONDITION
+  phone: TENANT__FIELD__PHONE__COMMON_FILTER_CONDITION
+}
+
+input PRO_ACCESS_REQUEST__FIELD__SOURCE__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input AUDIT_LOG_LIST_COUNT_INPUT_WHERE_PAYLOAD {
+  OR: AUDIT_LOG_LIST_COUNT_OR_CONDITION
+  tenant_id: AUDIT_LOG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  by: AUDIT_LOG__FIELD__BY__COMMON_FILTER_CONDITION
+  at: AUDIT_LOG__FIELD__AT__COMMON_FILTER_CONDITION
+  payload: AUDIT_LOG__FIELD__PAYLOAD__COMMON_FILTER_CONDITION
+  action: AUDIT_LOG__FIELD__ACTION__COMMON_FILTER_CONDITION
+  vendor_id: AUDIT_LOG__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+}
+
+input Device_Relation_Connect_Payload {
+  tenant_id: String
+}
+
+input In_App_Notification_Relation_Disconnect_Payload {
+  tenant_id: String
+}
+
+type Delete_CustomerDocument {
+}
+
+input CUSTOMER_DOCUMENT_CUSTOMER_WHERE_RELATION_FILTER_CONDITION {
+  address: CUSTOMER__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  total_outstanding: CUSTOMER__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  tenant_id: CUSTOMER__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  customer_id: CUSTOMER__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  phone: CUSTOMER__FIELD__PHONE__COMMON_FILTER_CONDITION
+  nid_number: CUSTOMER__FIELD__NID_NUMBER__COMMON_FILTER_CONDITION
+  updated_at: CUSTOMER__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  customer_uid: CUSTOMER__FIELD__CUSTOMER_UID__COMMON_FILTER_CONDITION
+  created_at: CUSTOMER__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  guarantor_name: CUSTOMER__FIELD__GUARANTOR_NAME__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  guarantor_phone: CUSTOMER__FIELD__GUARANTOR_PHONE__COMMON_FILTER_CONDITION
+  name: CUSTOMER__FIELD__NAME__COMMON_FILTER_CONDITION
+  is_blacklisted: CUSTOMER__FIELD__IS_BLACKLISTED__COMMON_FILTER_CONDITION
+  notes: CUSTOMER__FIELD__NOTES__COMMON_FILTER_CONDITION
+  active_loans_count: CUSTOMER__FIELD__ACTIVE_LOANS_COUNT__COMMON_FILTER_CONDITION
+}
+
+input DEVICELIST_INPUT_WHERE_PAYLOAD {
+  label: DEVICE__FIELD__LABEL__COMMON_FILTER_CONDITION
+  device_key: DEVICE__FIELD__DEVICE_KEY__COMMON_FILTER_CONDITION
+  OR: DEVICELIST_OR_CONDITION
+  last_seen_at: DEVICE__FIELD__LAST_SEEN_AT__COMMON_FILTER_CONDITION
+  vendor_uid: DEVICE__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  auth_uid: DEVICE__FIELD__AUTH_UID__COMMON_FILTER_CONDITION
+  push_token: DEVICE__FIELD__PUSH_TOKEN__COMMON_FILTER_CONDITION
+  platform: DEVICE__FIELD__PLATFORM__COMMON_FILTER_CONDITION
+  app_version: DEVICE__FIELD__APP_VERSION__COMMON_FILTER_CONDITION
+  tenant_id: DEVICE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input PAYMENTLIST_INPUT_SORT_PAYLOAD {
+  recorded_at: SORT_ENUM
+  installment_id: SORT_ENUM
+  business_id: SORT_ENUM
+  customer_id: SORT_ENUM
+  payment_reference: SORT_ENUM
+  payment_id: SORT_ENUM
+  vendor_id: SORT_ENUM
+  tenant_id: SORT_ENUM
+  customer_name: SORT_ENUM
+  loan_id: SORT_ENUM
+  amount: SORT_ENUM
+  notes: SORT_ENUM
+  recorded_by: SORT_ENUM
+}
+
+type MutationType {
+}
+
+input Customer_Document_List_Connect {
+  customer_id: String
+}
+
+input Vendor_Profile_Update_Payload {
+  role: String
+  language: String
+  onboarding_profile_complete: Boolean
+  shop_address: String
+  uid: String
+  photo_url: String
+  district: String
+  upazila: String
+  onboarding_business_complete: Boolean
+  updated_at: String
+  tenant_id: String
+  country_code: String
+  pro_request_email: String
+  created_at: String
+  staff_vendor_id: String
+  staff_role: String
+  city: String
+  name: String
+  subscription_plan: String
+  phone: String
+}
+
+input TENANT__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+type tenant_has_many_tenantBusinessList_connections {
+}
+
+type Create_ReportCache {
+}
+
+type Update_FeatureFlag {
+}
+
+enum FILTER_STATUS_TYPE_ENUM {
+  all
+  draft
+  published
+}
+
+input TENANTFEATUREFLAGLIST_OR_CONDITION {
+  key: FEATURE_FLAG__FIELD__KEY__COMMON_FILTER_CONDITION
+  enabled: FEATURE_FLAG__FIELD__ENABLED__COMMON_FILTER_CONDITION
+  tenant_id: FEATURE_FLAG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input FEATURE_FLAG__FIELD__KEY__COMMON_FILTER_CONDITION {
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+}
+
+input BUSINESS_WHERE_RELATION_FILTER_CONDITION {
+  customer: BUSINESS_CUSTOMER_WHERE_RELATION_FILTER_CONDITION
+  loan: BUSINESS_LOAN_WHERE_RELATION_FILTER_CONDITION
+  payment: BUSINESS_PAYMENT_WHERE_RELATION_FILTER_CONDITION
+  tenant: BUSINESS_TENANT_WHERE_RELATION_FILTER_CONDITION
+}
+
+input TENANTBUSINESSLIST_OR_CONDITION {
+  tenant_id: BUSINESS__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  created_at: BUSINESS__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  archived_at: BUSINESS__FIELD__ARCHIVED_AT__COMMON_FILTER_CONDITION
+  legacy_id: BUSINESS__FIELD__LEGACY_ID__COMMON_FILTER_CONDITION
+  logo_url: BUSINESS__FIELD__LOGO_URL__COMMON_FILTER_CONDITION
+  owner_id: BUSINESS__FIELD__OWNER_ID__COMMON_FILTER_CONDITION
+  name: BUSINESS__FIELD__NAME__COMMON_FILTER_CONDITION
+  address: BUSINESS__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  currency: BUSINESS__FIELD__CURRENCY__COMMON_FILTER_CONDITION
+}
+
+type Device {
+}
+
+input Tenant_List_Connect {
+  audit_log_ids: [String]
+  ownerProfile_id: String
+  business_ids: [String]
+  in_app_notification_ids: [String]
+  device_ids: [String]
+  subscription_request_ids: [String]
+  feature_flag_ids: [String]
+  pro_access_request_ids: [String]
+}
+
+type loan_has_many_loanLoanInstallmentList_connections {
+}
+
+input TENANT_SUBSCRIPTION_REQUEST_WHERE_RELATION_FILTER_CONDITION {
+  plan: SUBSCRIPTION_REQUEST__FIELD__PLAN__COMMON_FILTER_CONDITION
+  payment_method: SUBSCRIPTION_REQUEST__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  amount_bdt: SUBSCRIPTION_REQUEST__FIELD__AMOUNT_BDT__COMMON_FILTER_CONDITION
+  created_at: SUBSCRIPTION_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  tenant_id: SUBSCRIPTION_REQUEST__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  vendor_uid: SUBSCRIPTION_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  submitted_by: SUBSCRIPTION_REQUEST__FIELD__SUBMITTED_BY__COMMON_FILTER_CONDITION
+  txn_id: SUBSCRIPTION_REQUEST__FIELD__TXN_ID__COMMON_FILTER_CONDITION
+  approved_at: SUBSCRIPTION_REQUEST__FIELD__APPROVED_AT__COMMON_FILTER_CONDITION
+}
+
+input REPORT_CACHE_LIST_COUNT_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input CUSTOMER_DOCUMENT_LIST_COUNT_INPUT_WHERE_PAYLOAD {
+  tenant_id: CUSTOMER_DOCUMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  storage_url: CUSTOMER_DOCUMENT__FIELD__STORAGE_URL__COMMON_FILTER_CONDITION
+  OR: CUSTOMER_DOCUMENT_LIST_COUNT_OR_CONDITION
+  customer_id: CUSTOMER_DOCUMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER_DOCUMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER_DOCUMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  file_name: CUSTOMER_DOCUMENT__FIELD__FILE_NAME__COMMON_FILTER_CONDITION
+  mime_type: CUSTOMER_DOCUMENT__FIELD__MIME_TYPE__COMMON_FILTER_CONDITION
+  uploaded_at: CUSTOMER_DOCUMENT__FIELD__UPLOADED_AT__COMMON_FILTER_CONDITION
+}
+
+input Subscription_Request_List_Upsert_Payload {
+  tenant_id: String
+  amount_bdt: Float
+  _connect: Subscription_Request_List_Connect
+  vendor_uid: String
+  txn_id: String
+  created_at: String
+  plan: String
+  payment_method: String
+  submitted_by: String
+  approved_at: String
+  _id: String
+}
+
+type Upsert_CustomerDocumentList {
+}
+
+type Upsert_ReportCacheList {
+}
+
+type Create_InAppNotification {
+}
+
+input LOAN__FIELD__INTEREST_RATE__COMMON_FILTER_CONDITION {
+  lte: Float
+  gt: Float
+  gte: Float
+  eq: Float
+  ne: Float
+  lt: Float
+}
+
+input TENANT_CONNECTION_FILTER_CONDITION {
+  relation_type: RELATION_TYPE_ENUM
+  connection_type: CONNECTION_TYPE_ENUM
+  _id: String
+  to_model: tenant_MODEL_TYPE_ENUM
+}
+
+input TENANT_VENDOR_PROFILE_WHERE_RELATION_FILTER_CONDITION {
+  staff_role: VENDOR_PROFILE__FIELD__STAFF_ROLE__COMMON_FILTER_CONDITION
+  tenant_id: VENDOR_PROFILE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  onboarding_business_complete: VENDOR_PROFILE__FIELD__ONBOARDING_BUSINESS_COMPLETE__COMMON_FILTER_CONDITION
+  pro_request_email: VENDOR_PROFILE__FIELD__PRO_REQUEST_EMAIL__COMMON_FILTER_CONDITION
+  role: VENDOR_PROFILE__FIELD__ROLE__COMMON_FILTER_CONDITION
+  language: VENDOR_PROFILE__FIELD__LANGUAGE__COMMON_FILTER_CONDITION
+  country_code: VENDOR_PROFILE__FIELD__COUNTRY_CODE__COMMON_FILTER_CONDITION
+  city: VENDOR_PROFILE__FIELD__CITY__COMMON_FILTER_CONDITION
+  subscription_plan: VENDOR_PROFILE__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  shop_address: VENDOR_PROFILE__FIELD__SHOP_ADDRESS__COMMON_FILTER_CONDITION
+  phone: VENDOR_PROFILE__FIELD__PHONE__COMMON_FILTER_CONDITION
+  name: VENDOR_PROFILE__FIELD__NAME__COMMON_FILTER_CONDITION
+  onboarding_profile_complete: VENDOR_PROFILE__FIELD__ONBOARDING_PROFILE_COMPLETE__COMMON_FILTER_CONDITION
+  created_at: VENDOR_PROFILE__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  updated_at: VENDOR_PROFILE__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  photo_url: VENDOR_PROFILE__FIELD__PHOTO_URL__COMMON_FILTER_CONDITION
+  uid: VENDOR_PROFILE__FIELD__UID__COMMON_FILTER_CONDITION
+  district: VENDOR_PROFILE__FIELD__DISTRICT__COMMON_FILTER_CONDITION
+  upazila: VENDOR_PROFILE__FIELD__UPAZILA__COMMON_FILTER_CONDITION
+  staff_vendor_id: VENDOR_PROFILE__FIELD__STAFF_VENDOR_ID__COMMON_FILTER_CONDITION
+}
+
+type Create_VendorProfile {
+}
+
+type Delete_Customer {
+}
+
+input CUSTOMER__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION {
+  between: [String]
+  eq: String
+  ne: String
+  before: String
+  after: String
+}
+
+type MetaFields {
+}
+
+input TENANTINAPPNOTIFICATIONLIST_INPUT_SORT_PAYLOAD {
+  title: SORT_ENUM
+  body: SORT_ENUM
+  created_at: SORT_ENUM
+  tenant_id: SORT_ENUM
+  vendor_id: SORT_ENUM
+}
+
+type business_has_many_businessLoanList_connections {
+}
+
+input LOANLOANINSTALLMENTLIST_INPUT_SORT_PAYLOAD {
+  vendor_id: SORT_ENUM
+  business_id: SORT_ENUM
+  installment_number: SORT_ENUM
+  amount: SORT_ENUM
+  loan_id: SORT_ENUM
+  paid_amount: SORT_ENUM
+  paid_at: SORT_ENUM
+  installment_id: SORT_ENUM
+  payment_id: SORT_ENUM
+  tenant_id: SORT_ENUM
+  due_date: SORT_ENUM
+}
+
+input PRO_ACCESS_REQUEST_LIST_COUNT_INPUT_WHERE_PAYLOAD {
+  request_status: PRO_ACCESS_REQUEST__FIELD__REQUEST_STATUS__COMMON_FILTER_CONDITION
+  updated_at: PRO_ACCESS_REQUEST__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  country_code: PRO_ACCESS_REQUEST__FIELD__COUNTRY_CODE__COMMON_FILTER_CONDITION
+  source: PRO_ACCESS_REQUEST__FIELD__SOURCE__COMMON_FILTER_CONDITION
+  created_at: PRO_ACCESS_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  city: PRO_ACCESS_REQUEST__FIELD__CITY__COMMON_FILTER_CONDITION
+  vendor_uid: PRO_ACCESS_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  OR: PRO_ACCESS_REQUEST_LIST_COUNT_OR_CONDITION
+  email: PRO_ACCESS_REQUEST__FIELD__EMAIL__COMMON_FILTER_CONDITION
+}
+
+input VENDOR_PROFILE__FIELD__DISTRICT__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+type Upsert_CustomerList {
+}
+
+type pro_access_request_has_one_tenant_connection {
+}
+
+input BUSINESSLOANLIST_OR_CONDITION {
+  item_description: LOAN__FIELD__ITEM_DESCRIPTION__COMMON_FILTER_CONDITION
+  interest_type: LOAN__FIELD__INTEREST_TYPE__COMMON_FILTER_CONDITION
+  created_at: LOAN__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  customer_id: LOAN__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  start_date: LOAN__FIELD__START_DATE__COMMON_FILTER_CONDITION
+  installment_count: LOAN__FIELD__INSTALLMENT_COUNT__COMMON_FILTER_CONDITION
+  remaining_installments: LOAN__FIELD__REMAINING_INSTALLMENTS__COMMON_FILTER_CONDITION
+  created_by: LOAN__FIELD__CREATED_BY__COMMON_FILTER_CONDITION
+  notes: LOAN__FIELD__NOTES__COMMON_FILTER_CONDITION
+  principal_amount: LOAN__FIELD__PRINCIPAL_AMOUNT__COMMON_FILTER_CONDITION
+  vendor_id: LOAN__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  next_due_date: LOAN__FIELD__NEXT_DUE_DATE__COMMON_FILTER_CONDITION
+  paid_installments: LOAN__FIELD__PAID_INSTALLMENTS__COMMON_FILTER_CONDITION
+  total_paid: LOAN__FIELD__TOTAL_PAID__COMMON_FILTER_CONDITION
+  total_outstanding: LOAN__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  business_id: LOAN__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  first_payment_date: LOAN__FIELD__FIRST_PAYMENT_DATE__COMMON_FILTER_CONDITION
+  down_payment: LOAN__FIELD__DOWN_PAYMENT__COMMON_FILTER_CONDITION
+  tenant_id: LOAN__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  updated_at: LOAN__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  total_amount: LOAN__FIELD__TOTAL_AMOUNT__COMMON_FILTER_CONDITION
+  total_interest: LOAN__FIELD__TOTAL_INTEREST__COMMON_FILTER_CONDITION
+  installment_type: LOAN__FIELD__INSTALLMENT_TYPE__COMMON_FILTER_CONDITION
+  installment_amount: LOAN__FIELD__INSTALLMENT_AMOUNT__COMMON_FILTER_CONDITION
+  item_name: LOAN__FIELD__ITEM_NAME__COMMON_FILTER_CONDITION
+  closed_at: LOAN__FIELD__CLOSED_AT__COMMON_FILTER_CONDITION
+  customer_name: LOAN__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  interest_rate: LOAN__FIELD__INTEREST_RATE__COMMON_FILTER_CONDITION
+  customer_phone: LOAN__FIELD__CUSTOMER_PHONE__COMMON_FILTER_CONDITION
+  grand_total: LOAN__FIELD__GRAND_TOTAL__COMMON_FILTER_CONDITION
+  loan_id: LOAN__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  loan_status: LOAN__FIELD__LOAN_STATUS__COMMON_FILTER_CONDITION
+}
+
+input BUSINESS_LIST_COUNT_OR_CONDITION {
+  logo_url: BUSINESS__FIELD__LOGO_URL__COMMON_FILTER_CONDITION
+  currency: BUSINESS__FIELD__CURRENCY__COMMON_FILTER_CONDITION
+  owner_id: BUSINESS__FIELD__OWNER_ID__COMMON_FILTER_CONDITION
+  tenant_id: BUSINESS__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  archived_at: BUSINESS__FIELD__ARCHIVED_AT__COMMON_FILTER_CONDITION
+  address: BUSINESS__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  created_at: BUSINESS__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  legacy_id: BUSINESS__FIELD__LEGACY_ID__COMMON_FILTER_CONDITION
+  name: BUSINESS__FIELD__NAME__COMMON_FILTER_CONDITION
+}
+
+input AUDIT_LOG__FIELD__AT__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  before: String
+  after: String
+  between: [String]
+}
+
+input TENANTAUDITLOGLIST_INPUT_SORT_PAYLOAD {
+  vendor_id: SORT_ENUM
+  tenant_id: SORT_ENUM
+  by: SORT_ENUM
+  at: SORT_ENUM
+  payload: SORT_ENUM
+  action: SORT_ENUM
+}
+
+type Device_List_Connection {
+}
+
+input IN_APP_NOTIFICATION_LIST_COUNT_INPUT_SORT_PAYLOAD {
+  tenant_id: SORT_ENUM
+  vendor_id: SORT_ENUM
+  title: SORT_ENUM
+  body: SORT_ENUM
+  created_at: SORT_ENUM
+}
+
+input LOAN_INSTALLMENT_LIST_COUNT_INPUT_SORT_PAYLOAD {
+  installment_id: SORT_ENUM
+  business_id: SORT_ENUM
+  amount: SORT_ENUM
+  payment_id: SORT_ENUM
+  tenant_id: SORT_ENUM
+  due_date: SORT_ENUM
+  paid_amount: SORT_ENUM
+  vendor_id: SORT_ENUM
+  installment_number: SORT_ENUM
+  loan_id: SORT_ENUM
+  paid_at: SORT_ENUM
+}
+
+input TENANTPROACCESSREQUESTLIST_OR_CONDITION {
+  created_at: PRO_ACCESS_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  updated_at: PRO_ACCESS_REQUEST__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  vendor_uid: PRO_ACCESS_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  email: PRO_ACCESS_REQUEST__FIELD__EMAIL__COMMON_FILTER_CONDITION
+  country_code: PRO_ACCESS_REQUEST__FIELD__COUNTRY_CODE__COMMON_FILTER_CONDITION
+  city: PRO_ACCESS_REQUEST__FIELD__CITY__COMMON_FILTER_CONDITION
+  request_status: PRO_ACCESS_REQUEST__FIELD__REQUEST_STATUS__COMMON_FILTER_CONDITION
+  source: PRO_ACCESS_REQUEST__FIELD__SOURCE__COMMON_FILTER_CONDITION
+}
+
+input CUSTOMERLIST_OR_CONDITION {
+  total_outstanding: CUSTOMER__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  address: CUSTOMER__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  phone: CUSTOMER__FIELD__PHONE__COMMON_FILTER_CONDITION
+  nid_number: CUSTOMER__FIELD__NID_NUMBER__COMMON_FILTER_CONDITION
+  updated_at: CUSTOMER__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  active_loans_count: CUSTOMER__FIELD__ACTIVE_LOANS_COUNT__COMMON_FILTER_CONDITION
+  customer_uid: CUSTOMER__FIELD__CUSTOMER_UID__COMMON_FILTER_CONDITION
+  created_at: CUSTOMER__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  customer_id: CUSTOMER__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  guarantor_name: CUSTOMER__FIELD__GUARANTOR_NAME__COMMON_FILTER_CONDITION
+  tenant_id: CUSTOMER__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  guarantor_phone: CUSTOMER__FIELD__GUARANTOR_PHONE__COMMON_FILTER_CONDITION
+  name: CUSTOMER__FIELD__NAME__COMMON_FILTER_CONDITION
+  is_blacklisted: CUSTOMER__FIELD__IS_BLACKLISTED__COMMON_FILTER_CONDITION
+  notes: CUSTOMER__FIELD__NOTES__COMMON_FILTER_CONDITION
+}
+
+type Delete_AuditLog {
+}
+
+input BUSINESSPAYMENTLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input PAYMENT__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION {
+  in: [String]
+  eq: String
+  ne: String
+}
+
+input PRO_ACCESS_REQUEST_CONNECTION_FILTER_CONDITION {
+  connection_type: CONNECTION_TYPE_ENUM
+  _id: String
+  to_model: pro_access_request_MODEL_TYPE_ENUM
+  relation_type: RELATION_TYPE_ENUM
+}
+
+input CUSTOMER__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input LOAN__FIELD__TOTAL_INTEREST__COMMON_FILTER_CONDITION {
+  gte: Float
+  eq: Float
+  ne: Float
+  lt: Float
+  lte: Float
+  gt: Float
+}
+
+input PAYMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION {
+  eq: Float
+  ne: Float
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+}
+
+input BUSINESSPAYMENTLIST_OR_CONDITION {
+  payment_reference: PAYMENT__FIELD__PAYMENT_REFERENCE__COMMON_FILTER_CONDITION
+  loan_id: PAYMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  vendor_id: PAYMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  payment_method: PAYMENT__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  tenant_id: PAYMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  recorded_at: PAYMENT__FIELD__RECORDED_AT__COMMON_FILTER_CONDITION
+  recorded_by: PAYMENT__FIELD__RECORDED_BY__COMMON_FILTER_CONDITION
+  customer_id: PAYMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  business_id: PAYMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  is_verified: PAYMENT__FIELD__IS_VERIFIED__COMMON_FILTER_CONDITION
+  payment_id: PAYMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  installment_id: PAYMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  customer_name: PAYMENT__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  amount: PAYMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  notes: PAYMENT__FIELD__NOTES__COMMON_FILTER_CONDITION
+}
+
+enum audit_log_MODEL_TYPE_ENUM {
+  tenant
+}
+
+type loan_installment_has_one_loan_connection {
+}
+
+input SUBSCRIPTIONREQUESTLIST_OR_CONDITION {
+  tenant_id: SUBSCRIPTION_REQUEST__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  plan: SUBSCRIPTION_REQUEST__FIELD__PLAN__COMMON_FILTER_CONDITION
+  approved_at: SUBSCRIPTION_REQUEST__FIELD__APPROVED_AT__COMMON_FILTER_CONDITION
+  vendor_uid: SUBSCRIPTION_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  submitted_by: SUBSCRIPTION_REQUEST__FIELD__SUBMITTED_BY__COMMON_FILTER_CONDITION
+  payment_method: SUBSCRIPTION_REQUEST__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  txn_id: SUBSCRIPTION_REQUEST__FIELD__TXN_ID__COMMON_FILTER_CONDITION
+  amount_bdt: SUBSCRIPTION_REQUEST__FIELD__AMOUNT_BDT__COMMON_FILTER_CONDITION
+  created_at: SUBSCRIPTION_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+}
+
+input FEATUREFLAGLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input LOAN__FIELD__CLOSED_AT__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  before: String
+  after: String
+  between: [String]
+}
+
+input LOAN__FIELD__DOWN_PAYMENT__COMMON_FILTER_CONDITION {
+  ne: Float
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  eq: Float
+}
+
+type customer_has_many_customerLoanList_connections {
+}
+
+input SUBSCRIPTION_REQUEST__FIELD__SUBMITTED_BY__COMMON_FILTER_CONDITION {
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+}
+
+type Tenant_List_Connection {
+}
+
+type Delete_SubscriptionRequest {
+}
+
+input audit_log_payload_MultilineInput {
+  markdown: String
+  text: String
+  html: String
+}
+
+input CUSTOMER_WHERE_RELATION_FILTER_CONDITION {
+  payment: CUSTOMER_PAYMENT_WHERE_RELATION_FILTER_CONDITION
+  business: CUSTOMER_BUSINESS_WHERE_RELATION_FILTER_CONDITION
+  loan: CUSTOMER_LOAN_WHERE_RELATION_FILTER_CONDITION
+  customer_document: CUSTOMER_CUSTOMER_DOCUMENT_WHERE_RELATION_FILTER_CONDITION
+}
+
+input CUSTOMER_LOAN_WHERE_RELATION_FILTER_CONDITION {
+  interest_rate: LOAN__FIELD__INTEREST_RATE__COMMON_FILTER_CONDITION
+  installment_amount: LOAN__FIELD__INSTALLMENT_AMOUNT__COMMON_FILTER_CONDITION
+  customer_name: LOAN__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  item_description: LOAN__FIELD__ITEM_DESCRIPTION__COMMON_FILTER_CONDITION
+  next_due_date: LOAN__FIELD__NEXT_DUE_DATE__COMMON_FILTER_CONDITION
+  remaining_installments: LOAN__FIELD__REMAINING_INSTALLMENTS__COMMON_FILTER_CONDITION
+  item_name: LOAN__FIELD__ITEM_NAME__COMMON_FILTER_CONDITION
+  customer_id: LOAN__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  start_date: LOAN__FIELD__START_DATE__COMMON_FILTER_CONDITION
+  loan_id: LOAN__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  installment_count: LOAN__FIELD__INSTALLMENT_COUNT__COMMON_FILTER_CONDITION
+  total_amount: LOAN__FIELD__TOTAL_AMOUNT__COMMON_FILTER_CONDITION
+  interest_type: LOAN__FIELD__INTEREST_TYPE__COMMON_FILTER_CONDITION
+  down_payment: LOAN__FIELD__DOWN_PAYMENT__COMMON_FILTER_CONDITION
+  created_by: LOAN__FIELD__CREATED_BY__COMMON_FILTER_CONDITION
+  created_at: LOAN__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  closed_at: LOAN__FIELD__CLOSED_AT__COMMON_FILTER_CONDITION
+  total_paid: LOAN__FIELD__TOTAL_PAID__COMMON_FILTER_CONDITION
+  total_outstanding: LOAN__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  principal_amount: LOAN__FIELD__PRINCIPAL_AMOUNT__COMMON_FILTER_CONDITION
+  first_payment_date: LOAN__FIELD__FIRST_PAYMENT_DATE__COMMON_FILTER_CONDITION
+  installment_type: LOAN__FIELD__INSTALLMENT_TYPE__COMMON_FILTER_CONDITION
+  vendor_id: LOAN__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  loan_status: LOAN__FIELD__LOAN_STATUS__COMMON_FILTER_CONDITION
+  updated_at: LOAN__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  grand_total: LOAN__FIELD__GRAND_TOTAL__COMMON_FILTER_CONDITION
+  tenant_id: LOAN__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  paid_installments: LOAN__FIELD__PAID_INSTALLMENTS__COMMON_FILTER_CONDITION
+  customer_phone: LOAN__FIELD__CUSTOMER_PHONE__COMMON_FILTER_CONDITION
+  total_interest: LOAN__FIELD__TOTAL_INTEREST__COMMON_FILTER_CONDITION
+  business_id: LOAN__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  notes: LOAN__FIELD__NOTES__COMMON_FILTER_CONDITION
+}
+
+input TENANTPROACCESSREQUESTLIST_KEY_CONDITION {
+  in: [String]
+  eq: String
+  ne: String
+}
+
+input FEATURE_FLAG_CONNECTION_FILTER_CONDITION {
+  connection_type: CONNECTION_TYPE_ENUM
+  _id: String
+  to_model: feature_flag_MODEL_TYPE_ENUM
+  relation_type: RELATION_TYPE_ENUM
+}
+
+input LOANPAYMENTLIST_INPUT_WHERE_PAYLOAD {
+  loan_id: PAYMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  payment_method: PAYMENT__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  payment_id: PAYMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  notes: PAYMENT__FIELD__NOTES__COMMON_FILTER_CONDITION
+  recorded_by: PAYMENT__FIELD__RECORDED_BY__COMMON_FILTER_CONDITION
+  OR: LOANPAYMENTLIST_OR_CONDITION
+  tenant_id: PAYMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  payment_reference: PAYMENT__FIELD__PAYMENT_REFERENCE__COMMON_FILTER_CONDITION
+  customer_id: PAYMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  vendor_id: PAYMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  is_verified: PAYMENT__FIELD__IS_VERIFIED__COMMON_FILTER_CONDITION
+  installment_id: PAYMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  recorded_at: PAYMENT__FIELD__RECORDED_AT__COMMON_FILTER_CONDITION
+  customer_name: PAYMENT__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  amount: PAYMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  business_id: PAYMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+}
+
+input CUSTOMER_DOCUMENT_WHERE_RELATION_FILTER_CONDITION {
+  customer: CUSTOMER_DOCUMENT_CUSTOMER_WHERE_RELATION_FILTER_CONDITION
+}
+
+input SUBSCRIPTION_REQUEST__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input VENDOR_PROFILE__FIELD__CITY__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input VENDOR_PROFILE__FIELD__COUNTRY_CODE__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+input LOANLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+type CustomerList {
+}
+
+type Upsert_FeatureFlagList {
+}
+
+input Payment_Relation_Connect_Payload {
+  business_id: String
+  customer_id: String
+  loan_id: String
+}
+
+input IN_APP_NOTIFICATION__FIELD__BODY__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input LOANLOANINSTALLMENTLIST_INPUT_WHERE_PAYLOAD {
+  due_date: LOAN_INSTALLMENT__FIELD__DUE_DATE__COMMON_FILTER_CONDITION
+  paid_at: LOAN_INSTALLMENT__FIELD__PAID_AT__COMMON_FILTER_CONDITION
+  installment_id: LOAN_INSTALLMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  business_id: LOAN_INSTALLMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  installment_number: LOAN_INSTALLMENT__FIELD__INSTALLMENT_NUMBER__COMMON_FILTER_CONDITION
+  installment_status: LOAN_INSTALLMENT__FIELD__INSTALLMENT_STATUS__COMMON_FILTER_CONDITION
+  tenant_id: LOAN_INSTALLMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  payment_id: LOAN_INSTALLMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  OR: LOANLOANINSTALLMENTLIST_OR_CONDITION
+  paid_amount: LOAN_INSTALLMENT__FIELD__PAID_AMOUNT__COMMON_FILTER_CONDITION
+  loan_id: LOAN_INSTALLMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  amount: LOAN_INSTALLMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  vendor_id: LOAN_INSTALLMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+}
+
+type TenantList {
+}
+
+input AUDITLOGLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+type ReportCacheList {
+}
+
+input Device_List_Connect {
+  tenant_id: String
+}
+
+input PAYMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+input DEVICE_CONNECTION_FILTER_CONDITION {
+  _id: String
+  to_model: device_MODEL_TYPE_ENUM
+  relation_type: RELATION_TYPE_ENUM
+  connection_type: CONNECTION_TYPE_ENUM
+}
+
+input TENANT_FEATURE_FLAG_WHERE_RELATION_FILTER_CONDITION {
+  key: FEATURE_FLAG__FIELD__KEY__COMMON_FILTER_CONDITION
+  enabled: FEATURE_FLAG__FIELD__ENABLED__COMMON_FILTER_CONDITION
+  tenant_id: FEATURE_FLAG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input PAYMENTLIST_OR_CONDITION {
+  is_verified: PAYMENT__FIELD__IS_VERIFIED__COMMON_FILTER_CONDITION
+  vendor_id: PAYMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  payment_reference: PAYMENT__FIELD__PAYMENT_REFERENCE__COMMON_FILTER_CONDITION
+  loan_id: PAYMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  customer_id: PAYMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  installment_id: PAYMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  amount: PAYMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  recorded_by: PAYMENT__FIELD__RECORDED_BY__COMMON_FILTER_CONDITION
+  business_id: PAYMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  payment_method: PAYMENT__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  tenant_id: PAYMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  notes: PAYMENT__FIELD__NOTES__COMMON_FILTER_CONDITION
+  recorded_at: PAYMENT__FIELD__RECORDED_AT__COMMON_FILTER_CONDITION
+  payment_id: PAYMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  customer_name: PAYMENT__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+}
+
+input Tenant_Relation_Connect_Payload {
+  subscription_request_ids: [String]
+  feature_flag_ids: [String]
+  pro_access_request_ids: [String]
+  audit_log_ids: [String]
+  ownerProfile_id: String
+  business_ids: [String]
+  in_app_notification_ids: [String]
+  device_ids: [String]
+}
+
+type Update_ProAccessRequest {
+}
+
+input CUSTOMER_CUSTOMER_DOCUMENT_WHERE_RELATION_FILTER_CONDITION {
+  mime_type: CUSTOMER_DOCUMENT__FIELD__MIME_TYPE__COMMON_FILTER_CONDITION
+  storage_url: CUSTOMER_DOCUMENT__FIELD__STORAGE_URL__COMMON_FILTER_CONDITION
+  uploaded_at: CUSTOMER_DOCUMENT__FIELD__UPLOADED_AT__COMMON_FILTER_CONDITION
+  customer_id: CUSTOMER_DOCUMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER_DOCUMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER_DOCUMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  tenant_id: CUSTOMER_DOCUMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  file_name: CUSTOMER_DOCUMENT__FIELD__FILE_NAME__COMMON_FILTER_CONDITION
+}
+
+input REPORT_CACHE__FIELD__MONTHLY_COLLECTED__COMMON_FILTER_CONDITION {
+  gte: Float
+  eq: Float
+  ne: Float
+  lt: Float
+  lte: Float
+  gt: Float
+}
+
+input REPORT_CACHE_LIST_COUNT_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input AUDIT_LOG_LIST_COUNT_INPUT_SORT_PAYLOAD {
+  tenant_id: SORT_ENUM
+  by: SORT_ENUM
+  at: SORT_ENUM
+  payload: SORT_ENUM
+  action: SORT_ENUM
+  vendor_id: SORT_ENUM
+}
+
+input Pro_Access_Request_Relation_Connect_Payload {
+  tenant_id: String
+}
+
+input Loan_List_Connect {
+  business_id: String
+  customer_id: String
+  loan_installment_ids: [String]
+  payment_ids: [String]
+}
+
+type Update_CustomerDocument {
+}
+
+scalar Int
+
+type audit_log_query_payload_MultilineField {
+}
+
+type tenant_has_many_tenantSubscriptionRequestList_connections {
+}
+
+input Business_Relation_Connect_Payload {
+  tenant_id: String
+  customer_ids: [String]
+  loan_ids: [String]
+  payment_ids: [String]
+}
+
+input TENANTPROACCESSREQUESTLIST_INPUT_SORT_PAYLOAD {
+  country_code: SORT_ENUM
+  city: SORT_ENUM
+  source: SORT_ENUM
+  created_at: SORT_ENUM
+  updated_at: SORT_ENUM
+  vendor_uid: SORT_ENUM
+  email: SORT_ENUM
+}
+
+input DEVICE__FIELD__APP_VERSION__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+type Audit_Log_List_Connection {
+}
+
+type Loan_Installment_List_Aggregate {
+}
+
+input LOANINSTALLMENTLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input LOANINSTALLMENTLIST_INPUT_SORT_PAYLOAD {
+  amount: SORT_ENUM
+  payment_id: SORT_ENUM
+  tenant_id: SORT_ENUM
+  paid_amount: SORT_ENUM
+  paid_at: SORT_ENUM
+  installment_id: SORT_ENUM
+  vendor_id: SORT_ENUM
+  business_id: SORT_ENUM
+  installment_number: SORT_ENUM
+  loan_id: SORT_ENUM
+  due_date: SORT_ENUM
+}
+
+type Create_CustomerDocument {
+}
+
+type business_has_many_businessPaymentList_connections {
+}
+
+enum in_app_notification_MODEL_TYPE_ENUM {
+  tenant
+}
+
+type feature_flag_has_one_tenant_connection {
+}
+
+input SUBSCRIPTION_REQUEST_TENANT_WHERE_RELATION_FILTER_CONDITION {
+  legacy_vendor_id: TENANT__FIELD__LEGACY_VENDOR_ID__COMMON_FILTER_CONDITION
+  subscription_plan: TENANT__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  plan_expiry: TENANT__FIELD__PLAN_EXPIRY__COMMON_FILTER_CONDITION
+  name: TENANT__FIELD__NAME__COMMON_FILTER_CONDITION
+  phone: TENANT__FIELD__PHONE__COMMON_FILTER_CONDITION
+  owner_uid: TENANT__FIELD__OWNER_UID__COMMON_FILTER_CONDITION
+}
+
+input Audit_Log_List_Connect {
+  tenant_id: String
+}
+
+input Feature_Flag_List_Upsert_Payload {
+  _id: String
+  _connect: Feature_Flag_List_Connect
+  key: String
+  enabled: Boolean
+  tenant_id: String
+}
+
+input IN_APP_NOTIFICATION__FIELD__CREATED_AT__COMMON_FILTER_CONDITION {
+  after: String
+  between: [String]
+  eq: String
+  ne: String
+  before: String
+}
+
+input LOAN_INSTALLMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input SUBSCRIPTION_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION {
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+}
+
+enum payment_MODEL_TYPE_ENUM {
+  loan
+  business
+  customer
+}
+
+input VENDOR_PROFILE__FIELD__UPAZILA__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input CUSTOMER_DOCUMENT_LIST_COUNT_OR_CONDITION {
+  mime_type: CUSTOMER_DOCUMENT__FIELD__MIME_TYPE__COMMON_FILTER_CONDITION
+  storage_url: CUSTOMER_DOCUMENT__FIELD__STORAGE_URL__COMMON_FILTER_CONDITION
+  uploaded_at: CUSTOMER_DOCUMENT__FIELD__UPLOADED_AT__COMMON_FILTER_CONDITION
+  customer_id: CUSTOMER_DOCUMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER_DOCUMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER_DOCUMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  tenant_id: CUSTOMER_DOCUMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  file_name: CUSTOMER_DOCUMENT__FIELD__FILE_NAME__COMMON_FILTER_CONDITION
+}
+
+input BUSINESS_LIST_COUNT_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input LOAN__FIELD__INSTALLMENT_AMOUNT__COMMON_FILTER_CONDITION {
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  eq: Float
+  ne: Float
+}
+
+type customer_document_has_one_customer_connection {
+}
+
+input VENDOR_PROFILE__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION {
+  after: String
+  between: [String]
+  eq: String
+  ne: String
+  before: String
+}
+
+type Payment_List_Aggregate {
+}
+
+type Customer {
+}
+
+input Subscription_Request_Create_Payload {
+  approved_at: String
+  plan: String
+  submitted_by: String
+  txn_id: String
+  _id: String
+  tenant_id: String
+  payment_method: String
+  amount_bdt: Float
+  _connect: Subscription_Request_List_Connect
+  vendor_uid: String
+  created_at: String
+}
+
+type Delete_LoanInstallment {
+}
+
+input BUSINESSPAYMENTLIST_INPUT_SORT_PAYLOAD {
+  tenant_id: SORT_ENUM
+  amount: SORT_ENUM
+  notes: SORT_ENUM
+  customer_id: SORT_ENUM
+  payment_reference: SORT_ENUM
+  payment_id: SORT_ENUM
+  loan_id: SORT_ENUM
+  vendor_id: SORT_ENUM
+  recorded_by: SORT_ENUM
+  recorded_at: SORT_ENUM
+  installment_id: SORT_ENUM
+  business_id: SORT_ENUM
+  customer_name: SORT_ENUM
+}
+
+input CUSTOMER__FIELD__GUARANTOR_NAME__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input LOAN__FIELD__ITEM_NAME__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input TENANTDEVICELIST_KEY_CONDITION {
+  in: [String]
+  eq: String
+  ne: String
+}
+
+input PAYMENT_LIST_COUNT_INPUT_WHERE_PAYLOAD {
+  customer_name: PAYMENT__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  payment_reference: PAYMENT__FIELD__PAYMENT_REFERENCE__COMMON_FILTER_CONDITION
+  OR: PAYMENT_LIST_COUNT_OR_CONDITION
+  customer_id: PAYMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  tenant_id: PAYMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  loan_id: PAYMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  installment_id: PAYMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  business_id: PAYMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  recorded_at: PAYMENT__FIELD__RECORDED_AT__COMMON_FILTER_CONDITION
+  recorded_by: PAYMENT__FIELD__RECORDED_BY__COMMON_FILTER_CONDITION
+  vendor_id: PAYMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  amount: PAYMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  payment_method: PAYMENT__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  notes: PAYMENT__FIELD__NOTES__COMMON_FILTER_CONDITION
+  payment_id: PAYMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  is_verified: PAYMENT__FIELD__IS_VERIFIED__COMMON_FILTER_CONDITION
+}
+
+input REPORT_CACHE_LIST_COUNT_INPUT_WHERE_PAYLOAD {
+  business_id: REPORT_CACHE__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  tenant_id: REPORT_CACHE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  monthly_collected: REPORT_CACHE__FIELD__MONTHLY_COLLECTED__COMMON_FILTER_CONDITION
+  overdue_amount: REPORT_CACHE__FIELD__OVERDUE_AMOUNT__COMMON_FILTER_CONDITION
+  OR: REPORT_CACHE_LIST_COUNT_OR_CONDITION
+  updated_at: REPORT_CACHE__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+}
+
+input FEATURE_FLAG_LIST_COUNT_INPUT_WHERE_PAYLOAD {
+  enabled: FEATURE_FLAG__FIELD__ENABLED__COMMON_FILTER_CONDITION
+  tenant_id: FEATURE_FLAG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  key: FEATURE_FLAG__FIELD__KEY__COMMON_FILTER_CONDITION
+  OR: FEATURE_FLAG_LIST_COUNT_OR_CONDITION
+}
+
+input PRO_ACCESS_REQUEST__FIELD__COUNTRY_CODE__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input SUBSCRIPTION_REQUEST_LIST_COUNT_INPUT_WHERE_PAYLOAD {
+  payment_method: SUBSCRIPTION_REQUEST__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  txn_id: SUBSCRIPTION_REQUEST__FIELD__TXN_ID__COMMON_FILTER_CONDITION
+  amount_bdt: SUBSCRIPTION_REQUEST__FIELD__AMOUNT_BDT__COMMON_FILTER_CONDITION
+  vendor_uid: SUBSCRIPTION_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  submitted_by: SUBSCRIPTION_REQUEST__FIELD__SUBMITTED_BY__COMMON_FILTER_CONDITION
+  created_at: SUBSCRIPTION_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  OR: SUBSCRIPTION_REQUEST_LIST_COUNT_OR_CONDITION
+  tenant_id: SUBSCRIPTION_REQUEST__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  approved_at: SUBSCRIPTION_REQUEST__FIELD__APPROVED_AT__COMMON_FILTER_CONDITION
+  plan: SUBSCRIPTION_REQUEST__FIELD__PLAN__COMMON_FILTER_CONDITION
+}
+
+input CUSTOMERDOCUMENTLIST_INPUT_SORT_PAYLOAD {
+  uploaded_at: SORT_ENUM
+  customer_id: SORT_ENUM
+  business_id: SORT_ENUM
+  vendor_id: SORT_ENUM
+  tenant_id: SORT_ENUM
+  file_name: SORT_ENUM
+  mime_type: SORT_ENUM
+  storage_url: SORT_ENUM
+}
+
+input PAYMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input BUSINESSCUSTOMERLIST_INPUT_WHERE_PAYLOAD {
+  customer_uid: CUSTOMER__FIELD__CUSTOMER_UID__COMMON_FILTER_CONDITION
+  active_loans_count: CUSTOMER__FIELD__ACTIVE_LOANS_COUNT__COMMON_FILTER_CONDITION
+  nid_number: CUSTOMER__FIELD__NID_NUMBER__COMMON_FILTER_CONDITION
+  guarantor_name: CUSTOMER__FIELD__GUARANTOR_NAME__COMMON_FILTER_CONDITION
+  notes: CUSTOMER__FIELD__NOTES__COMMON_FILTER_CONDITION
+  created_at: CUSTOMER__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  tenant_id: CUSTOMER__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  phone: CUSTOMER__FIELD__PHONE__COMMON_FILTER_CONDITION
+  customer_id: CUSTOMER__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  OR: BUSINESSCUSTOMERLIST_OR_CONDITION
+  is_blacklisted: CUSTOMER__FIELD__IS_BLACKLISTED__COMMON_FILTER_CONDITION
+  total_outstanding: CUSTOMER__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  guarantor_phone: CUSTOMER__FIELD__GUARANTOR_PHONE__COMMON_FILTER_CONDITION
+  updated_at: CUSTOMER__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  address: CUSTOMER__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  name: CUSTOMER__FIELD__NAME__COMMON_FILTER_CONDITION
+}
+
+enum customer_MODEL_TYPE_ENUM {
+  loan
+  customer_document
+  payment
+  business
+}
+
+input CUSTOMER_DOCUMENT__FIELD__STORAGE_URL__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input CUSTOMERPAYMENTLIST_KEY_CONDITION {
+  ne: String
+  in: [String]
+  eq: String
+}
+
+input SUBSCRIPTIONREQUESTLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input LOAN__FIELD__CREATED_AT__COMMON_FILTER_CONDITION {
+  before: String
+  after: String
+  between: [String]
+  eq: String
+  ne: String
+}
+
+input IN_APP_NOTIFICATION_CONNECTION_FILTER_CONDITION {
+  connection_type: CONNECTION_TYPE_ENUM
+  _id: String
+  to_model: in_app_notification_MODEL_TYPE_ENUM
+  relation_type: RELATION_TYPE_ENUM
+}
+
+input TENANT__FIELD__OWNER_UID__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input TENANTPROACCESSREQUESTLIST_INPUT_WHERE_PAYLOAD {
+  updated_at: PRO_ACCESS_REQUEST__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  vendor_uid: PRO_ACCESS_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  request_status: PRO_ACCESS_REQUEST__FIELD__REQUEST_STATUS__COMMON_FILTER_CONDITION
+  email: PRO_ACCESS_REQUEST__FIELD__EMAIL__COMMON_FILTER_CONDITION
+  OR: TENANTPROACCESSREQUESTLIST_OR_CONDITION
+  city: PRO_ACCESS_REQUEST__FIELD__CITY__COMMON_FILTER_CONDITION
+  source: PRO_ACCESS_REQUEST__FIELD__SOURCE__COMMON_FILTER_CONDITION
+  created_at: PRO_ACCESS_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  country_code: PRO_ACCESS_REQUEST__FIELD__COUNTRY_CODE__COMMON_FILTER_CONDITION
+}
+
+input DEVICE__FIELD__DEVICE_KEY__COMMON_FILTER_CONDITION {
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+}
+
+input CUSTOMER_LIST_COUNT_INPUT_WHERE_PAYLOAD {
+  business_id: CUSTOMER__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  customer_uid: CUSTOMER__FIELD__CUSTOMER_UID__COMMON_FILTER_CONDITION
+  phone: CUSTOMER__FIELD__PHONE__COMMON_FILTER_CONDITION
+  notes: CUSTOMER__FIELD__NOTES__COMMON_FILTER_CONDITION
+  is_blacklisted: CUSTOMER__FIELD__IS_BLACKLISTED__COMMON_FILTER_CONDITION
+  updated_at: CUSTOMER__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  name: CUSTOMER__FIELD__NAME__COMMON_FILTER_CONDITION
+  OR: CUSTOMER_LIST_COUNT_OR_CONDITION
+  nid_number: CUSTOMER__FIELD__NID_NUMBER__COMMON_FILTER_CONDITION
+  guarantor_phone: CUSTOMER__FIELD__GUARANTOR_PHONE__COMMON_FILTER_CONDITION
+  guarantor_name: CUSTOMER__FIELD__GUARANTOR_NAME__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  customer_id: CUSTOMER__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  address: CUSTOMER__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  active_loans_count: CUSTOMER__FIELD__ACTIVE_LOANS_COUNT__COMMON_FILTER_CONDITION
+  total_outstanding: CUSTOMER__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  tenant_id: CUSTOMER__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  created_at: CUSTOMER__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+}
+
+input PROACCESSREQUESTLIST_KEY_CONDITION {
+  ne: String
+  in: [String]
+  eq: String
+}
+
+type Tenant {
+}
+
+input BUSINESS__FIELD__LEGACY_ID__COMMON_FILTER_CONDITION {
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+}
+
+input DEVICE__FIELD__LABEL__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+type Update_Tenant {
+}
+
+input TENANT__FIELD__NAME__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+input TENANT_LIST_COUNT_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input Loan_Relation_Connect_Payload {
+  payment_ids: [String]
+  business_id: String
+  customer_id: String
+  loan_installment_ids: [String]
+}
+
+input CUSTOMER_DOCUMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input CUSTOMER_DOCUMENT__FIELD__FILE_NAME__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input CUSTOMER_PAYMENT_WHERE_RELATION_FILTER_CONDITION {
+  vendor_id: PAYMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  customer_id: PAYMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  tenant_id: PAYMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  customer_name: PAYMENT__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  amount: PAYMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  loan_id: PAYMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  business_id: PAYMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  installment_id: PAYMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  payment_reference: PAYMENT__FIELD__PAYMENT_REFERENCE__COMMON_FILTER_CONDITION
+  recorded_by: PAYMENT__FIELD__RECORDED_BY__COMMON_FILTER_CONDITION
+  payment_id: PAYMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  is_verified: PAYMENT__FIELD__IS_VERIFIED__COMMON_FILTER_CONDITION
+  payment_method: PAYMENT__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  notes: PAYMENT__FIELD__NOTES__COMMON_FILTER_CONDITION
+  recorded_at: PAYMENT__FIELD__RECORDED_AT__COMMON_FILTER_CONDITION
+}
+
+input CUSTOMERPAYMENTLIST_INPUT_SORT_PAYLOAD {
+  business_id: SORT_ENUM
+  payment_reference: SORT_ENUM
+  payment_id: SORT_ENUM
+  loan_id: SORT_ENUM
+  tenant_id: SORT_ENUM
+  amount: SORT_ENUM
+  recorded_at: SORT_ENUM
+  installment_id: SORT_ENUM
+  customer_id: SORT_ENUM
+  customer_name: SORT_ENUM
+  vendor_id: SORT_ENUM
+  notes: SORT_ENUM
+  recorded_by: SORT_ENUM
+}
+
+input AUDIT_LOG_WHERE_RELATION_FILTER_CONDITION {
+  tenant: AUDIT_LOG_TENANT_WHERE_RELATION_FILTER_CONDITION
+}
+
+enum business_MODEL_TYPE_ENUM {
+  tenant
+  customer
+  loan
+  payment
+}
+
+enum vendor_profile_MODEL_TYPE_ENUM {
+  tenant
+}
+
+input CUSTOMERDOCUMENTLIST_OR_CONDITION {
+  file_name: CUSTOMER_DOCUMENT__FIELD__FILE_NAME__COMMON_FILTER_CONDITION
+  mime_type: CUSTOMER_DOCUMENT__FIELD__MIME_TYPE__COMMON_FILTER_CONDITION
+  storage_url: CUSTOMER_DOCUMENT__FIELD__STORAGE_URL__COMMON_FILTER_CONDITION
+  uploaded_at: CUSTOMER_DOCUMENT__FIELD__UPLOADED_AT__COMMON_FILTER_CONDITION
+  customer_id: CUSTOMER_DOCUMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER_DOCUMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER_DOCUMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  tenant_id: CUSTOMER_DOCUMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input IN_APP_NOTIFICATION__FIELD__TENANT_ID__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input LOAN_WHERE_RELATION_FILTER_CONDITION {
+  loan_installment: LOAN_LOAN_INSTALLMENT_WHERE_RELATION_FILTER_CONDITION
+  payment: LOAN_PAYMENT_WHERE_RELATION_FILTER_CONDITION
+  business: LOAN_BUSINESS_WHERE_RELATION_FILTER_CONDITION
+  customer: LOAN_CUSTOMER_WHERE_RELATION_FILTER_CONDITION
+}
+
+input SUBSCRIPTION_REQUEST__FIELD__TXN_ID__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+input BUSINESSLIST_INPUT_SORT_PAYLOAD {
+  tenant_id: SORT_ENUM
+  created_at: SORT_ENUM
+  legacy_id: SORT_ENUM
+  owner_id: SORT_ENUM
+  address: SORT_ENUM
+  logo_url: SORT_ENUM
+  archived_at: SORT_ENUM
+  currency: SORT_ENUM
+  name: SORT_ENUM
+}
+
+input VENDORPROFILELIST_INPUT_WHERE_PAYLOAD {
+  onboarding_profile_complete: VENDOR_PROFILE__FIELD__ONBOARDING_PROFILE_COMPLETE__COMMON_FILTER_CONDITION
+  updated_at: VENDOR_PROFILE__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  uid: VENDOR_PROFILE__FIELD__UID__COMMON_FILTER_CONDITION
+  OR: VENDORPROFILELIST_OR_CONDITION
+  photo_url: VENDOR_PROFILE__FIELD__PHOTO_URL__COMMON_FILTER_CONDITION
+  language: VENDOR_PROFILE__FIELD__LANGUAGE__COMMON_FILTER_CONDITION
+  staff_role: VENDOR_PROFILE__FIELD__STAFF_ROLE__COMMON_FILTER_CONDITION
+  district: VENDOR_PROFILE__FIELD__DISTRICT__COMMON_FILTER_CONDITION
+  subscription_plan: VENDOR_PROFILE__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  role: VENDOR_PROFILE__FIELD__ROLE__COMMON_FILTER_CONDITION
+  staff_vendor_id: VENDOR_PROFILE__FIELD__STAFF_VENDOR_ID__COMMON_FILTER_CONDITION
+  shop_address: VENDOR_PROFILE__FIELD__SHOP_ADDRESS__COMMON_FILTER_CONDITION
+  phone: VENDOR_PROFILE__FIELD__PHONE__COMMON_FILTER_CONDITION
+  name: VENDOR_PROFILE__FIELD__NAME__COMMON_FILTER_CONDITION
+  pro_request_email: VENDOR_PROFILE__FIELD__PRO_REQUEST_EMAIL__COMMON_FILTER_CONDITION
+  onboarding_business_complete: VENDOR_PROFILE__FIELD__ONBOARDING_BUSINESS_COMPLETE__COMMON_FILTER_CONDITION
+  upazila: VENDOR_PROFILE__FIELD__UPAZILA__COMMON_FILTER_CONDITION
+  tenant_id: VENDOR_PROFILE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  city: VENDOR_PROFILE__FIELD__CITY__COMMON_FILTER_CONDITION
+  country_code: VENDOR_PROFILE__FIELD__COUNTRY_CODE__COMMON_FILTER_CONDITION
+  created_at: VENDOR_PROFILE__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+}
+
+input PROACCESSREQUESTLIST_INPUT_WHERE_PAYLOAD {
+  source: PRO_ACCESS_REQUEST__FIELD__SOURCE__COMMON_FILTER_CONDITION
+  created_at: PRO_ACCESS_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  vendor_uid: PRO_ACCESS_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  email: PRO_ACCESS_REQUEST__FIELD__EMAIL__COMMON_FILTER_CONDITION
+  city: PRO_ACCESS_REQUEST__FIELD__CITY__COMMON_FILTER_CONDITION
+  request_status: PRO_ACCESS_REQUEST__FIELD__REQUEST_STATUS__COMMON_FILTER_CONDITION
+  updated_at: PRO_ACCESS_REQUEST__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  country_code: PRO_ACCESS_REQUEST__FIELD__COUNTRY_CODE__COMMON_FILTER_CONDITION
+  OR: PROACCESSREQUESTLIST_OR_CONDITION
+}
+
+input INAPPNOTIFICATIONLIST_INPUT_WHERE_PAYLOAD {
+  tenant_id: IN_APP_NOTIFICATION__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  vendor_id: IN_APP_NOTIFICATION__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  title: IN_APP_NOTIFICATION__FIELD__TITLE__COMMON_FILTER_CONDITION
+  body: IN_APP_NOTIFICATION__FIELD__BODY__COMMON_FILTER_CONDITION
+  read: IN_APP_NOTIFICATION__FIELD__READ__COMMON_FILTER_CONDITION
+  OR: INAPPNOTIFICATIONLIST_OR_CONDITION
+  created_at: IN_APP_NOTIFICATION__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+}
+
+type SubscriptionRequestList {
+}
+
+type Audit_Log_Raw_Model {
+}
+
+input Business_List_Upsert_Payload {
+  _connect: Business_List_Connect
+  tenant_id: String
+  _id: String
+  name: String
+  logo_url: String
+  legacy_id: String
+  created_at: String
+  owner_id: String
+  address: String
+  currency: String
+  archived_at: String
+}
+
+input TENANT_IN_APP_NOTIFICATION_WHERE_RELATION_FILTER_CONDITION {
+  vendor_id: IN_APP_NOTIFICATION__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  title: IN_APP_NOTIFICATION__FIELD__TITLE__COMMON_FILTER_CONDITION
+  body: IN_APP_NOTIFICATION__FIELD__BODY__COMMON_FILTER_CONDITION
+  read: IN_APP_NOTIFICATION__FIELD__READ__COMMON_FILTER_CONDITION
+  created_at: IN_APP_NOTIFICATION__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  tenant_id: IN_APP_NOTIFICATION__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input INAPPNOTIFICATIONLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input BUSINESS_LIST_COUNT_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+type Upsert_InAppNotificationList {
+}
+
+input Customer_Document_Update_Payload {
+  storage_url: String
+  uploaded_at: String
+  customer_id: String
+  business_id: String
+  vendor_id: String
+  tenant_id: String
+  file_name: String
+  mime_type: String
+}
+
+input Business_Create_Payload {
+  owner_id: String
+  address: String
+  logo_url: String
+  legacy_id: String
+  created_at: String
+  currency: String
+  archived_at: String
+  _connect: Business_List_Connect
+  tenant_id: String
+  _id: String
+  name: String
+}
+
+type Update_Payment {
+}
+
+input LOAN__FIELD__INSTALLMENT_TYPE__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input PAYMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+input TENANTBUSINESSLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+type Loan_Raw_Model {
+}
+
+input VENDORPROFILELIST_OR_CONDITION {
+  district: VENDOR_PROFILE__FIELD__DISTRICT__COMMON_FILTER_CONDITION
+  tenant_id: VENDOR_PROFILE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  onboarding_business_complete: VENDOR_PROFILE__FIELD__ONBOARDING_BUSINESS_COMPLETE__COMMON_FILTER_CONDITION
+  upazila: VENDOR_PROFILE__FIELD__UPAZILA__COMMON_FILTER_CONDITION
+  name: VENDOR_PROFILE__FIELD__NAME__COMMON_FILTER_CONDITION
+  pro_request_email: VENDOR_PROFILE__FIELD__PRO_REQUEST_EMAIL__COMMON_FILTER_CONDITION
+  created_at: VENDOR_PROFILE__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  updated_at: VENDOR_PROFILE__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  phone: VENDOR_PROFILE__FIELD__PHONE__COMMON_FILTER_CONDITION
+  photo_url: VENDOR_PROFILE__FIELD__PHOTO_URL__COMMON_FILTER_CONDITION
+  uid: VENDOR_PROFILE__FIELD__UID__COMMON_FILTER_CONDITION
+  country_code: VENDOR_PROFILE__FIELD__COUNTRY_CODE__COMMON_FILTER_CONDITION
+  subscription_plan: VENDOR_PROFILE__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  onboarding_profile_complete: VENDOR_PROFILE__FIELD__ONBOARDING_PROFILE_COMPLETE__COMMON_FILTER_CONDITION
+  role: VENDOR_PROFILE__FIELD__ROLE__COMMON_FILTER_CONDITION
+  staff_vendor_id: VENDOR_PROFILE__FIELD__STAFF_VENDOR_ID__COMMON_FILTER_CONDITION
+  language: VENDOR_PROFILE__FIELD__LANGUAGE__COMMON_FILTER_CONDITION
+  city: VENDOR_PROFILE__FIELD__CITY__COMMON_FILTER_CONDITION
+  shop_address: VENDOR_PROFILE__FIELD__SHOP_ADDRESS__COMMON_FILTER_CONDITION
+  staff_role: VENDOR_PROFILE__FIELD__STAFF_ROLE__COMMON_FILTER_CONDITION
+}
+
+type Payment {
+}
+
+input Loan_Relation_Disconnect_Payload {
+  business_id: String
+  customer_id: String
+  loan_installment_ids: [String]
+  payment_ids: [String]
+}
+
+input LOAN__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+type Update_Business {
+}
+
+input PAYMENT_BUSINESS_WHERE_RELATION_FILTER_CONDITION {
+  tenant_id: BUSINESS__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  name: BUSINESS__FIELD__NAME__COMMON_FILTER_CONDITION
+  address: BUSINESS__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  created_at: BUSINESS__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  archived_at: BUSINESS__FIELD__ARCHIVED_AT__COMMON_FILTER_CONDITION
+  legacy_id: BUSINESS__FIELD__LEGACY_ID__COMMON_FILTER_CONDITION
+  logo_url: BUSINESS__FIELD__LOGO_URL__COMMON_FILTER_CONDITION
+  currency: BUSINESS__FIELD__CURRENCY__COMMON_FILTER_CONDITION
+  owner_id: BUSINESS__FIELD__OWNER_ID__COMMON_FILTER_CONDITION
+}
+
+input PAYMENT__FIELD__PAYMENT_REFERENCE__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input TENANTFEATUREFLAGLIST_INPUT_SORT_PAYLOAD {
+  key: SORT_ENUM
+  tenant_id: SORT_ENUM
+}
+
+type vendor_profile_has_one_ownerProfile_connection {
+}
+
+input AUDITLOGLIST_KEY_CONDITION {
+  ne: String
+  in: [String]
+  eq: String
+}
+
+type AuditLog {
+}
+
+input In_App_Notification_Relation_Connect_Payload {
+  tenant_id: String
+}
+
+input CUSTOMER__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input AUDITLOGLIST_INPUT_WHERE_PAYLOAD {
+  action: AUDIT_LOG__FIELD__ACTION__COMMON_FILTER_CONDITION
+  vendor_id: AUDIT_LOG__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  OR: AUDITLOGLIST_OR_CONDITION
+  tenant_id: AUDIT_LOG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  by: AUDIT_LOG__FIELD__BY__COMMON_FILTER_CONDITION
+  at: AUDIT_LOG__FIELD__AT__COMMON_FILTER_CONDITION
+  payload: AUDIT_LOG__FIELD__PAYLOAD__COMMON_FILTER_CONDITION
+}
+
+type CustomerDocument {
+}
+
+input Customer_Create_Payload {
+  guarantor_name: String
+  name: String
+  _id: String
+  _connect: Customer_List_Connect
+  business_id: String
+  customer_uid: String
+  notes: String
+  total_outstanding: Float
+  customer_id: String
+  created_at: String
+  is_blacklisted: Boolean
+  guarantor_phone: String
+  tenant_id: String
+  active_loans_count: Int
+  phone: String
+  nid_number: String
+  updated_at: String
+  vendor_id: String
+  address: String
+}
+
+input CUSTOMER__FIELD__GUARANTOR_PHONE__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input BUSINESSLOANLIST_GROUPBY_INPUT {
+  value: String
+  key: String
+}
+
+input LOAN_CUSTOMER_WHERE_RELATION_FILTER_CONDITION {
+  address: CUSTOMER__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  tenant_id: CUSTOMER__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  active_loans_count: CUSTOMER__FIELD__ACTIVE_LOANS_COUNT__COMMON_FILTER_CONDITION
+  is_blacklisted: CUSTOMER__FIELD__IS_BLACKLISTED__COMMON_FILTER_CONDITION
+  created_at: CUSTOMER__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  updated_at: CUSTOMER__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  customer_id: CUSTOMER__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  phone: CUSTOMER__FIELD__PHONE__COMMON_FILTER_CONDITION
+  notes: CUSTOMER__FIELD__NOTES__COMMON_FILTER_CONDITION
+  total_outstanding: CUSTOMER__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  guarantor_phone: CUSTOMER__FIELD__GUARANTOR_PHONE__COMMON_FILTER_CONDITION
+  name: CUSTOMER__FIELD__NAME__COMMON_FILTER_CONDITION
+  nid_number: CUSTOMER__FIELD__NID_NUMBER__COMMON_FILTER_CONDITION
+  guarantor_name: CUSTOMER__FIELD__GUARANTOR_NAME__COMMON_FILTER_CONDITION
+  customer_uid: CUSTOMER__FIELD__CUSTOMER_UID__COMMON_FILTER_CONDITION
+}
+
+input LOAN_INSTALLMENT__FIELD__INSTALLMENT_STATUS__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+type customer_has_many_customerCustomerDocumentList_connections {
+}
+
+input VENDOR_PROFILE_CONNECTION_FILTER_CONDITION {
+  relation_type: RELATION_TYPE_ENUM
+  connection_type: CONNECTION_TYPE_ENUM
+  _id: String
+  to_model: vendor_profile_MODEL_TYPE_ENUM
+}
+
+input TENANT_LIST_COUNT_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+type ProAccessRequest {
+}
+
+input LOAN_INSTALLMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+type Upsert_LoanInstallmentList {
+}
+
+type tenant_has_many_tenantFeatureFlagList_connections {
+}
+
+input AUDITLOGLIST_INPUT_SORT_PAYLOAD {
+  payload: SORT_ENUM
+  action: SORT_ENUM
+  vendor_id: SORT_ENUM
+  tenant_id: SORT_ENUM
+  by: SORT_ENUM
+  at: SORT_ENUM
+}
+
+input LOAN_LIST_COUNT_GROUPBY_INPUT {
+  value: String
+  key: String
+}
+
+input PAYMENTLIST_INPUT_WHERE_PAYLOAD {
+  customer_name: PAYMENT__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  loan_id: PAYMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  tenant_id: PAYMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  installment_id: PAYMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  vendor_id: PAYMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  customer_id: PAYMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  payment_reference: PAYMENT__FIELD__PAYMENT_REFERENCE__COMMON_FILTER_CONDITION
+  amount: PAYMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  recorded_by: PAYMENT__FIELD__RECORDED_BY__COMMON_FILTER_CONDITION
+  business_id: PAYMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  notes: PAYMENT__FIELD__NOTES__COMMON_FILTER_CONDITION
+  payment_id: PAYMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  is_verified: PAYMENT__FIELD__IS_VERIFIED__COMMON_FILTER_CONDITION
+  recorded_at: PAYMENT__FIELD__RECORDED_AT__COMMON_FILTER_CONDITION
+  payment_method: PAYMENT__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  OR: PAYMENTLIST_OR_CONDITION
+}
+
+input In_App_Notification_List_Upsert_Payload {
+  read: Boolean
+  created_at: String
+  _id: String
+  _connect: In_App_Notification_List_Connect
+  tenant_id: String
+  vendor_id: String
+  title: String
+  body: String
+}
+
+type Create_SubscriptionRequest {
+}
+
+input Payment_List_Connect {
+  business_id: String
+  customer_id: String
+  loan_id: String
+}
+
+input LOAN__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+type payment_has_one_business_connection {
+}
+
+input BUSINESS_TENANT_WHERE_RELATION_FILTER_CONDITION {
+  owner_uid: TENANT__FIELD__OWNER_UID__COMMON_FILTER_CONDITION
+  legacy_vendor_id: TENANT__FIELD__LEGACY_VENDOR_ID__COMMON_FILTER_CONDITION
+  subscription_plan: TENANT__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  plan_expiry: TENANT__FIELD__PLAN_EXPIRY__COMMON_FILTER_CONDITION
+  name: TENANT__FIELD__NAME__COMMON_FILTER_CONDITION
+  phone: TENANT__FIELD__PHONE__COMMON_FILTER_CONDITION
+}
+
+input BUSINESSLOANLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+type tenant_has_many_tenantDeviceList_connections {
+}
+
+type Feature_Flag_Raw_Model {
+}
+
+input Tenant_Relation_Disconnect_Payload {
+  business_ids: [String]
+  in_app_notification_ids: [String]
+  device_ids: [String]
+  subscription_request_ids: [String]
+  feature_flag_ids: [String]
+  pro_access_request_ids: [String]
+  audit_log_ids: [String]
+  ownerProfile_id: String
+}
+
+input CUSTOMER_LIST_COUNT_KEY_CONDITION {
+  ne: String
+  in: [String]
+  eq: String
+}
+
+type tenant_has_many_tenantAuditLogList_connections {
+}
+
+type audit_log_has_one_tenant_connection {
+}
+
+type loan_has_many_loanPaymentList_connections {
+}
+
+input Loan_Installment_Update_Payload {
+  installment_status: String
+  payment_id: String
+  amount: Float
+  paid_at: String
+  installment_id: String
+  loan_id: String
+  due_date: String
+  vendor_id: String
+  business_id: String
+  tenant_id: String
+  installment_number: Int
+  paid_amount: Float
+}
+
+type QueryType {
+}
+
+type business_has_one_tenant_connection {
+}
+
+input LOAN_INSTALLMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input TENANTDEVICELIST_INPUT_WHERE_PAYLOAD {
+  push_token: DEVICE__FIELD__PUSH_TOKEN__COMMON_FILTER_CONDITION
+  device_key: DEVICE__FIELD__DEVICE_KEY__COMMON_FILTER_CONDITION
+  platform: DEVICE__FIELD__PLATFORM__COMMON_FILTER_CONDITION
+  last_seen_at: DEVICE__FIELD__LAST_SEEN_AT__COMMON_FILTER_CONDITION
+  vendor_uid: DEVICE__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  tenant_id: DEVICE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  label: DEVICE__FIELD__LABEL__COMMON_FILTER_CONDITION
+  app_version: DEVICE__FIELD__APP_VERSION__COMMON_FILTER_CONDITION
+  auth_uid: DEVICE__FIELD__AUTH_UID__COMMON_FILTER_CONDITION
+  OR: TENANTDEVICELIST_OR_CONDITION
+}
+
+type Subscription_Request_List_Connection {
+}
+
+type Delete_Device {
+}
+
+input Device_Create_Payload {
+  auth_uid: String
+  tenant_id: String
+  vendor_uid: String
+  platform: String
+  app_version: String
+  device_key: String
+  push_token: String
+  label: String
+  last_seen_at: String
+  _connect: Device_List_Connect
+  _id: String
+}
+
+input TENANTINAPPNOTIFICATIONLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input TENANTFEATUREFLAGLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input TENANT_LIST_COUNT_INPUT_WHERE_PAYLOAD {
+  OR: TENANT_LIST_COUNT_OR_CONDITION
+  subscription_plan: TENANT__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  plan_expiry: TENANT__FIELD__PLAN_EXPIRY__COMMON_FILTER_CONDITION
+  name: TENANT__FIELD__NAME__COMMON_FILTER_CONDITION
+  phone: TENANT__FIELD__PHONE__COMMON_FILTER_CONDITION
+  owner_uid: TENANT__FIELD__OWNER_UID__COMMON_FILTER_CONDITION
+  legacy_vendor_id: TENANT__FIELD__LEGACY_VENDOR_ID__COMMON_FILTER_CONDITION
+}
+
+input CUSTOMER_LIST_COUNT_OR_CONDITION {
+  name: CUSTOMER__FIELD__NAME__COMMON_FILTER_CONDITION
+  address: CUSTOMER__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  nid_number: CUSTOMER__FIELD__NID_NUMBER__COMMON_FILTER_CONDITION
+  guarantor_name: CUSTOMER__FIELD__GUARANTOR_NAME__COMMON_FILTER_CONDITION
+  updated_at: CUSTOMER__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  customer_uid: CUSTOMER__FIELD__CUSTOMER_UID__COMMON_FILTER_CONDITION
+  notes: CUSTOMER__FIELD__NOTES__COMMON_FILTER_CONDITION
+  guarantor_phone: CUSTOMER__FIELD__GUARANTOR_PHONE__COMMON_FILTER_CONDITION
+  is_blacklisted: CUSTOMER__FIELD__IS_BLACKLISTED__COMMON_FILTER_CONDITION
+  customer_id: CUSTOMER__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  phone: CUSTOMER__FIELD__PHONE__COMMON_FILTER_CONDITION
+  total_outstanding: CUSTOMER__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  tenant_id: CUSTOMER__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  active_loans_count: CUSTOMER__FIELD__ACTIVE_LOANS_COUNT__COMMON_FILTER_CONDITION
+  created_at: CUSTOMER__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+}
+
+type BusinessList {
+}
+
+input Loan_Installment_List_Connect {
+  loan_id: String
+}
+
+scalar JSON
+
+input BUSINESS__FIELD__NAME__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+input PAYMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION {
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+}
+
+input AUDIT_LOG_TENANT_WHERE_RELATION_FILTER_CONDITION {
+  name: TENANT__FIELD__NAME__COMMON_FILTER_CONDITION
+  phone: TENANT__FIELD__PHONE__COMMON_FILTER_CONDITION
+  owner_uid: TENANT__FIELD__OWNER_UID__COMMON_FILTER_CONDITION
+  legacy_vendor_id: TENANT__FIELD__LEGACY_VENDOR_ID__COMMON_FILTER_CONDITION
+  subscription_plan: TENANT__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  plan_expiry: TENANT__FIELD__PLAN_EXPIRY__COMMON_FILTER_CONDITION
+}
+
+input SUBSCRIPTION_REQUEST_WHERE_RELATION_FILTER_CONDITION {
+  tenant: SUBSCRIPTION_REQUEST_TENANT_WHERE_RELATION_FILTER_CONDITION
+}
+
+input PRO_ACCESS_REQUEST_LIST_COUNT_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input PAYMENT_LIST_COUNT_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input CUSTOMERLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input Loan_Installment_Create_Payload {
+  installment_status: String
+  payment_id: String
+  _id: String
+  loan_id: String
+  business_id: String
+  _connect: Loan_Installment_List_Connect
+  due_date: String
+  tenant_id: String
+  installment_number: Int
+  amount: Float
+  paid_amount: Float
+  paid_at: String
+  installment_id: String
+  vendor_id: String
+}
+
+input Subscription_Request_Relation_Disconnect_Payload {
+  tenant_id: String
+}
+
+input Payment_Create_Payload {
+  payment_id: String
+  amount: Float!
+  recorded_at: String
+  loan_id: String
+  customer_id: String
+  customer_name: String
+  vendor_id: String
+  recorded_by: String
+  _connect: Payment_List_Connect
+  tenant_id: String
+  notes: String
+  _id: String
+  business_id: String
+  payment_method: String
+  payment_reference: String
+  installment_id: String
+  is_verified: Boolean
+}
+
+type Update_SubscriptionRequest {
+}
+
+input IN_APP_NOTIFICATION__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input CUSTOMERLOANLIST_OR_CONDITION {
+  start_date: LOAN__FIELD__START_DATE__COMMON_FILTER_CONDITION
+  business_id: LOAN__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  installment_type: LOAN__FIELD__INSTALLMENT_TYPE__COMMON_FILTER_CONDITION
+  total_interest: LOAN__FIELD__TOTAL_INTEREST__COMMON_FILTER_CONDITION
+  customer_name: LOAN__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  interest_rate: LOAN__FIELD__INTEREST_RATE__COMMON_FILTER_CONDITION
+  loan_status: LOAN__FIELD__LOAN_STATUS__COMMON_FILTER_CONDITION
+  item_description: LOAN__FIELD__ITEM_DESCRIPTION__COMMON_FILTER_CONDITION
+  paid_installments: LOAN__FIELD__PAID_INSTALLMENTS__COMMON_FILTER_CONDITION
+  updated_at: LOAN__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  total_outstanding: LOAN__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  customer_phone: LOAN__FIELD__CUSTOMER_PHONE__COMMON_FILTER_CONDITION
+  created_by: LOAN__FIELD__CREATED_BY__COMMON_FILTER_CONDITION
+  grand_total: LOAN__FIELD__GRAND_TOTAL__COMMON_FILTER_CONDITION
+  first_payment_date: LOAN__FIELD__FIRST_PAYMENT_DATE__COMMON_FILTER_CONDITION
+  tenant_id: LOAN__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  item_name: LOAN__FIELD__ITEM_NAME__COMMON_FILTER_CONDITION
+  down_payment: LOAN__FIELD__DOWN_PAYMENT__COMMON_FILTER_CONDITION
+  loan_id: LOAN__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  next_due_date: LOAN__FIELD__NEXT_DUE_DATE__COMMON_FILTER_CONDITION
+  total_amount: LOAN__FIELD__TOTAL_AMOUNT__COMMON_FILTER_CONDITION
+  created_at: LOAN__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  notes: LOAN__FIELD__NOTES__COMMON_FILTER_CONDITION
+  closed_at: LOAN__FIELD__CLOSED_AT__COMMON_FILTER_CONDITION
+  customer_id: LOAN__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  vendor_id: LOAN__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  remaining_installments: LOAN__FIELD__REMAINING_INSTALLMENTS__COMMON_FILTER_CONDITION
+  total_paid: LOAN__FIELD__TOTAL_PAID__COMMON_FILTER_CONDITION
+  installment_count: LOAN__FIELD__INSTALLMENT_COUNT__COMMON_FILTER_CONDITION
+  interest_type: LOAN__FIELD__INTEREST_TYPE__COMMON_FILTER_CONDITION
+  installment_amount: LOAN__FIELD__INSTALLMENT_AMOUNT__COMMON_FILTER_CONDITION
+  principal_amount: LOAN__FIELD__PRINCIPAL_AMOUNT__COMMON_FILTER_CONDITION
+}
+
+input CUSTOMERLIST_GROUPBY_INPUT {
+  value: String
+  key: String
+}
+
+input PAYMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input CUSTOMERPAYMENTLIST_OR_CONDITION {
+  installment_id: PAYMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  amount: PAYMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  payment_reference: PAYMENT__FIELD__PAYMENT_REFERENCE__COMMON_FILTER_CONDITION
+  is_verified: PAYMENT__FIELD__IS_VERIFIED__COMMON_FILTER_CONDITION
+  loan_id: PAYMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  customer_id: PAYMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  payment_method: PAYMENT__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  notes: PAYMENT__FIELD__NOTES__COMMON_FILTER_CONDITION
+  vendor_id: PAYMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  business_id: PAYMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  payment_id: PAYMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  tenant_id: PAYMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  customer_name: PAYMENT__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  recorded_by: PAYMENT__FIELD__RECORDED_BY__COMMON_FILTER_CONDITION
+  recorded_at: PAYMENT__FIELD__RECORDED_AT__COMMON_FILTER_CONDITION
+}
+
+input TENANTAUDITLOGLIST_OR_CONDITION {
+  vendor_id: AUDIT_LOG__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  tenant_id: AUDIT_LOG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  by: AUDIT_LOG__FIELD__BY__COMMON_FILTER_CONDITION
+  at: AUDIT_LOG__FIELD__AT__COMMON_FILTER_CONDITION
+  payload: AUDIT_LOG__FIELD__PAYLOAD__COMMON_FILTER_CONDITION
+  action: AUDIT_LOG__FIELD__ACTION__COMMON_FILTER_CONDITION
+}
+
+input DEVICE__FIELD__PUSH_TOKEN__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+type In_App_Notification_Raw_Model {
+}
+
+type Customer_List_Aggregate {
+}
+
+type Subscription_Request_List_Aggregate_Group_By {
+}
+
+input IN_APP_NOTIFICATION_LIST_COUNT_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input REPORT_CACHE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input LOAN__FIELD__ITEM_DESCRIPTION__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input TENANTFEATUREFLAGLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input TENANTBUSINESSLIST_INPUT_SORT_PAYLOAD {
+  tenant_id: SORT_ENUM
+  address: SORT_ENUM
+  logo_url: SORT_ENUM
+  created_at: SORT_ENUM
+  archived_at: SORT_ENUM
+  legacy_id: SORT_ENUM
+  currency: SORT_ENUM
+  name: SORT_ENUM
+  owner_id: SORT_ENUM
+}
+
+input CUSTOMERLOANLIST_INPUT_WHERE_PAYLOAD {
+  interest_rate: LOAN__FIELD__INTEREST_RATE__COMMON_FILTER_CONDITION
+  customer_phone: LOAN__FIELD__CUSTOMER_PHONE__COMMON_FILTER_CONDITION
+  installment_type: LOAN__FIELD__INSTALLMENT_TYPE__COMMON_FILTER_CONDITION
+  total_interest: LOAN__FIELD__TOTAL_INTEREST__COMMON_FILTER_CONDITION
+  total_outstanding: LOAN__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  updated_at: LOAN__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  start_date: LOAN__FIELD__START_DATE__COMMON_FILTER_CONDITION
+  installment_amount: LOAN__FIELD__INSTALLMENT_AMOUNT__COMMON_FILTER_CONDITION
+  item_name: LOAN__FIELD__ITEM_NAME__COMMON_FILTER_CONDITION
+  item_description: LOAN__FIELD__ITEM_DESCRIPTION__COMMON_FILTER_CONDITION
+  total_paid: LOAN__FIELD__TOTAL_PAID__COMMON_FILTER_CONDITION
+  closed_at: LOAN__FIELD__CLOSED_AT__COMMON_FILTER_CONDITION
+  customer_name: LOAN__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  first_payment_date: LOAN__FIELD__FIRST_PAYMENT_DATE__COMMON_FILTER_CONDITION
+  remaining_installments: LOAN__FIELD__REMAINING_INSTALLMENTS__COMMON_FILTER_CONDITION
+  loan_id: LOAN__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  principal_amount: LOAN__FIELD__PRINCIPAL_AMOUNT__COMMON_FILTER_CONDITION
+  down_payment: LOAN__FIELD__DOWN_PAYMENT__COMMON_FILTER_CONDITION
+  tenant_id: LOAN__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  vendor_id: LOAN__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  interest_type: LOAN__FIELD__INTEREST_TYPE__COMMON_FILTER_CONDITION
+  created_at: LOAN__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  loan_status: LOAN__FIELD__LOAN_STATUS__COMMON_FILTER_CONDITION
+  OR: CUSTOMERLOANLIST_OR_CONDITION
+  notes: LOAN__FIELD__NOTES__COMMON_FILTER_CONDITION
+  customer_id: LOAN__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  paid_installments: LOAN__FIELD__PAID_INSTALLMENTS__COMMON_FILTER_CONDITION
+  installment_count: LOAN__FIELD__INSTALLMENT_COUNT__COMMON_FILTER_CONDITION
+  business_id: LOAN__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  grand_total: LOAN__FIELD__GRAND_TOTAL__COMMON_FILTER_CONDITION
+  total_amount: LOAN__FIELD__TOTAL_AMOUNT__COMMON_FILTER_CONDITION
+  next_due_date: LOAN__FIELD__NEXT_DUE_DATE__COMMON_FILTER_CONDITION
+  created_by: LOAN__FIELD__CREATED_BY__COMMON_FILTER_CONDITION
+}
+
+input VENDOR_PROFILE_LIST_COUNT_INPUT_SORT_PAYLOAD {
+  tenant_id: SORT_ENUM
+  country_code: SORT_ENUM
+  photo_url: SORT_ENUM
+  language: SORT_ENUM
+  name: SORT_ENUM
+  district: SORT_ENUM
+  staff_vendor_id: SORT_ENUM
+  city: SORT_ENUM
+  pro_request_email: SORT_ENUM
+  created_at: SORT_ENUM
+  upazila: SORT_ENUM
+  staff_role: SORT_ENUM
+  uid: SORT_ENUM
+  phone: SORT_ENUM
+  shop_address: SORT_ENUM
+  updated_at: SORT_ENUM
+}
+
+input TENANTLIST_OR_CONDITION {
+  plan_expiry: TENANT__FIELD__PLAN_EXPIRY__COMMON_FILTER_CONDITION
+  name: TENANT__FIELD__NAME__COMMON_FILTER_CONDITION
+  phone: TENANT__FIELD__PHONE__COMMON_FILTER_CONDITION
+  owner_uid: TENANT__FIELD__OWNER_UID__COMMON_FILTER_CONDITION
+  legacy_vendor_id: TENANT__FIELD__LEGACY_VENDOR_ID__COMMON_FILTER_CONDITION
+  subscription_plan: TENANT__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+}
+
+input LOAN_LIST_COUNT_INPUT_SORT_PAYLOAD {
+  customer_phone: SORT_ENUM
+  tenant_id: SORT_ENUM
+  total_paid: SORT_ENUM
+  down_payment: SORT_ENUM
+  created_at: SORT_ENUM
+  customer_name: SORT_ENUM
+  paid_installments: SORT_ENUM
+  installment_amount: SORT_ENUM
+  start_date: SORT_ENUM
+  loan_id: SORT_ENUM
+  total_amount: SORT_ENUM
+  updated_at: SORT_ENUM
+  first_payment_date: SORT_ENUM
+  customer_id: SORT_ENUM
+  vendor_id: SORT_ENUM
+  principal_amount: SORT_ENUM
+  closed_at: SORT_ENUM
+  installment_count: SORT_ENUM
+  next_due_date: SORT_ENUM
+  total_interest: SORT_ENUM
+  created_by: SORT_ENUM
+  total_outstanding: SORT_ENUM
+  item_name: SORT_ENUM
+  interest_rate: SORT_ENUM
+  remaining_installments: SORT_ENUM
+  grand_total: SORT_ENUM
+  item_description: SORT_ENUM
+  business_id: SORT_ENUM
+  notes: SORT_ENUM
+}
+
+input CUSTOMER__FIELD__PHONE__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input LOANPAYMENTLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+type Payment_List_Connection {
+}
+
+input CUSTOMERLIST_INPUT_WHERE_PAYLOAD {
+  phone: CUSTOMER__FIELD__PHONE__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  is_blacklisted: CUSTOMER__FIELD__IS_BLACKLISTED__COMMON_FILTER_CONDITION
+  guarantor_phone: CUSTOMER__FIELD__GUARANTOR_PHONE__COMMON_FILTER_CONDITION
+  name: CUSTOMER__FIELD__NAME__COMMON_FILTER_CONDITION
+  customer_uid: CUSTOMER__FIELD__CUSTOMER_UID__COMMON_FILTER_CONDITION
+  address: CUSTOMER__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  OR: CUSTOMERLIST_OR_CONDITION
+  customer_id: CUSTOMER__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  total_outstanding: CUSTOMER__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  notes: CUSTOMER__FIELD__NOTES__COMMON_FILTER_CONDITION
+  active_loans_count: CUSTOMER__FIELD__ACTIVE_LOANS_COUNT__COMMON_FILTER_CONDITION
+  updated_at: CUSTOMER__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  guarantor_name: CUSTOMER__FIELD__GUARANTOR_NAME__COMMON_FILTER_CONDITION
+  tenant_id: CUSTOMER__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  created_at: CUSTOMER__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  nid_number: CUSTOMER__FIELD__NID_NUMBER__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+}
+
+input Vendor_Profile_List_Upsert_Payload {
+  onboarding_profile_complete: Boolean
+  city: String
+  updated_at: String
+  upazila: String
+  staff_role: String
+  country_code: String
+  uid: String
+  tenant_id: String
+  pro_request_email: String
+  staff_vendor_id: String
+  subscription_plan: String
+  district: String
+  role: String
+  shop_address: String
+  name: String
+  onboarding_business_complete: Boolean
+  language: String
+  _id: String
+  photo_url: String
+  _connect: Vendor_Profile_List_Connect
+  created_at: String
+  phone: String
+}
+
+type Upsert_VendorProfileList {
+}
+
+type Business_Raw_Model {
+}
+
+enum subscription_request_MODEL_TYPE_ENUM {
+  tenant
+}
+
+input VENDOR_PROFILE__FIELD__UID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input BUSINESSLIST_OR_CONDITION {
+  created_at: BUSINESS__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  archived_at: BUSINESS__FIELD__ARCHIVED_AT__COMMON_FILTER_CONDITION
+  legacy_id: BUSINESS__FIELD__LEGACY_ID__COMMON_FILTER_CONDITION
+  name: BUSINESS__FIELD__NAME__COMMON_FILTER_CONDITION
+  address: BUSINESS__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  logo_url: BUSINESS__FIELD__LOGO_URL__COMMON_FILTER_CONDITION
+  currency: BUSINESS__FIELD__CURRENCY__COMMON_FILTER_CONDITION
+  owner_id: BUSINESS__FIELD__OWNER_ID__COMMON_FILTER_CONDITION
+  tenant_id: BUSINESS__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input DEVICELIST_INPUT_SORT_PAYLOAD {
+  auth_uid: SORT_ENUM
+  device_key: SORT_ENUM
+  platform: SORT_ENUM
+  push_token: SORT_ENUM
+  app_version: SORT_ENUM
+  tenant_id: SORT_ENUM
+  vendor_uid: SORT_ENUM
+  label: SORT_ENUM
+  last_seen_at: SORT_ENUM
+}
+
+input Feature_Flag_Update_Payload {
+  enabled: Boolean
+  tenant_id: String
+  key: String
+}
+
+input PRO_ACCESS_REQUEST_TENANT_WHERE_RELATION_FILTER_CONDITION {
+  owner_uid: TENANT__FIELD__OWNER_UID__COMMON_FILTER_CONDITION
+  legacy_vendor_id: TENANT__FIELD__LEGACY_VENDOR_ID__COMMON_FILTER_CONDITION
+  subscription_plan: TENANT__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  plan_expiry: TENANT__FIELD__PLAN_EXPIRY__COMMON_FILTER_CONDITION
+  name: TENANT__FIELD__NAME__COMMON_FILTER_CONDITION
+  phone: TENANT__FIELD__PHONE__COMMON_FILTER_CONDITION
+}
+
+input TENANTBUSINESSLIST_INPUT_WHERE_PAYLOAD {
+  logo_url: BUSINESS__FIELD__LOGO_URL__COMMON_FILTER_CONDITION
+  currency: BUSINESS__FIELD__CURRENCY__COMMON_FILTER_CONDITION
+  created_at: BUSINESS__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  archived_at: BUSINESS__FIELD__ARCHIVED_AT__COMMON_FILTER_CONDITION
+  legacy_id: BUSINESS__FIELD__LEGACY_ID__COMMON_FILTER_CONDITION
+  address: BUSINESS__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  owner_id: BUSINESS__FIELD__OWNER_ID__COMMON_FILTER_CONDITION
+  tenant_id: BUSINESS__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  OR: TENANTBUSINESSLIST_OR_CONDITION
+  name: BUSINESS__FIELD__NAME__COMMON_FILTER_CONDITION
+}
+
+input CUSTOMERCUSTOMERDOCUMENTLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input VENDOR_PROFILE_LIST_COUNT_INPUT_WHERE_PAYLOAD {
+  district: VENDOR_PROFILE__FIELD__DISTRICT__COMMON_FILTER_CONDITION
+  city: VENDOR_PROFILE__FIELD__CITY__COMMON_FILTER_CONDITION
+  onboarding_business_complete: VENDOR_PROFILE__FIELD__ONBOARDING_BUSINESS_COMPLETE__COMMON_FILTER_CONDITION
+  upazila: VENDOR_PROFILE__FIELD__UPAZILA__COMMON_FILTER_CONDITION
+  OR: VENDOR_PROFILE_LIST_COUNT_OR_CONDITION
+  updated_at: VENDOR_PROFILE__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  staff_vendor_id: VENDOR_PROFILE__FIELD__STAFF_VENDOR_ID__COMMON_FILTER_CONDITION
+  tenant_id: VENDOR_PROFILE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  name: VENDOR_PROFILE__FIELD__NAME__COMMON_FILTER_CONDITION
+  shop_address: VENDOR_PROFILE__FIELD__SHOP_ADDRESS__COMMON_FILTER_CONDITION
+  role: VENDOR_PROFILE__FIELD__ROLE__COMMON_FILTER_CONDITION
+  onboarding_profile_complete: VENDOR_PROFILE__FIELD__ONBOARDING_PROFILE_COMPLETE__COMMON_FILTER_CONDITION
+  phone: VENDOR_PROFILE__FIELD__PHONE__COMMON_FILTER_CONDITION
+  staff_role: VENDOR_PROFILE__FIELD__STAFF_ROLE__COMMON_FILTER_CONDITION
+  subscription_plan: VENDOR_PROFILE__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  photo_url: VENDOR_PROFILE__FIELD__PHOTO_URL__COMMON_FILTER_CONDITION
+  pro_request_email: VENDOR_PROFILE__FIELD__PRO_REQUEST_EMAIL__COMMON_FILTER_CONDITION
+  language: VENDOR_PROFILE__FIELD__LANGUAGE__COMMON_FILTER_CONDITION
+  country_code: VENDOR_PROFILE__FIELD__COUNTRY_CODE__COMMON_FILTER_CONDITION
+  created_at: VENDOR_PROFILE__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  uid: VENDOR_PROFILE__FIELD__UID__COMMON_FILTER_CONDITION
+}
+
+type Vendor_Profile_List_Connection {
+}
+
+type In_App_Notification_List_Connection {
+}
+
+type Delete_ProAccessRequest {
+}
+
+input Report_Cache_Update_Payload {
+  updated_at: String
+  business_id: String
+  tenant_id: String
+  monthly_collected: Float
+  overdue_amount: Float
+}
+
+input BUSINESS__FIELD__ADDRESS__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input TENANTAUDITLOGLIST_INPUT_WHERE_PAYLOAD {
+  at: AUDIT_LOG__FIELD__AT__COMMON_FILTER_CONDITION
+  payload: AUDIT_LOG__FIELD__PAYLOAD__COMMON_FILTER_CONDITION
+  action: AUDIT_LOG__FIELD__ACTION__COMMON_FILTER_CONDITION
+  vendor_id: AUDIT_LOG__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  tenant_id: AUDIT_LOG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  by: AUDIT_LOG__FIELD__BY__COMMON_FILTER_CONDITION
+  OR: TENANTAUDITLOGLIST_OR_CONDITION
+}
+
+input LOAN_INSTALLMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION {
+  ne: Float
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  eq: Float
+}
+
+input DEVICE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input FEATURE_FLAG_LIST_COUNT_OR_CONDITION {
+  key: FEATURE_FLAG__FIELD__KEY__COMMON_FILTER_CONDITION
+  enabled: FEATURE_FLAG__FIELD__ENABLED__COMMON_FILTER_CONDITION
+  tenant_id: FEATURE_FLAG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input Subscription_Request_List_Connect {
+  tenant_id: String
+}
+
+input BUSINESS__FIELD__ARCHIVED_AT__COMMON_FILTER_CONDITION {
+  between: [String]
+  eq: String
+  ne: String
+  before: String
+  after: String
+}
+
+input BUSINESSCUSTOMERLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+type LoanInstallment {
+}
+
+input DEVICELIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input FEATUREFLAGLIST_OR_CONDITION {
+  enabled: FEATURE_FLAG__FIELD__ENABLED__COMMON_FILTER_CONDITION
+  tenant_id: FEATURE_FLAG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  key: FEATURE_FLAG__FIELD__KEY__COMMON_FILTER_CONDITION
+}
+
+input Feature_Flag_List_Connect {
+  tenant_id: String
+}
+
+input SUBSCRIPTION_REQUEST_LIST_COUNT_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input TENANT__FIELD__LEGACY_VENDOR_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input LOAN_BUSINESS_WHERE_RELATION_FILTER_CONDITION {
+  archived_at: BUSINESS__FIELD__ARCHIVED_AT__COMMON_FILTER_CONDITION
+  legacy_id: BUSINESS__FIELD__LEGACY_ID__COMMON_FILTER_CONDITION
+  address: BUSINESS__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  logo_url: BUSINESS__FIELD__LOGO_URL__COMMON_FILTER_CONDITION
+  currency: BUSINESS__FIELD__CURRENCY__COMMON_FILTER_CONDITION
+  owner_id: BUSINESS__FIELD__OWNER_ID__COMMON_FILTER_CONDITION
+  tenant_id: BUSINESS__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  created_at: BUSINESS__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  name: BUSINESS__FIELD__NAME__COMMON_FILTER_CONDITION
+}
+
+input DEVICE__FIELD__AUTH_UID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input SUBSCRIPTION_REQUEST__FIELD__AMOUNT_BDT__COMMON_FILTER_CONDITION {
+  eq: Float
+  ne: Float
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+}
+
+type FeatureFlag {
+}
+
+type Upsert_SubscriptionRequestList {
+}
+
+enum pro_access_request_MODEL_TYPE_ENUM {
+  tenant
+}
+
+input AUDIT_LOG__FIELD__PAYLOAD__COMMON_FILTER_CONDITION {
+  contains: String
+}
+
+input TENANTSUBSCRIPTIONREQUESTLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input PRO_ACCESS_REQUEST_LIST_COUNT_OR_CONDITION {
+  updated_at: PRO_ACCESS_REQUEST__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  vendor_uid: PRO_ACCESS_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  email: PRO_ACCESS_REQUEST__FIELD__EMAIL__COMMON_FILTER_CONDITION
+  country_code: PRO_ACCESS_REQUEST__FIELD__COUNTRY_CODE__COMMON_FILTER_CONDITION
+  city: PRO_ACCESS_REQUEST__FIELD__CITY__COMMON_FILTER_CONDITION
+  request_status: PRO_ACCESS_REQUEST__FIELD__REQUEST_STATUS__COMMON_FILTER_CONDITION
+  source: PRO_ACCESS_REQUEST__FIELD__SOURCE__COMMON_FILTER_CONDITION
+  created_at: PRO_ACCESS_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+}
+
+input VENDOR_PROFILE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input LOANLIST_OR_CONDITION {
+  vendor_id: LOAN__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  total_interest: LOAN__FIELD__TOTAL_INTEREST__COMMON_FILTER_CONDITION
+  created_by: LOAN__FIELD__CREATED_BY__COMMON_FILTER_CONDITION
+  notes: LOAN__FIELD__NOTES__COMMON_FILTER_CONDITION
+  interest_rate: LOAN__FIELD__INTEREST_RATE__COMMON_FILTER_CONDITION
+  start_date: LOAN__FIELD__START_DATE__COMMON_FILTER_CONDITION
+  loan_id: LOAN__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  remaining_installments: LOAN__FIELD__REMAINING_INSTALLMENTS__COMMON_FILTER_CONDITION
+  total_amount: LOAN__FIELD__TOTAL_AMOUNT__COMMON_FILTER_CONDITION
+  interest_type: LOAN__FIELD__INTEREST_TYPE__COMMON_FILTER_CONDITION
+  total_paid: LOAN__FIELD__TOTAL_PAID__COMMON_FILTER_CONDITION
+  total_outstanding: LOAN__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  business_id: LOAN__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  principal_amount: LOAN__FIELD__PRINCIPAL_AMOUNT__COMMON_FILTER_CONDITION
+  loan_status: LOAN__FIELD__LOAN_STATUS__COMMON_FILTER_CONDITION
+  updated_at: LOAN__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  customer_phone: LOAN__FIELD__CUSTOMER_PHONE__COMMON_FILTER_CONDITION
+  installment_type: LOAN__FIELD__INSTALLMENT_TYPE__COMMON_FILTER_CONDITION
+  installment_count: LOAN__FIELD__INSTALLMENT_COUNT__COMMON_FILTER_CONDITION
+  created_at: LOAN__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  item_name: LOAN__FIELD__ITEM_NAME__COMMON_FILTER_CONDITION
+  grand_total: LOAN__FIELD__GRAND_TOTAL__COMMON_FILTER_CONDITION
+  first_payment_date: LOAN__FIELD__FIRST_PAYMENT_DATE__COMMON_FILTER_CONDITION
+  customer_id: LOAN__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  item_description: LOAN__FIELD__ITEM_DESCRIPTION__COMMON_FILTER_CONDITION
+  installment_amount: LOAN__FIELD__INSTALLMENT_AMOUNT__COMMON_FILTER_CONDITION
+  closed_at: LOAN__FIELD__CLOSED_AT__COMMON_FILTER_CONDITION
+  customer_name: LOAN__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  down_payment: LOAN__FIELD__DOWN_PAYMENT__COMMON_FILTER_CONDITION
+  next_due_date: LOAN__FIELD__NEXT_DUE_DATE__COMMON_FILTER_CONDITION
+  paid_installments: LOAN__FIELD__PAID_INSTALLMENTS__COMMON_FILTER_CONDITION
+  tenant_id: LOAN__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input TENANTLIST_INPUT_WHERE_PAYLOAD {
+  name: TENANT__FIELD__NAME__COMMON_FILTER_CONDITION
+  OR: TENANTLIST_OR_CONDITION
+  phone: TENANT__FIELD__PHONE__COMMON_FILTER_CONDITION
+  owner_uid: TENANT__FIELD__OWNER_UID__COMMON_FILTER_CONDITION
+  legacy_vendor_id: TENANT__FIELD__LEGACY_VENDOR_ID__COMMON_FILTER_CONDITION
+  subscription_plan: TENANT__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  plan_expiry: TENANT__FIELD__PLAN_EXPIRY__COMMON_FILTER_CONDITION
+}
+
+input BUSINESSLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+enum CONNECTION_TYPE_ENUM {
+  forward
+  backward
+}
+
+input CUSTOMER__FIELD__ACTIVE_LOANS_COUNT__COMMON_FILTER_CONDITION {
+  in: [Int]
+  lt: Int
+  ne: Int
+  gt: Int
+  gte: Int
+  eq: Int
+  not_in: [Int]
+  lte: Int
+  between: [Int]
+}
+
+input TENANTPROACCESSREQUESTLIST_GROUPBY_INPUT {
+  value: String
+  key: String
+}
+
+type VendorProfile {
+}
+
+input DEVICELIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input Pro_Access_Request_Relation_Disconnect_Payload {
+  tenant_id: String
+}
+
+input Customer_List_Connect {
+  customer_document_ids: [String]
+  payment_ids: [String]
+  business_id: String
+  loan_ids: [String]
+}
+
+input Feature_Flag_Create_Payload {
+  _id: String
+  _connect: Feature_Flag_List_Connect
+  key: String
+  enabled: Boolean
+  tenant_id: String
+}
+
+scalar Boolean
+
+enum RELATION_TYPE_ENUM {
+  has_one
+  has_many
+}
+
+type Loan_Installment_List_Aggregate_Group_By {
+}
+
+input VENDORPROFILELIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input PROACCESSREQUESTLIST_GROUPBY_INPUT {
+  value: String
+  key: String
+}
+
+input Customer_Relation_Connect_Payload {
+  business_id: String
+  loan_ids: [String]
+  customer_document_ids: [String]
+  payment_ids: [String]
+}
+
+input Loan_Installment_List_Upsert_Payload {
+  installment_number: Int
+  paid_amount: Float
+  paid_at: String
+  _connect: Loan_Installment_List_Connect
+  installment_id: String
+  installment_status: String
+  tenant_id: String
+  amount: Float
+  vendor_id: String
+  due_date: String
+  payment_id: String
+  _id: String
+  loan_id: String
+  business_id: String
+}
+
+type Delete_VendorProfile {
+}
+
+input CUSTOMERPAYMENTLIST_GROUPBY_INPUT {
+  value: String
+  key: String
+}
+
+input DEVICE__FIELD__PLATFORM__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input CUSTOMER_LIST_COUNT_INPUT_SORT_PAYLOAD {
+  tenant_id: SORT_ENUM
+  total_outstanding: SORT_ENUM
+  notes: SORT_ENUM
+  name: SORT_ENUM
+  business_id: SORT_ENUM
+  customer_uid: SORT_ENUM
+  nid_number: SORT_ENUM
+  customer_id: SORT_ENUM
+  guarantor_phone: SORT_ENUM
+  created_at: SORT_ENUM
+  phone: SORT_ENUM
+  address: SORT_ENUM
+  guarantor_name: SORT_ENUM
+  vendor_id: SORT_ENUM
+  updated_at: SORT_ENUM
+  active_loans_count: SORT_ENUM
+}
+
+input FEATURE_FLAG_LIST_COUNT_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+type Upsert_ProAccessRequestList {
+}
+
+type Update_InAppNotification {
+}
+
+type Update_ReportCache {
+}
+
+input SUBSCRIPTION_REQUEST__FIELD__PLAN__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+type Vendor_Profile_Raw_Model {
+}
+
+type LoanInstallmentList {
+}
+
+input BUSINESSLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+type DeviceList {
+}
+
+input Report_Cache_Create_Payload {
+  monthly_collected: Float
+  overdue_amount: Float
+  updated_at: String
+  _id: String
+  business_id: String
+  tenant_id: String
+}
+
+type Delete_FeatureFlag {
+}
+
+input Audit_Log_Relation_Disconnect_Payload {
+  tenant_id: String
+}
+
+input PRO_ACCESS_REQUEST__FIELD__REQUEST_STATUS__COMMON_FILTER_CONDITION {
+  in: [String]
+  eq: String
+  ne: String
+}
+
+input LOANPAYMENTLIST_INPUT_SORT_PAYLOAD {
+  tenant_id: SORT_ENUM
+  notes: SORT_ENUM
+  business_id: SORT_ENUM
+  customer_name: SORT_ENUM
+  vendor_id: SORT_ENUM
+  amount: SORT_ENUM
+  recorded_by: SORT_ENUM
+  recorded_at: SORT_ENUM
+  installment_id: SORT_ENUM
+  customer_id: SORT_ENUM
+  payment_reference: SORT_ENUM
+  payment_id: SORT_ENUM
+  loan_id: SORT_ENUM
+}
+
+input REPORT_CACHE__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+type CustomerDocumentList {
+}
+
+input INAPPNOTIFICATIONLIST_INPUT_SORT_PAYLOAD {
+  tenant_id: SORT_ENUM
+  vendor_id: SORT_ENUM
+  title: SORT_ENUM
+  body: SORT_ENUM
+  created_at: SORT_ENUM
+}
+
+input CUSTOMERLOANLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+type tenant_has_one_ownerProfile_connection {
+}
+
+type Pro_Access_Request_List_Connection {
+}
+
+input PAYMENT_LIST_COUNT_OR_CONDITION {
+  notes: PAYMENT__FIELD__NOTES__COMMON_FILTER_CONDITION
+  recorded_at: PAYMENT__FIELD__RECORDED_AT__COMMON_FILTER_CONDITION
+  installment_id: PAYMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  payment_reference: PAYMENT__FIELD__PAYMENT_REFERENCE__COMMON_FILTER_CONDITION
+  customer_id: PAYMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  customer_name: PAYMENT__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  amount: PAYMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  recorded_by: PAYMENT__FIELD__RECORDED_BY__COMMON_FILTER_CONDITION
+  business_id: PAYMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  payment_id: PAYMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  tenant_id: PAYMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  loan_id: PAYMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  vendor_id: PAYMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  payment_method: PAYMENT__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  is_verified: PAYMENT__FIELD__IS_VERIFIED__COMMON_FILTER_CONDITION
+}
+
+type FeatureFlagList {
+}
+
+type Delete_InAppNotification {
+}
+
+input LOAN__FIELD__NOTES__COMMON_FILTER_CONDITION {
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+}
+
+input LOAN__FIELD__LOAN_ID__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input PRO_ACCESS_REQUEST__FIELD__CITY__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+enum feature_flag_MODEL_TYPE_ENUM {
+  tenant
+}
+
+type Loan_Installment_Raw_Model {
+}
+
+type LoanList {
+}
+
+input AUDIT_LOG_LIST_COUNT_OR_CONDITION {
+  by: AUDIT_LOG__FIELD__BY__COMMON_FILTER_CONDITION
+  at: AUDIT_LOG__FIELD__AT__COMMON_FILTER_CONDITION
+  payload: AUDIT_LOG__FIELD__PAYLOAD__COMMON_FILTER_CONDITION
+  action: AUDIT_LOG__FIELD__ACTION__COMMON_FILTER_CONDITION
+  vendor_id: AUDIT_LOG__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  tenant_id: AUDIT_LOG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input DEVICE_LIST_COUNT_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input LOAN__FIELD__CREATED_BY__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input TENANTINAPPNOTIFICATIONLIST_INPUT_WHERE_PAYLOAD {
+  read: IN_APP_NOTIFICATION__FIELD__READ__COMMON_FILTER_CONDITION
+  created_at: IN_APP_NOTIFICATION__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  OR: TENANTINAPPNOTIFICATIONLIST_OR_CONDITION
+  tenant_id: IN_APP_NOTIFICATION__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  vendor_id: IN_APP_NOTIFICATION__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  title: IN_APP_NOTIFICATION__FIELD__TITLE__COMMON_FILTER_CONDITION
+  body: IN_APP_NOTIFICATION__FIELD__BODY__COMMON_FILTER_CONDITION
+}
+
+input LOAN_INSTALLMENT__FIELD__DUE_DATE__COMMON_FILTER_CONDITION {
+  before: String
+  after: String
+  between: [String]
+  eq: String
+  ne: String
+}
+
+input FEATURE_FLAG_LIST_COUNT_INPUT_SORT_PAYLOAD {
+  key: SORT_ENUM
+  tenant_id: SORT_ENUM
+}
+
+input Pro_Access_Request_List_Upsert_Payload {
+  vendor_uid: String
+  country_code: String
+  created_at: String
+  _connect: Pro_Access_Request_List_Connect
+  email: String
+  city: String
+  _id: String
+  request_status: String
+  source: String
+  updated_at: String
+}
+
+input Business_List_Connect {
+  tenant_id: String
+  customer_ids: [String]
+  loan_ids: [String]
+  payment_ids: [String]
+}
+
+input Customer_List_Upsert_Payload {
+  vendor_id: String
+  customer_uid: String
+  address: String
+  guarantor_name: String
+  active_loans_count: Int
+  name: String
+  _id: String
+  _connect: Customer_List_Connect
+  updated_at: String
+  is_blacklisted: Boolean
+  customer_id: String
+  phone: String
+  nid_number: String
+  notes: String
+  total_outstanding: Float
+  business_id: String
+  guarantor_phone: String
+  created_at: String
+  tenant_id: String
+}
+
+type Payment_Raw_Model {
+}
+
+input CUSTOMERCUSTOMERDOCUMENTLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input VENDOR_PROFILE_WHERE_RELATION_FILTER_CONDITION {
+  tenant: VENDOR_PROFILE_TENANT_WHERE_RELATION_FILTER_CONDITION
+}
+
+input CUSTOMER__FIELD__TENANT_ID__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input BUSINESSLOANLIST_INPUT_SORT_PAYLOAD {
+  customer_name: SORT_ENUM
+  remaining_installments: SORT_ENUM
+  customer_id: SORT_ENUM
+  next_due_date: SORT_ENUM
+  created_by: SORT_ENUM
+  installment_count: SORT_ENUM
+  start_date: SORT_ENUM
+  loan_id: SORT_ENUM
+  tenant_id: SORT_ENUM
+  business_id: SORT_ENUM
+  total_amount: SORT_ENUM
+  notes: SORT_ENUM
+  paid_installments: SORT_ENUM
+  customer_phone: SORT_ENUM
+  total_interest: SORT_ENUM
+  interest_rate: SORT_ENUM
+  closed_at: SORT_ENUM
+  installment_amount: SORT_ENUM
+  total_outstanding: SORT_ENUM
+  item_name: SORT_ENUM
+  first_payment_date: SORT_ENUM
+  vendor_id: SORT_ENUM
+  updated_at: SORT_ENUM
+  grand_total: SORT_ENUM
+  principal_amount: SORT_ENUM
+  item_description: SORT_ENUM
+  down_payment: SORT_ENUM
+  created_at: SORT_ENUM
+  total_paid: SORT_ENUM
+}
+
+input LOANLOANINSTALLMENTLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+type Report_Cache_Raw_Model {
+}
+
+type Delete_Loan {
+}
+
+input LOAN_INSTALLMENT__FIELD__INSTALLMENT_NUMBER__COMMON_FILTER_CONDITION {
+  eq: Int
+  ne: Int
+  lt: Int
+  in: [Int]
+  not_in: [Int]
+  lte: Int
+  gte: Int
+  gt: Int
+  between: [Int]
+}
+
+input LOANPAYMENTLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+type device_has_one_tenant_connection {
+}
+
+input PAYMENTLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+type Upsert_AuditLogList {
+}
+
+type Update_Customer {
+}
+
+input BUSINESS__FIELD__CREATED_AT__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  before: String
+  after: String
+  between: [String]
+}
+
+input CUSTOMER_DOCUMENT__FIELD__MIME_TYPE__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input TENANTINAPPNOTIFICATIONLIST_OR_CONDITION {
+  vendor_id: IN_APP_NOTIFICATION__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  title: IN_APP_NOTIFICATION__FIELD__TITLE__COMMON_FILTER_CONDITION
+  body: IN_APP_NOTIFICATION__FIELD__BODY__COMMON_FILTER_CONDITION
+  read: IN_APP_NOTIFICATION__FIELD__READ__COMMON_FILTER_CONDITION
+  created_at: IN_APP_NOTIFICATION__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  tenant_id: IN_APP_NOTIFICATION__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input LOANLIST_KEY_CONDITION {
+  in: [String]
+  eq: String
+  ne: String
+}
+
+input SUBSCRIPTION_REQUEST_LIST_COUNT_INPUT_SORT_PAYLOAD {
+  tenant_id: SORT_ENUM
+  vendor_uid: SORT_ENUM
+  created_at: SORT_ENUM
+  approved_at: SORT_ENUM
+  payment_method: SORT_ENUM
+  submitted_by: SORT_ENUM
+  plan: SORT_ENUM
+  txn_id: SORT_ENUM
+  amount_bdt: SORT_ENUM
+}
+
+type Loan_Installment_List_Connection {
+}
+
+input Customer_Update_Payload {
+  guarantor_phone: String
+  active_loans_count: Int
+  updated_at: String
+  name: String
+  guarantor_name: String
+  total_outstanding: Float
+  phone: String
+  notes: String
+  customer_uid: String
+  nid_number: String
+  business_id: String
+  created_at: String
+  address: String
+  customer_id: String
+  is_blacklisted: Boolean
+  tenant_id: String
+  vendor_id: String
+}
+
+input Payment_List_Upsert_Payload {
+  recorded_at: String
+  loan_id: String
+  tenant_id: String
+  _id: String
+  business_id: String
+  payment_id: String
+  amount: Float!
+  installment_id: String
+  payment_method: String
+  _connect: Payment_List_Connect
+  customer_id: String
+  payment_reference: String
+  notes: String
+  recorded_by: String
+  is_verified: Boolean
+  vendor_id: String
+  customer_name: String
+}
+
+input FEATURE_FLAG__FIELD__ENABLED__COMMON_FILTER_CONDITION {
+  eq: Boolean
+  ne: Boolean
+}
+
+input LOANLOANINSTALLMENTLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+type ProAccessRequestList {
+}
+
+type InAppNotification {
+}
+
+input Payment_Update_Payload {
+  tenant_id: String
+  installment_id: String
+  customer_name: String
+  payment_id: String
+  amount: Float
+  payment_method: String
+  business_id: String
+  customer_id: String
+  payment_reference: String
+  recorded_by: String
+  is_verified: Boolean
+  recorded_at: String
+  loan_id: String
+  notes: String
+  vendor_id: String
+}
+
+input IN_APP_NOTIFICATION__FIELD__READ__COMMON_FILTER_CONDITION {
+  ne: Boolean
+  eq: Boolean
+}
+
+input DEVICE_WHERE_RELATION_FILTER_CONDITION {
+  tenant: DEVICE_TENANT_WHERE_RELATION_FILTER_CONDITION
+}
+
+input DEVICE__FIELD__LAST_SEEN_AT__COMMON_FILTER_CONDITION {
+  ne: String
+  before: String
+  after: String
+  between: [String]
+  eq: String
+}
+
+input DEVICE_LIST_COUNT_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input SUBSCRIPTIONREQUESTLIST_INPUT_SORT_PAYLOAD {
+  txn_id: SORT_ENUM
+  vendor_uid: SORT_ENUM
+  amount_bdt: SORT_ENUM
+  created_at: SORT_ENUM
+  approved_at: SORT_ENUM
+  tenant_id: SORT_ENUM
+  payment_method: SORT_ENUM
+  submitted_by: SORT_ENUM
+  plan: SORT_ENUM
+}
+
+input Customer_Document_Relation_Connect_Payload {
+  customer_id: String
+}
+
+type Upsert_LoanList {
+}
+
+type Tenant_Raw_Model {
+}
+
+input Vendor_Profile_List_Connect {
+  ownerProfile_id: String
+}
+
+input In_App_Notification_List_Connect {
+  tenant_id: String
+}
+
+type Business {
+}
+
+input CUSTOMER__FIELD__NAME__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+input PRO_ACCESS_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION {
+  ne: String
+  before: String
+  after: String
+  between: [String]
+  eq: String
+}
+
+input PRO_ACCESS_REQUEST_LIST_COUNT_GROUPBY_INPUT {
+  value: String
+  key: String
+}
+
+input VENDOR_PROFILE__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input VENDOR_PROFILE__FIELD__NAME__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+input TENANTLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input LOAN_INSTALLMENT_LIST_COUNT_KEY_CONDITION {
+  in: [String]
+  eq: String
+  ne: String
+}
+
+input LOAN__FIELD__PRINCIPAL_AMOUNT__COMMON_FILTER_CONDITION {
+  gt: Float
+  gte: Float
+  eq: Float
+  ne: Float
+  lt: Float
+  lte: Float
+}
+
+type Subscription_Request_Raw_Model {
+}
+
+input CUSTOMER_DOCUMENT_LIST_COUNT_INPUT_SORT_PAYLOAD {
+  uploaded_at: SORT_ENUM
+  customer_id: SORT_ENUM
+  business_id: SORT_ENUM
+  vendor_id: SORT_ENUM
+  tenant_id: SORT_ENUM
+  file_name: SORT_ENUM
+  mime_type: SORT_ENUM
+  storage_url: SORT_ENUM
+}
+
+type PaymentList {
+}
+
+input FEATURE_FLAG_LIST_COUNT_KEY_CONDITION {
+  in: [String]
+  eq: String
+  ne: String
+}
+
+input tenant_logo_SingleMediaInput {
+  url: String
+}
+
+input Feature_Flag_Relation_Disconnect_Payload {
+  tenant_id: String
+}
+
+input update_audit_log_payload_MultilineInput {
+  html: String
+  markdown: String
+  text: String
+}
+
+input CUSTOMER__FIELD__CREATED_AT__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  before: String
+  after: String
+  between: [String]
+}
+
+input CUSTOMER__FIELD__NID_NUMBER__COMMON_FILTER_CONDITION {
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+}
+
+input BUSINESS__FIELD__CURRENCY__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+type UserMetaFields {
+}
+
+input LOAN_INSTALLMENT__FIELD__PAID_AT__COMMON_FILTER_CONDITION {
+  before: String
+  after: String
+  between: [String]
+  eq: String
+  ne: String
+}
+
+input Payment_Relation_Disconnect_Payload {
+  business_id: String
+  customer_id: String
+  loan_id: String
+}
+
+input AUDIT_LOG__FIELD__BY__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input SUBSCRIPTION_REQUEST_LIST_COUNT_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input LOAN_INSTALLMENT_LIST_COUNT_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input REPORTCACHELIST_INPUT_WHERE_PAYLOAD {
+  overdue_amount: REPORT_CACHE__FIELD__OVERDUE_AMOUNT__COMMON_FILTER_CONDITION
+  updated_at: REPORT_CACHE__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  OR: REPORTCACHELIST_OR_CONDITION
+  business_id: REPORT_CACHE__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  tenant_id: REPORT_CACHE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  monthly_collected: REPORT_CACHE__FIELD__MONTHLY_COLLECTED__COMMON_FILTER_CONDITION
+}
+
+type Delete_Payment {
+}
+
+type Create_Loan {
+}
+
+input Customer_Relation_Disconnect_Payload {
+  business_id: String
+  loan_ids: [String]
+  customer_document_ids: [String]
+  payment_ids: [String]
+}
+
+type Customer_Document_Raw_Model {
+}
+
+input Business_Relation_Disconnect_Payload {
+  payment_ids: [String]
+  tenant_id: String
+  customer_ids: [String]
+  loan_ids: [String]
+}
+
+type Update_VendorProfile {
+}
+
+input In_App_Notification_Create_Payload {
+  title: String
+  body: String
+  read: Boolean
+  created_at: String
+  _id: String
+  _connect: In_App_Notification_List_Connect
+  tenant_id: String
+  vendor_id: String
+}
+
+input BUSINESSCUSTOMERLIST_OR_CONDITION {
+  tenant_id: CUSTOMER__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  customer_uid: CUSTOMER__FIELD__CUSTOMER_UID__COMMON_FILTER_CONDITION
+  updated_at: CUSTOMER__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  nid_number: CUSTOMER__FIELD__NID_NUMBER__COMMON_FILTER_CONDITION
+  notes: CUSTOMER__FIELD__NOTES__COMMON_FILTER_CONDITION
+  created_at: CUSTOMER__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  customer_id: CUSTOMER__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  guarantor_phone: CUSTOMER__FIELD__GUARANTOR_PHONE__COMMON_FILTER_CONDITION
+  name: CUSTOMER__FIELD__NAME__COMMON_FILTER_CONDITION
+  address: CUSTOMER__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  is_blacklisted: CUSTOMER__FIELD__IS_BLACKLISTED__COMMON_FILTER_CONDITION
+  total_outstanding: CUSTOMER__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  active_loans_count: CUSTOMER__FIELD__ACTIVE_LOANS_COUNT__COMMON_FILTER_CONDITION
+  guarantor_name: CUSTOMER__FIELD__GUARANTOR_NAME__COMMON_FILTER_CONDITION
+  phone: CUSTOMER__FIELD__PHONE__COMMON_FILTER_CONDITION
+}
+
+type Customer_Raw_Model {
+}
+
+enum loan_installment_MODEL_TYPE_ENUM {
+  loan
+}
+
+enum customer_document_MODEL_TYPE_ENUM {
+  customer
+}
+
+type Customer_List_Aggregate_Group_By {
+}
+
+input INAPPNOTIFICATIONLIST_GROUPBY_INPUT {
+  value: String
+  key: String
+}
+
+type Feature_Flag_List_Connection {
+}
+
+type Delete_Tenant {
+}
+
+enum LOCAL_TYPE_ENUM {
+  en
+}
+
+input PAYMENT_WHERE_RELATION_FILTER_CONDITION {
+  loan: PAYMENT_LOAN_WHERE_RELATION_FILTER_CONDITION
+  business: PAYMENT_BUSINESS_WHERE_RELATION_FILTER_CONDITION
+  customer: PAYMENT_CUSTOMER_WHERE_RELATION_FILTER_CONDITION
+}
+
+input LOAN__FIELD__NEXT_DUE_DATE__COMMON_FILTER_CONDITION {
+  after: String
+  between: [String]
+  eq: String
+  ne: String
+  before: String
+}
+
+type Payment_List_Aggregate_Group_By {
+}
+
+input IN_APP_NOTIFICATION_LIST_COUNT_OR_CONDITION {
+  title: IN_APP_NOTIFICATION__FIELD__TITLE__COMMON_FILTER_CONDITION
+  body: IN_APP_NOTIFICATION__FIELD__BODY__COMMON_FILTER_CONDITION
+  read: IN_APP_NOTIFICATION__FIELD__READ__COMMON_FILTER_CONDITION
+  created_at: IN_APP_NOTIFICATION__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  tenant_id: IN_APP_NOTIFICATION__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  vendor_id: IN_APP_NOTIFICATION__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+}
+
+input BUSINESSLIST_INPUT_WHERE_PAYLOAD {
+  currency: BUSINESS__FIELD__CURRENCY__COMMON_FILTER_CONDITION
+  archived_at: BUSINESS__FIELD__ARCHIVED_AT__COMMON_FILTER_CONDITION
+  name: BUSINESS__FIELD__NAME__COMMON_FILTER_CONDITION
+  tenant_id: BUSINESS__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  address: BUSINESS__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  logo_url: BUSINESS__FIELD__LOGO_URL__COMMON_FILTER_CONDITION
+  OR: BUSINESSLIST_OR_CONDITION
+  owner_id: BUSINESS__FIELD__OWNER_ID__COMMON_FILTER_CONDITION
+  created_at: BUSINESS__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  legacy_id: BUSINESS__FIELD__LEGACY_ID__COMMON_FILTER_CONDITION
+}
+
+input PROACCESSREQUESTLIST_INPUT_SORT_PAYLOAD {
+  updated_at: SORT_ENUM
+  vendor_uid: SORT_ENUM
+  email: SORT_ENUM
+  country_code: SORT_ENUM
+  city: SORT_ENUM
+  source: SORT_ENUM
+  created_at: SORT_ENUM
+}
+
+type ReportCache {
+}
+
+input PAYMENT_CUSTOMER_WHERE_RELATION_FILTER_CONDITION {
+  is_blacklisted: CUSTOMER__FIELD__IS_BLACKLISTED__COMMON_FILTER_CONDITION
+  guarantor_name: CUSTOMER__FIELD__GUARANTOR_NAME__COMMON_FILTER_CONDITION
+  total_outstanding: CUSTOMER__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  name: CUSTOMER__FIELD__NAME__COMMON_FILTER_CONDITION
+  notes: CUSTOMER__FIELD__NOTES__COMMON_FILTER_CONDITION
+  tenant_id: CUSTOMER__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  customer_uid: CUSTOMER__FIELD__CUSTOMER_UID__COMMON_FILTER_CONDITION
+  created_at: CUSTOMER__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  customer_id: CUSTOMER__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  phone: CUSTOMER__FIELD__PHONE__COMMON_FILTER_CONDITION
+  updated_at: CUSTOMER__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  active_loans_count: CUSTOMER__FIELD__ACTIVE_LOANS_COUNT__COMMON_FILTER_CONDITION
+  address: CUSTOMER__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  nid_number: CUSTOMER__FIELD__NID_NUMBER__COMMON_FILTER_CONDITION
+  guarantor_phone: CUSTOMER__FIELD__GUARANTOR_PHONE__COMMON_FILTER_CONDITION
+}
+
+input REPORTCACHELIST_INPUT_SORT_PAYLOAD {
+  business_id: SORT_ENUM
+  tenant_id: SORT_ENUM
+  monthly_collected: SORT_ENUM
+  overdue_amount: SORT_ENUM
+  updated_at: SORT_ENUM
+}
+
+type Create_AuditLog {
+}
+
+enum SORT_ENUM {
+  ASC
+  DESC
+}
+
+input LOAN__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input CUSTOMERPAYMENTLIST_INPUT_WHERE_PAYLOAD {
+  recorded_at: PAYMENT__FIELD__RECORDED_AT__COMMON_FILTER_CONDITION
+  loan_id: PAYMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  recorded_by: PAYMENT__FIELD__RECORDED_BY__COMMON_FILTER_CONDITION
+  business_id: PAYMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  OR: CUSTOMERPAYMENTLIST_OR_CONDITION
+  payment_id: PAYMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  is_verified: PAYMENT__FIELD__IS_VERIFIED__COMMON_FILTER_CONDITION
+  installment_id: PAYMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  vendor_id: PAYMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  payment_method: PAYMENT__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  tenant_id: PAYMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  notes: PAYMENT__FIELD__NOTES__COMMON_FILTER_CONDITION
+  customer_id: PAYMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  amount: PAYMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  customer_name: PAYMENT__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  payment_reference: PAYMENT__FIELD__PAYMENT_REFERENCE__COMMON_FILTER_CONDITION
+}
+
+input TENANTAUDITLOGLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input CUSTOMERLOANLIST_GROUPBY_INPUT {
+  value: String
+  key: String
+}
+
+input SUBSCRIPTION_REQUEST_CONNECTION_FILTER_CONDITION {
+  connection_type: CONNECTION_TYPE_ENUM
+  _id: String
+  to_model: subscription_request_MODEL_TYPE_ENUM
+  relation_type: RELATION_TYPE_ENUM
+}
+
+input VENDOR_PROFILE__FIELD__STAFF_ROLE__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+input VENDOR_PROFILE_LIST_COUNT_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+type Report_Cache_List_Aggregate_Group_By {
+}
+
+type Update_Loan {
+}
+
+type Create_Customer {
+}
+
+input LOAN__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION {
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+}
+
+input LOAN__FIELD__TOTAL_AMOUNT__COMMON_FILTER_CONDITION {
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  eq: Float
+  ne: Float
+}
+
+type tenant_query_logoMediaField {
+}
+
+input update_tenant_logo_SingleMediaInput {
+  url: String
+}
+
+type tenant_has_many_tenantInAppNotificationList_connections {
+}
+
+input FEATURE_FLAG_WHERE_RELATION_FILTER_CONDITION {
+  tenant: FEATURE_FLAG_TENANT_WHERE_RELATION_FILTER_CONDITION
+}
+
+input CUSTOMER_DOCUMENT_CONNECTION_FILTER_CONDITION {
+  connection_type: CONNECTION_TYPE_ENUM
+  _id: String
+  to_model: customer_document_MODEL_TYPE_ENUM
+  relation_type: RELATION_TYPE_ENUM
+}
+
+input TENANTSUBSCRIPTIONREQUESTLIST_INPUT_SORT_PAYLOAD {
+  created_at: SORT_ENUM
+  approved_at: SORT_ENUM
+  tenant_id: SORT_ENUM
+  vendor_uid: SORT_ENUM
+  submitted_by: SORT_ENUM
+  txn_id: SORT_ENUM
+  amount_bdt: SORT_ENUM
+  payment_method: SORT_ENUM
+  plan: SORT_ENUM
+}
+
+type Create_ProAccessRequest {
+}
+
+type Update_LoanInstallment {
+}
+
+input Subscription_Request_Update_Payload {
+  submitted_by: String
+  amount_bdt: Float
+  approved_at: String
+  payment_method: String
+  created_at: String
+  tenant_id: String
+  plan: String
+  txn_id: String
+  vendor_uid: String
+}
+
+input BUSINESSPAYMENTLIST_INPUT_WHERE_PAYLOAD {
+  is_verified: PAYMENT__FIELD__IS_VERIFIED__COMMON_FILTER_CONDITION
+  payment_id: PAYMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  tenant_id: PAYMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  business_id: PAYMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  customer_id: PAYMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  recorded_by: PAYMENT__FIELD__RECORDED_BY__COMMON_FILTER_CONDITION
+  amount: PAYMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  loan_id: PAYMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  payment_method: PAYMENT__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  payment_reference: PAYMENT__FIELD__PAYMENT_REFERENCE__COMMON_FILTER_CONDITION
+  recorded_at: PAYMENT__FIELD__RECORDED_AT__COMMON_FILTER_CONDITION
+  customer_name: PAYMENT__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  vendor_id: PAYMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  installment_id: PAYMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  OR: BUSINESSPAYMENTLIST_OR_CONDITION
+  notes: PAYMENT__FIELD__NOTES__COMMON_FILTER_CONDITION
+}
+
+input LOAN_LIST_COUNT_OR_CONDITION {
+  start_date: LOAN__FIELD__START_DATE__COMMON_FILTER_CONDITION
+  total_paid: LOAN__FIELD__TOTAL_PAID__COMMON_FILTER_CONDITION
+  total_outstanding: LOAN__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  principal_amount: LOAN__FIELD__PRINCIPAL_AMOUNT__COMMON_FILTER_CONDITION
+  grand_total: LOAN__FIELD__GRAND_TOTAL__COMMON_FILTER_CONDITION
+  first_payment_date: LOAN__FIELD__FIRST_PAYMENT_DATE__COMMON_FILTER_CONDITION
+  loan_id: LOAN__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  tenant_id: LOAN__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  loan_status: LOAN__FIELD__LOAN_STATUS__COMMON_FILTER_CONDITION
+  created_by: LOAN__FIELD__CREATED_BY__COMMON_FILTER_CONDITION
+  interest_type: LOAN__FIELD__INTEREST_TYPE__COMMON_FILTER_CONDITION
+  closed_at: LOAN__FIELD__CLOSED_AT__COMMON_FILTER_CONDITION
+  down_payment: LOAN__FIELD__DOWN_PAYMENT__COMMON_FILTER_CONDITION
+  installment_count: LOAN__FIELD__INSTALLMENT_COUNT__COMMON_FILTER_CONDITION
+  vendor_id: LOAN__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  business_id: LOAN__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  interest_rate: LOAN__FIELD__INTEREST_RATE__COMMON_FILTER_CONDITION
+  customer_phone: LOAN__FIELD__CUSTOMER_PHONE__COMMON_FILTER_CONDITION
+  installment_amount: LOAN__FIELD__INSTALLMENT_AMOUNT__COMMON_FILTER_CONDITION
+  created_at: LOAN__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  notes: LOAN__FIELD__NOTES__COMMON_FILTER_CONDITION
+  updated_at: LOAN__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  total_amount: LOAN__FIELD__TOTAL_AMOUNT__COMMON_FILTER_CONDITION
+  total_interest: LOAN__FIELD__TOTAL_INTEREST__COMMON_FILTER_CONDITION
+  next_due_date: LOAN__FIELD__NEXT_DUE_DATE__COMMON_FILTER_CONDITION
+  paid_installments: LOAN__FIELD__PAID_INSTALLMENTS__COMMON_FILTER_CONDITION
+  customer_id: LOAN__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  installment_type: LOAN__FIELD__INSTALLMENT_TYPE__COMMON_FILTER_CONDITION
+  item_description: LOAN__FIELD__ITEM_DESCRIPTION__COMMON_FILTER_CONDITION
+  remaining_installments: LOAN__FIELD__REMAINING_INSTALLMENTS__COMMON_FILTER_CONDITION
+  customer_name: LOAN__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  item_name: LOAN__FIELD__ITEM_NAME__COMMON_FILTER_CONDITION
+}
+
+input LOAN__FIELD__INSTALLMENT_COUNT__COMMON_FILTER_CONDITION {
+  in: [Int]
+  lt: Int
+  gt: Int
+  gte: Int
+  between: [Int]
+  ne: Int
+  lte: Int
+  not_in: [Int]
+  eq: Int
+}
+
+input TENANTDEVICELIST_OR_CONDITION {
+  push_token: DEVICE__FIELD__PUSH_TOKEN__COMMON_FILTER_CONDITION
+  app_version: DEVICE__FIELD__APP_VERSION__COMMON_FILTER_CONDITION
+  label: DEVICE__FIELD__LABEL__COMMON_FILTER_CONDITION
+  last_seen_at: DEVICE__FIELD__LAST_SEEN_AT__COMMON_FILTER_CONDITION
+  vendor_uid: DEVICE__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  auth_uid: DEVICE__FIELD__AUTH_UID__COMMON_FILTER_CONDITION
+  tenant_id: DEVICE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  device_key: DEVICE__FIELD__DEVICE_KEY__COMMON_FILTER_CONDITION
+  platform: DEVICE__FIELD__PLATFORM__COMMON_FILTER_CONDITION
+}
+
+type Loan_List_Aggregate {
+}
+
+input CUSTOMERLIST_INPUT_SORT_PAYLOAD {
+  guarantor_phone: SORT_ENUM
+  address: SORT_ENUM
+  notes: SORT_ENUM
+  active_loans_count: SORT_ENUM
+  tenant_id: SORT_ENUM
+  name: SORT_ENUM
+  business_id: SORT_ENUM
+  nid_number: SORT_ENUM
+  updated_at: SORT_ENUM
+  customer_id: SORT_ENUM
+  phone: SORT_ENUM
+  total_outstanding: SORT_ENUM
+  guarantor_name: SORT_ENUM
+  created_at: SORT_ENUM
+  vendor_id: SORT_ENUM
+  customer_uid: SORT_ENUM
+}
+
+input LOAN__FIELD__REMAINING_INSTALLMENTS__COMMON_FILTER_CONDITION {
+  gt: Int
+  in: [Int]
+  ne: Int
+  lt: Int
+  not_in: [Int]
+  eq: Int
+  lte: Int
+  gte: Int
+  between: [Int]
+}
+
+input BUSINESSCUSTOMERLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input PRO_ACCESS_REQUEST_WHERE_RELATION_FILTER_CONDITION {
+  tenant: PRO_ACCESS_REQUEST_TENANT_WHERE_RELATION_FILTER_CONDITION
+}
+
+input AUDIT_LOG__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+type payment_has_one_loan_connection {
+}
+
+input VENDOR_PROFILE__FIELD__SHOP_ADDRESS__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input Feature_Flag_Relation_Connect_Payload {
+  tenant_id: String
+}
+
+input DEVICE_TENANT_WHERE_RELATION_FILTER_CONDITION {
+  phone: TENANT__FIELD__PHONE__COMMON_FILTER_CONDITION
+  owner_uid: TENANT__FIELD__OWNER_UID__COMMON_FILTER_CONDITION
+  legacy_vendor_id: TENANT__FIELD__LEGACY_VENDOR_ID__COMMON_FILTER_CONDITION
+  subscription_plan: TENANT__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  plan_expiry: TENANT__FIELD__PLAN_EXPIRY__COMMON_FILTER_CONDITION
+  name: TENANT__FIELD__NAME__COMMON_FILTER_CONDITION
+}
+
+input LOANINSTALLMENTLIST_OR_CONDITION {
+  amount: LOAN_INSTALLMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  due_date: LOAN_INSTALLMENT__FIELD__DUE_DATE__COMMON_FILTER_CONDITION
+  paid_at: LOAN_INSTALLMENT__FIELD__PAID_AT__COMMON_FILTER_CONDITION
+  installment_id: LOAN_INSTALLMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  loan_id: LOAN_INSTALLMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  business_id: LOAN_INSTALLMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  tenant_id: LOAN_INSTALLMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  installment_number: LOAN_INSTALLMENT__FIELD__INSTALLMENT_NUMBER__COMMON_FILTER_CONDITION
+  installment_status: LOAN_INSTALLMENT__FIELD__INSTALLMENT_STATUS__COMMON_FILTER_CONDITION
+  vendor_id: LOAN_INSTALLMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  paid_amount: LOAN_INSTALLMENT__FIELD__PAID_AMOUNT__COMMON_FILTER_CONDITION
+  payment_id: LOAN_INSTALLMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+}
+
+input Customer_Document_Relation_Disconnect_Payload {
+  customer_id: String
+}
+
+type Create_FeatureFlag {
+}
+
+input Report_Cache_List_Upsert_Payload {
+  overdue_amount: Float
+  updated_at: String
+  _id: String
+  business_id: String
+  tenant_id: String
+  monthly_collected: Float
+}
+
+input TENANTLIST_INPUT_SORT_PAYLOAD {
+  legacy_vendor_id: SORT_ENUM
+  plan_expiry: SORT_ENUM
+  name: SORT_ENUM
+  phone: SORT_ENUM
+  owner_uid: SORT_ENUM
+}
+
+input FEATUREFLAGLIST_KEY_CONDITION {
+  in: [String]
+  eq: String
+  ne: String
+}
+
+input Loan_Installment_Relation_Connect_Payload {
+  loan_id: String
+}
+
+scalar JSONArray
+
+input CUSTOMER__FIELD__IS_BLACKLISTED__COMMON_FILTER_CONDITION {
+  eq: Boolean
+  ne: Boolean
+}
+
+input PAYMENT_LOAN_WHERE_RELATION_FILTER_CONDITION {
+  notes: LOAN__FIELD__NOTES__COMMON_FILTER_CONDITION
+  closed_at: LOAN__FIELD__CLOSED_AT__COMMON_FILTER_CONDITION
+  customer_id: LOAN__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  start_date: LOAN__FIELD__START_DATE__COMMON_FILTER_CONDITION
+  tenant_id: LOAN__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  next_due_date: LOAN__FIELD__NEXT_DUE_DATE__COMMON_FILTER_CONDITION
+  total_amount: LOAN__FIELD__TOTAL_AMOUNT__COMMON_FILTER_CONDITION
+  created_by: LOAN__FIELD__CREATED_BY__COMMON_FILTER_CONDITION
+  principal_amount: LOAN__FIELD__PRINCIPAL_AMOUNT__COMMON_FILTER_CONDITION
+  first_payment_date: LOAN__FIELD__FIRST_PAYMENT_DATE__COMMON_FILTER_CONDITION
+  installment_type: LOAN__FIELD__INSTALLMENT_TYPE__COMMON_FILTER_CONDITION
+  total_paid: LOAN__FIELD__TOTAL_PAID__COMMON_FILTER_CONDITION
+  created_at: LOAN__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  customer_name: LOAN__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  paid_installments: LOAN__FIELD__PAID_INSTALLMENTS__COMMON_FILTER_CONDITION
+  installment_amount: LOAN__FIELD__INSTALLMENT_AMOUNT__COMMON_FILTER_CONDITION
+  grand_total: LOAN__FIELD__GRAND_TOTAL__COMMON_FILTER_CONDITION
+  installment_count: LOAN__FIELD__INSTALLMENT_COUNT__COMMON_FILTER_CONDITION
+  item_description: LOAN__FIELD__ITEM_DESCRIPTION__COMMON_FILTER_CONDITION
+  remaining_installments: LOAN__FIELD__REMAINING_INSTALLMENTS__COMMON_FILTER_CONDITION
+  updated_at: LOAN__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  customer_phone: LOAN__FIELD__CUSTOMER_PHONE__COMMON_FILTER_CONDITION
+  interest_type: LOAN__FIELD__INTEREST_TYPE__COMMON_FILTER_CONDITION
+  down_payment: LOAN__FIELD__DOWN_PAYMENT__COMMON_FILTER_CONDITION
+  total_interest: LOAN__FIELD__TOTAL_INTEREST__COMMON_FILTER_CONDITION
+  total_outstanding: LOAN__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  business_id: LOAN__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  loan_id: LOAN__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  interest_rate: LOAN__FIELD__INTEREST_RATE__COMMON_FILTER_CONDITION
+  loan_status: LOAN__FIELD__LOAN_STATUS__COMMON_FILTER_CONDITION
+  item_name: LOAN__FIELD__ITEM_NAME__COMMON_FILTER_CONDITION
+  vendor_id: LOAN__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+}
+
+input LOAN__FIELD__PAID_INSTALLMENTS__COMMON_FILTER_CONDITION {
+  in: [Int]
+  not_in: [Int]
+  eq: Int
+  between: [Int]
+  lt: Int
+  ne: Int
+  lte: Int
+  gt: Int
+  gte: Int
+}
+
+input PAYMENT__FIELD__RECORDED_AT__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  before: String
+  after: String
+  between: [String]
+}
+
+input PAYMENT__FIELD__NOTES__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+input SUBSCRIPTIONREQUESTLIST_INPUT_WHERE_PAYLOAD {
+  tenant_id: SUBSCRIPTION_REQUEST__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  approved_at: SUBSCRIPTION_REQUEST__FIELD__APPROVED_AT__COMMON_FILTER_CONDITION
+  OR: SUBSCRIPTIONREQUESTLIST_OR_CONDITION
+  submitted_by: SUBSCRIPTION_REQUEST__FIELD__SUBMITTED_BY__COMMON_FILTER_CONDITION
+  plan: SUBSCRIPTION_REQUEST__FIELD__PLAN__COMMON_FILTER_CONDITION
+  payment_method: SUBSCRIPTION_REQUEST__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  amount_bdt: SUBSCRIPTION_REQUEST__FIELD__AMOUNT_BDT__COMMON_FILTER_CONDITION
+  created_at: SUBSCRIPTION_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  vendor_uid: SUBSCRIPTION_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  txn_id: SUBSCRIPTION_REQUEST__FIELD__TXN_ID__COMMON_FILTER_CONDITION
+}
+
+input Device_Update_Payload {
+  platform: String
+  app_version: String
+  label: String
+  last_seen_at: String
+  device_key: String
+  tenant_id: String
+  vendor_uid: String
+  auth_uid: String
+  push_token: String
+}
+
+input Loan_Create_Payload {
+  total_paid: Float
+  customer_name: String
+  item_description: String
+  principal_amount: Float
+  tenant_id: String
+  installment_amount: Float
+  loan_id: String
+  installment_count: Int
+  closed_at: String
+  total_amount: Float
+  installment_type: String
+  interest_type: String
+  grand_total: Float
+  first_payment_date: String
+  next_due_date: String
+  paid_installments: Int
+  total_outstanding: Float
+  _connect: Loan_List_Connect
+  _id: String
+  vendor_id: String
+  created_by: String
+  down_payment: Float
+  start_date: String
+  updated_at: String
+  total_interest: Float
+  interest_rate: Float
+  customer_phone: String
+  item_name: String
+  customer_id: String
+  created_at: String
+  remaining_installments: Int
+  loan_status: String
+  business_id: String
+  notes: String
+}
+
+input PAYMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input Customer_Document_Create_Payload {
+  vendor_id: String
+  tenant_id: String
+  file_name: String
+  storage_url: String
+  uploaded_at: String
+  business_id: String
+  mime_type: String
+  _connect: Customer_Document_List_Connect
+  customer_id: String
+  _id: String
+}
+
+input Loan_Installment_Relation_Disconnect_Payload {
+  loan_id: String
+}
+
+input LOAN_INSTALLMENT__FIELD__PAID_AMOUNT__COMMON_FILTER_CONDITION {
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  eq: Float
+  ne: Float
+}
+
+input LOANPAYMENTLIST_OR_CONDITION {
+  installment_id: PAYMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  amount: PAYMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  payment_reference: PAYMENT__FIELD__PAYMENT_REFERENCE__COMMON_FILTER_CONDITION
+  is_verified: PAYMENT__FIELD__IS_VERIFIED__COMMON_FILTER_CONDITION
+  vendor_id: PAYMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  customer_name: PAYMENT__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  recorded_by: PAYMENT__FIELD__RECORDED_BY__COMMON_FILTER_CONDITION
+  loan_id: PAYMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  business_id: PAYMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  payment_method: PAYMENT__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  recorded_at: PAYMENT__FIELD__RECORDED_AT__COMMON_FILTER_CONDITION
+  payment_id: PAYMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  customer_id: PAYMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  tenant_id: PAYMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  notes: PAYMENT__FIELD__NOTES__COMMON_FILTER_CONDITION
+}
+
+input DEVICE_LIST_COUNT_INPUT_WHERE_PAYLOAD {
+  auth_uid: DEVICE__FIELD__AUTH_UID__COMMON_FILTER_CONDITION
+  platform: DEVICE__FIELD__PLATFORM__COMMON_FILTER_CONDITION
+  last_seen_at: DEVICE__FIELD__LAST_SEEN_AT__COMMON_FILTER_CONDITION
+  vendor_uid: DEVICE__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  OR: DEVICE_LIST_COUNT_OR_CONDITION
+  push_token: DEVICE__FIELD__PUSH_TOKEN__COMMON_FILTER_CONDITION
+  device_key: DEVICE__FIELD__DEVICE_KEY__COMMON_FILTER_CONDITION
+  tenant_id: DEVICE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  app_version: DEVICE__FIELD__APP_VERSION__COMMON_FILTER_CONDITION
+  label: DEVICE__FIELD__LABEL__COMMON_FILTER_CONDITION
+}
+
+input IN_APP_NOTIFICATION_LIST_COUNT_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+type Delete_ReportCache {
+}
+
+enum PUBLISH_STATUS_TYPE_ENUM {
+  draft
+  published
+}
+
+input CUSTOMERLOANLIST_INPUT_SORT_PAYLOAD {
+  item_name: SORT_ENUM
+  closed_at: SORT_ENUM
+  total_paid: SORT_ENUM
+  customer_name: SORT_ENUM
+  installment_count: SORT_ENUM
+  first_payment_date: SORT_ENUM
+  notes: SORT_ENUM
+  created_by: SORT_ENUM
+  updated_at: SORT_ENUM
+  total_amount: SORT_ENUM
+  grand_total: SORT_ENUM
+  next_due_date: SORT_ENUM
+  down_payment: SORT_ENUM
+  paid_installments: SORT_ENUM
+  tenant_id: SORT_ENUM
+  total_outstanding: SORT_ENUM
+  total_interest: SORT_ENUM
+  interest_rate: SORT_ENUM
+  start_date: SORT_ENUM
+  loan_id: SORT_ENUM
+  customer_id: SORT_ENUM
+  installment_amount: SORT_ENUM
+  vendor_id: SORT_ENUM
+  remaining_installments: SORT_ENUM
+  item_description: SORT_ENUM
+  created_at: SORT_ENUM
+  business_id: SORT_ENUM
+  customer_phone: SORT_ENUM
+  principal_amount: SORT_ENUM
+}
+
+input LOANLOANINSTALLMENTLIST_OR_CONDITION {
+  tenant_id: LOAN_INSTALLMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  installment_number: LOAN_INSTALLMENT__FIELD__INSTALLMENT_NUMBER__COMMON_FILTER_CONDITION
+  amount: LOAN_INSTALLMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  paid_at: LOAN_INSTALLMENT__FIELD__PAID_AT__COMMON_FILTER_CONDITION
+  installment_id: LOAN_INSTALLMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  loan_id: LOAN_INSTALLMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  business_id: LOAN_INSTALLMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  installment_status: LOAN_INSTALLMENT__FIELD__INSTALLMENT_STATUS__COMMON_FILTER_CONDITION
+  vendor_id: LOAN_INSTALLMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  due_date: LOAN_INSTALLMENT__FIELD__DUE_DATE__COMMON_FILTER_CONDITION
+  paid_amount: LOAN_INSTALLMENT__FIELD__PAID_AMOUNT__COMMON_FILTER_CONDITION
+  payment_id: LOAN_INSTALLMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+}
+
+input VENDOR_PROFILE__FIELD__ONBOARDING_BUSINESS_COMPLETE__COMMON_FILTER_CONDITION {
+  eq: Boolean
+  ne: Boolean
+}
+
+type AuditLogList {
+}
+
+type Report_Cache_List_Connection {
+}
+
+input SUBSCRIPTIONREQUESTLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input PRO_ACCESS_REQUEST__FIELD__EMAIL__COMMON_FILTER_CONDITION {
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input BUSINESS_LOAN_WHERE_RELATION_FILTER_CONDITION {
+  loan_id: LOAN__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  installment_count: LOAN__FIELD__INSTALLMENT_COUNT__COMMON_FILTER_CONDITION
+  closed_at: LOAN__FIELD__CLOSED_AT__COMMON_FILTER_CONDITION
+  customer_id: LOAN__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  customer_name: LOAN__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  next_due_date: LOAN__FIELD__NEXT_DUE_DATE__COMMON_FILTER_CONDITION
+  created_by: LOAN__FIELD__CREATED_BY__COMMON_FILTER_CONDITION
+  business_id: LOAN__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  principal_amount: LOAN__FIELD__PRINCIPAL_AMOUNT__COMMON_FILTER_CONDITION
+  grand_total: LOAN__FIELD__GRAND_TOTAL__COMMON_FILTER_CONDITION
+  installment_type: LOAN__FIELD__INSTALLMENT_TYPE__COMMON_FILTER_CONDITION
+  total_paid: LOAN__FIELD__TOTAL_PAID__COMMON_FILTER_CONDITION
+  total_outstanding: LOAN__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  remaining_installments: LOAN__FIELD__REMAINING_INSTALLMENTS__COMMON_FILTER_CONDITION
+  updated_at: LOAN__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  item_name: LOAN__FIELD__ITEM_NAME__COMMON_FILTER_CONDITION
+  down_payment: LOAN__FIELD__DOWN_PAYMENT__COMMON_FILTER_CONDITION
+  tenant_id: LOAN__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  installment_amount: LOAN__FIELD__INSTALLMENT_AMOUNT__COMMON_FILTER_CONDITION
+  start_date: LOAN__FIELD__START_DATE__COMMON_FILTER_CONDITION
+  paid_installments: LOAN__FIELD__PAID_INSTALLMENTS__COMMON_FILTER_CONDITION
+  total_amount: LOAN__FIELD__TOTAL_AMOUNT__COMMON_FILTER_CONDITION
+  interest_type: LOAN__FIELD__INTEREST_TYPE__COMMON_FILTER_CONDITION
+  notes: LOAN__FIELD__NOTES__COMMON_FILTER_CONDITION
+  first_payment_date: LOAN__FIELD__FIRST_PAYMENT_DATE__COMMON_FILTER_CONDITION
+  interest_rate: LOAN__FIELD__INTEREST_RATE__COMMON_FILTER_CONDITION
+  vendor_id: LOAN__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  loan_status: LOAN__FIELD__LOAN_STATUS__COMMON_FILTER_CONDITION
+  item_description: LOAN__FIELD__ITEM_DESCRIPTION__COMMON_FILTER_CONDITION
+  created_at: LOAN__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  customer_phone: LOAN__FIELD__CUSTOMER_PHONE__COMMON_FILTER_CONDITION
+  total_interest: LOAN__FIELD__TOTAL_INTEREST__COMMON_FILTER_CONDITION
+}
+
+input LOAN_LOAN_INSTALLMENT_WHERE_RELATION_FILTER_CONDITION {
+  amount: LOAN_INSTALLMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  due_date: LOAN_INSTALLMENT__FIELD__DUE_DATE__COMMON_FILTER_CONDITION
+  paid_amount: LOAN_INSTALLMENT__FIELD__PAID_AMOUNT__COMMON_FILTER_CONDITION
+  paid_at: LOAN_INSTALLMENT__FIELD__PAID_AT__COMMON_FILTER_CONDITION
+  business_id: LOAN_INSTALLMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  tenant_id: LOAN_INSTALLMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  installment_number: LOAN_INSTALLMENT__FIELD__INSTALLMENT_NUMBER__COMMON_FILTER_CONDITION
+  installment_status: LOAN_INSTALLMENT__FIELD__INSTALLMENT_STATUS__COMMON_FILTER_CONDITION
+  vendor_id: LOAN_INSTALLMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  payment_id: LOAN_INSTALLMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  installment_id: LOAN_INSTALLMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  loan_id: LOAN_INSTALLMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+}
+
+input LOAN_INSTALLMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+input LOAN_PAYMENT_WHERE_RELATION_FILTER_CONDITION {
+  is_verified: PAYMENT__FIELD__IS_VERIFIED__COMMON_FILTER_CONDITION
+  business_id: PAYMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  tenant_id: PAYMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  customer_name: PAYMENT__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  recorded_by: PAYMENT__FIELD__RECORDED_BY__COMMON_FILTER_CONDITION
+  amount: PAYMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  loan_id: PAYMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  payment_method: PAYMENT__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  recorded_at: PAYMENT__FIELD__RECORDED_AT__COMMON_FILTER_CONDITION
+  payment_reference: PAYMENT__FIELD__PAYMENT_REFERENCE__COMMON_FILTER_CONDITION
+  vendor_id: PAYMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  customer_id: PAYMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  payment_id: PAYMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  notes: PAYMENT__FIELD__NOTES__COMMON_FILTER_CONDITION
+  installment_id: PAYMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+}
+
+input VENDOR_PROFILE_LIST_COUNT_OR_CONDITION {
+  staff_vendor_id: VENDOR_PROFILE__FIELD__STAFF_VENDOR_ID__COMMON_FILTER_CONDITION
+  staff_role: VENDOR_PROFILE__FIELD__STAFF_ROLE__COMMON_FILTER_CONDITION
+  uid: VENDOR_PROFILE__FIELD__UID__COMMON_FILTER_CONDITION
+  updated_at: VENDOR_PROFILE__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  phone: VENDOR_PROFILE__FIELD__PHONE__COMMON_FILTER_CONDITION
+  role: VENDOR_PROFILE__FIELD__ROLE__COMMON_FILTER_CONDITION
+  upazila: VENDOR_PROFILE__FIELD__UPAZILA__COMMON_FILTER_CONDITION
+  language: VENDOR_PROFILE__FIELD__LANGUAGE__COMMON_FILTER_CONDITION
+  tenant_id: VENDOR_PROFILE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  city: VENDOR_PROFILE__FIELD__CITY__COMMON_FILTER_CONDITION
+  onboarding_profile_complete: VENDOR_PROFILE__FIELD__ONBOARDING_PROFILE_COMPLETE__COMMON_FILTER_CONDITION
+  created_at: VENDOR_PROFILE__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  district: VENDOR_PROFILE__FIELD__DISTRICT__COMMON_FILTER_CONDITION
+  name: VENDOR_PROFILE__FIELD__NAME__COMMON_FILTER_CONDITION
+  country_code: VENDOR_PROFILE__FIELD__COUNTRY_CODE__COMMON_FILTER_CONDITION
+  onboarding_business_complete: VENDOR_PROFILE__FIELD__ONBOARDING_BUSINESS_COMPLETE__COMMON_FILTER_CONDITION
+  subscription_plan: VENDOR_PROFILE__FIELD__SUBSCRIPTION_PLAN__COMMON_FILTER_CONDITION
+  shop_address: VENDOR_PROFILE__FIELD__SHOP_ADDRESS__COMMON_FILTER_CONDITION
+  pro_request_email: VENDOR_PROFILE__FIELD__PRO_REQUEST_EMAIL__COMMON_FILTER_CONDITION
+  photo_url: VENDOR_PROFILE__FIELD__PHOTO_URL__COMMON_FILTER_CONDITION
+}
+
+input Tenant_Update_Payload {
+  logo: update_tenant_logo_SingleMediaInput
+  phone: String
+  owner_uid: String
+  legacy_vendor_id: String
+  subscription_plan: String
+  plan_expiry: String
+  name: String
+}
+
+input LOAN__FIELD__CUSTOMER_PHONE__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input CUSTOMERDOCUMENTLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input Device_List_Upsert_Payload {
+  _connect: Device_List_Connect
+  vendor_uid: String
+  app_version: String
+  _id: String
+  auth_uid: String
+  device_key: String
+  push_token: String
+  label: String
+  tenant_id: String
+  platform: String
+  last_seen_at: String
+}
+
+input CUSTOMER__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+input CUSTOMER_DOCUMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input AUDIT_LOG_CONNECTION_FILTER_CONDITION {
+  relation_type: RELATION_TYPE_ENUM
+  connection_type: CONNECTION_TYPE_ENUM
+  _id: String
+  to_model: audit_log_MODEL_TYPE_ENUM
+}
+
+input FEATUREFLAGLIST_INPUT_WHERE_PAYLOAD {
+  enabled: FEATURE_FLAG__FIELD__ENABLED__COMMON_FILTER_CONDITION
+  OR: FEATUREFLAGLIST_OR_CONDITION
+  tenant_id: FEATURE_FLAG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  key: FEATURE_FLAG__FIELD__KEY__COMMON_FILTER_CONDITION
+}
+
+input Loan_Update_Payload {
+  customer_name: String
+  installment_amount: Float
+  installment_count: Int
+  grand_total: Float
+  installment_type: String
+  total_amount: Float
+  notes: String
+  start_date: String
+  total_paid: Float
+  next_due_date: String
+  total_interest: Float
+  customer_id: String
+  created_at: String
+  interest_type: String
+  first_payment_date: String
+  loan_id: String
+  item_description: String
+  created_by: String
+  customer_phone: String
+  down_payment: Float
+  vendor_id: String
+  business_id: String
+  interest_rate: Float
+  principal_amount: Float
+  updated_at: String
+  remaining_installments: Int
+  total_outstanding: Float
+  loan_status: String
+  paid_installments: Int
+  item_name: String
+  tenant_id: String
+  closed_at: String
+}
+
+input TENANTSUBSCRIPTIONREQUESTLIST_INPUT_WHERE_PAYLOAD {
+  payment_method: SUBSCRIPTION_REQUEST__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  tenant_id: SUBSCRIPTION_REQUEST__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  submitted_by: SUBSCRIPTION_REQUEST__FIELD__SUBMITTED_BY__COMMON_FILTER_CONDITION
+  created_at: SUBSCRIPTION_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  vendor_uid: SUBSCRIPTION_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  txn_id: SUBSCRIPTION_REQUEST__FIELD__TXN_ID__COMMON_FILTER_CONDITION
+  amount_bdt: SUBSCRIPTION_REQUEST__FIELD__AMOUNT_BDT__COMMON_FILTER_CONDITION
+  OR: TENANTSUBSCRIPTIONREQUESTLIST_OR_CONDITION
+  plan: SUBSCRIPTION_REQUEST__FIELD__PLAN__COMMON_FILTER_CONDITION
+  approved_at: SUBSCRIPTION_REQUEST__FIELD__APPROVED_AT__COMMON_FILTER_CONDITION
+}
+
+input VENDOR_PROFILE__FIELD__ONBOARDING_PROFILE_COMPLETE__COMMON_FILTER_CONDITION {
+  eq: Boolean
+  ne: Boolean
+}
+
+input AUDITLOGLIST_OR_CONDITION {
+  action: AUDIT_LOG__FIELD__ACTION__COMMON_FILTER_CONDITION
+  vendor_id: AUDIT_LOG__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  tenant_id: AUDIT_LOG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  by: AUDIT_LOG__FIELD__BY__COMMON_FILTER_CONDITION
+  at: AUDIT_LOG__FIELD__AT__COMMON_FILTER_CONDITION
+  payload: AUDIT_LOG__FIELD__PAYLOAD__COMMON_FILTER_CONDITION
+}
+
+type Customer_Document_List_Connection {
+}
+
+input Audit_Log_Create_Payload {
+  _connect: Audit_Log_List_Connect
+  action: String
+  vendor_id: String
+  tenant_id: String
+  by: String
+  at: String
+  payload: audit_log_payload_MultilineInput
+  _id: String
+}
+
+input LOAN_INSTALLMENT_LOAN_WHERE_RELATION_FILTER_CONDITION {
+  item_name: LOAN__FIELD__ITEM_NAME__COMMON_FILTER_CONDITION
+  closed_at: LOAN__FIELD__CLOSED_AT__COMMON_FILTER_CONDITION
+  start_date: LOAN__FIELD__START_DATE__COMMON_FILTER_CONDITION
+  paid_installments: LOAN__FIELD__PAID_INSTALLMENTS__COMMON_FILTER_CONDITION
+  total_amount: LOAN__FIELD__TOTAL_AMOUNT__COMMON_FILTER_CONDITION
+  installment_amount: LOAN__FIELD__INSTALLMENT_AMOUNT__COMMON_FILTER_CONDITION
+  total_outstanding: LOAN__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  created_by: LOAN__FIELD__CREATED_BY__COMMON_FILTER_CONDITION
+  loan_id: LOAN__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  remaining_installments: LOAN__FIELD__REMAINING_INSTALLMENTS__COMMON_FILTER_CONDITION
+  grand_total: LOAN__FIELD__GRAND_TOTAL__COMMON_FILTER_CONDITION
+  customer_id: LOAN__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  updated_at: LOAN__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  customer_phone: LOAN__FIELD__CUSTOMER_PHONE__COMMON_FILTER_CONDITION
+  interest_type: LOAN__FIELD__INTEREST_TYPE__COMMON_FILTER_CONDITION
+  total_interest: LOAN__FIELD__TOTAL_INTEREST__COMMON_FILTER_CONDITION
+  created_at: LOAN__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  business_id: LOAN__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  principal_amount: LOAN__FIELD__PRINCIPAL_AMOUNT__COMMON_FILTER_CONDITION
+  customer_name: LOAN__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  next_due_date: LOAN__FIELD__NEXT_DUE_DATE__COMMON_FILTER_CONDITION
+  item_description: LOAN__FIELD__ITEM_DESCRIPTION__COMMON_FILTER_CONDITION
+  total_paid: LOAN__FIELD__TOTAL_PAID__COMMON_FILTER_CONDITION
+  interest_rate: LOAN__FIELD__INTEREST_RATE__COMMON_FILTER_CONDITION
+  down_payment: LOAN__FIELD__DOWN_PAYMENT__COMMON_FILTER_CONDITION
+  installment_type: LOAN__FIELD__INSTALLMENT_TYPE__COMMON_FILTER_CONDITION
+  tenant_id: LOAN__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  loan_status: LOAN__FIELD__LOAN_STATUS__COMMON_FILTER_CONDITION
+  notes: LOAN__FIELD__NOTES__COMMON_FILTER_CONDITION
+  first_payment_date: LOAN__FIELD__FIRST_PAYMENT_DATE__COMMON_FILTER_CONDITION
+  installment_count: LOAN__FIELD__INSTALLMENT_COUNT__COMMON_FILTER_CONDITION
+  vendor_id: LOAN__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+}
+
+type Update_Device {
+}
+
+input LOAN__FIELD__GRAND_TOTAL__COMMON_FILTER_CONDITION {
+  ne: Float
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  eq: Float
+}
+
+input LOAN__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION {
+  gte: Float
+  eq: Float
+  ne: Float
+  lt: Float
+  lte: Float
+  gt: Float
+}
+
+input BUSINESS_CUSTOMER_WHERE_RELATION_FILTER_CONDITION {
+  address: CUSTOMER__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+  is_blacklisted: CUSTOMER__FIELD__IS_BLACKLISTED__COMMON_FILTER_CONDITION
+  created_at: CUSTOMER__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  guarantor_name: CUSTOMER__FIELD__GUARANTOR_NAME__COMMON_FILTER_CONDITION
+  total_outstanding: CUSTOMER__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  name: CUSTOMER__FIELD__NAME__COMMON_FILTER_CONDITION
+  active_loans_count: CUSTOMER__FIELD__ACTIVE_LOANS_COUNT__COMMON_FILTER_CONDITION
+  phone: CUSTOMER__FIELD__PHONE__COMMON_FILTER_CONDITION
+  nid_number: CUSTOMER__FIELD__NID_NUMBER__COMMON_FILTER_CONDITION
+  customer_uid: CUSTOMER__FIELD__CUSTOMER_UID__COMMON_FILTER_CONDITION
+  customer_id: CUSTOMER__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  notes: CUSTOMER__FIELD__NOTES__COMMON_FILTER_CONDITION
+  updated_at: CUSTOMER__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  guarantor_phone: CUSTOMER__FIELD__GUARANTOR_PHONE__COMMON_FILTER_CONDITION
+  tenant_id: CUSTOMER__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input TENANTDEVICELIST_INPUT_SORT_PAYLOAD {
+  app_version: SORT_ENUM
+  tenant_id: SORT_ENUM
+  push_token: SORT_ENUM
+  label: SORT_ENUM
+  last_seen_at: SORT_ENUM
+  platform: SORT_ENUM
+  vendor_uid: SORT_ENUM
+  auth_uid: SORT_ENUM
+  device_key: SORT_ENUM
+}
+
+type Create_LoanInstallment {
+}
+
+type Upsert_PaymentList {
+}
+
+type customer_has_many_customerPaymentList_connections {
+}
+
+input SUBSCRIPTION_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  before: String
+  after: String
+  between: [String]
+}
+
+input VENDOR_PROFILE__FIELD__STAFF_VENDOR_ID__COMMON_FILTER_CONDITION {
+  contains: String
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+}
+
+input CUSTOMERDOCUMENTLIST_INPUT_WHERE_PAYLOAD {
+  vendor_id: CUSTOMER_DOCUMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  tenant_id: CUSTOMER_DOCUMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  storage_url: CUSTOMER_DOCUMENT__FIELD__STORAGE_URL__COMMON_FILTER_CONDITION
+  uploaded_at: CUSTOMER_DOCUMENT__FIELD__UPLOADED_AT__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER_DOCUMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  customer_id: CUSTOMER_DOCUMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  file_name: CUSTOMER_DOCUMENT__FIELD__FILE_NAME__COMMON_FILTER_CONDITION
+  mime_type: CUSTOMER_DOCUMENT__FIELD__MIME_TYPE__COMMON_FILTER_CONDITION
+  OR: CUSTOMERDOCUMENTLIST_OR_CONDITION
+}
+
+input Tenant_Create_Payload {
+  logo: tenant_logo_SingleMediaInput
+  phone: String
+  legacy_vendor_id: String
+  _id: String
+  name: String
+  owner_uid: String
+  subscription_plan: String
+  plan_expiry: String
+  _connect: Tenant_List_Connect
+}
+
+input LOAN__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION {
+  after: String
+  between: [String]
+  eq: String
+  ne: String
+  before: String
+}
+
+input TENANTINAPPNOTIFICATIONLIST_KEY_CONDITION {
+  in: [String]
+  eq: String
+  ne: String
+}
+
+input TENANTSUBSCRIPTIONREQUESTLIST_OR_CONDITION {
+  vendor_uid: SUBSCRIPTION_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  payment_method: SUBSCRIPTION_REQUEST__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  txn_id: SUBSCRIPTION_REQUEST__FIELD__TXN_ID__COMMON_FILTER_CONDITION
+  amount_bdt: SUBSCRIPTION_REQUEST__FIELD__AMOUNT_BDT__COMMON_FILTER_CONDITION
+  created_at: SUBSCRIPTION_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  approved_at: SUBSCRIPTION_REQUEST__FIELD__APPROVED_AT__COMMON_FILTER_CONDITION
+  tenant_id: SUBSCRIPTION_REQUEST__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  submitted_by: SUBSCRIPTION_REQUEST__FIELD__SUBMITTED_BY__COMMON_FILTER_CONDITION
+  plan: SUBSCRIPTION_REQUEST__FIELD__PLAN__COMMON_FILTER_CONDITION
+}
+
+type Pro_Access_Request_Raw_Model {
+}
+
+input VENDOR_PROFILE__FIELD__ROLE__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input Vendor_Profile_Create_Payload {
+  shop_address: String
+  _id: String
+  subscription_plan: String
+  staff_role: String
+  created_at: String
+  district: String
+  country_code: String
+  onboarding_profile_complete: Boolean
+  onboarding_business_complete: Boolean
+  language: String
+  pro_request_email: String
+  uid: String
+  role: String
+  city: String
+  updated_at: String
+  tenant_id: String
+  photo_url: String
+  staff_vendor_id: String
+  _connect: Vendor_Profile_List_Connect
+  phone: String
+  name: String
+  upazila: String
+}
+
+input LOAN_INSTALLMENT_CONNECTION_FILTER_CONDITION {
+  _id: String
+  to_model: loan_installment_MODEL_TYPE_ENUM
+  relation_type: RELATION_TYPE_ENUM
+  connection_type: CONNECTION_TYPE_ENUM
+}
+
+input LOAN_INSTALLMENT_WHERE_RELATION_FILTER_CONDITION {
+  loan: LOAN_INSTALLMENT_LOAN_WHERE_RELATION_FILTER_CONDITION
+}
+
+input VENDOR_PROFILE__FIELD__CREATED_AT__COMMON_FILTER_CONDITION {
+  ne: String
+  before: String
+  after: String
+  between: [String]
+  eq: String
+}
+
+input DEVICE_LIST_COUNT_INPUT_SORT_PAYLOAD {
+  push_token: SORT_ENUM
+  label: SORT_ENUM
+  last_seen_at: SORT_ENUM
+  auth_uid: SORT_ENUM
+  device_key: SORT_ENUM
+  vendor_uid: SORT_ENUM
+  platform: SORT_ENUM
+  app_version: SORT_ENUM
+  tenant_id: SORT_ENUM
+}
+
+type Upsert_DeviceList {
+}
+
+input CUSTOMERCUSTOMERDOCUMENTLIST_OR_CONDITION {
+  mime_type: CUSTOMER_DOCUMENT__FIELD__MIME_TYPE__COMMON_FILTER_CONDITION
+  storage_url: CUSTOMER_DOCUMENT__FIELD__STORAGE_URL__COMMON_FILTER_CONDITION
+  uploaded_at: CUSTOMER_DOCUMENT__FIELD__UPLOADED_AT__COMMON_FILTER_CONDITION
+  customer_id: CUSTOMER_DOCUMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  business_id: CUSTOMER_DOCUMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  vendor_id: CUSTOMER_DOCUMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  tenant_id: CUSTOMER_DOCUMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  file_name: CUSTOMER_DOCUMENT__FIELD__FILE_NAME__COMMON_FILTER_CONDITION
+}
+
+input REPORT_CACHE__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION {
+  before: String
+  after: String
+  between: [String]
+  eq: String
+  ne: String
+}
+
+type Subscription_Request_List_Aggregate {
+}
+
+input AUDIT_LOG_LIST_COUNT_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+type Create_Payment {
+}
+
+type business_has_many_businessCustomerList_connections {
+}
+
+input TENANT_AUDIT_LOG_WHERE_RELATION_FILTER_CONDITION {
+  tenant_id: AUDIT_LOG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  by: AUDIT_LOG__FIELD__BY__COMMON_FILTER_CONDITION
+  at: AUDIT_LOG__FIELD__AT__COMMON_FILTER_CONDITION
+  payload: AUDIT_LOG__FIELD__PAYLOAD__COMMON_FILTER_CONDITION
+  action: AUDIT_LOG__FIELD__ACTION__COMMON_FILTER_CONDITION
+  vendor_id: AUDIT_LOG__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+}
+
+input TENANTLIST_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input PAYMENT__FIELD__IS_VERIFIED__COMMON_FILTER_CONDITION {
+  eq: Boolean
+  ne: Boolean
+}
+
+input TENANTAUDITLOGLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+type subscription_request_has_one_tenant_connection {
+}
+
+input TENANT_WHERE_RELATION_FILTER_CONDITION {
+  in_app_notification: TENANT_IN_APP_NOTIFICATION_WHERE_RELATION_FILTER_CONDITION
+  device: TENANT_DEVICE_WHERE_RELATION_FILTER_CONDITION
+  subscription_request: TENANT_SUBSCRIPTION_REQUEST_WHERE_RELATION_FILTER_CONDITION
+  feature_flag: TENANT_FEATURE_FLAG_WHERE_RELATION_FILTER_CONDITION
+  pro_access_request: TENANT_PRO_ACCESS_REQUEST_WHERE_RELATION_FILTER_CONDITION
+  audit_log: TENANT_AUDIT_LOG_WHERE_RELATION_FILTER_CONDITION
+  vendor_profile: TENANT_VENDOR_PROFILE_WHERE_RELATION_FILTER_CONDITION
+  business: TENANT_BUSINESS_WHERE_RELATION_FILTER_CONDITION
+}
+
+input PAYMENT_LIST_COUNT_KEY_CONDITION {
+  in: [String]
+  eq: String
+  ne: String
+}
+
+type Delete_Business {
+}
+
+input CUSTOMER_DOCUMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input BUSINESS_PAYMENT_WHERE_RELATION_FILTER_CONDITION {
+  loan_id: PAYMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  recorded_at: PAYMENT__FIELD__RECORDED_AT__COMMON_FILTER_CONDITION
+  installment_id: PAYMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  recorded_by: PAYMENT__FIELD__RECORDED_BY__COMMON_FILTER_CONDITION
+  vendor_id: PAYMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  payment_id: PAYMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  tenant_id: PAYMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  customer_id: PAYMENT__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  customer_name: PAYMENT__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  payment_reference: PAYMENT__FIELD__PAYMENT_REFERENCE__COMMON_FILTER_CONDITION
+  business_id: PAYMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  payment_method: PAYMENT__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  notes: PAYMENT__FIELD__NOTES__COMMON_FILTER_CONDITION
+  amount: PAYMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  is_verified: PAYMENT__FIELD__IS_VERIFIED__COMMON_FILTER_CONDITION
+}
+
+input CUSTOMERCUSTOMERDOCUMENTLIST_INPUT_SORT_PAYLOAD {
+  customer_id: SORT_ENUM
+  business_id: SORT_ENUM
+  vendor_id: SORT_ENUM
+  tenant_id: SORT_ENUM
+  file_name: SORT_ENUM
+  mime_type: SORT_ENUM
+  storage_url: SORT_ENUM
+  uploaded_at: SORT_ENUM
+}
+
+type Report_Cache_List_Aggregate {
+}
+
+input INAPPNOTIFICATIONLIST_OR_CONDITION {
+  title: IN_APP_NOTIFICATION__FIELD__TITLE__COMMON_FILTER_CONDITION
+  body: IN_APP_NOTIFICATION__FIELD__BODY__COMMON_FILTER_CONDITION
+  read: IN_APP_NOTIFICATION__FIELD__READ__COMMON_FILTER_CONDITION
+  created_at: IN_APP_NOTIFICATION__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  tenant_id: IN_APP_NOTIFICATION__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  vendor_id: IN_APP_NOTIFICATION__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+}
+
+input Vendor_Profile_Relation_Connect_Payload {
+  ownerProfile_id: String
+}
+
+input Audit_Log_List_Upsert_Payload {
+  _connect: Audit_Log_List_Connect
+  action: String
+  vendor_id: String
+  tenant_id: String
+  by: String
+  at: String
+  payload: audit_log_payload_MultilineInput
+  _id: String
+}
+
+input BUSINESSPAYMENTLIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+input CUSTOMER__FIELD__CUSTOMER_UID__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input CUSTOMER_BUSINESS_WHERE_RELATION_FILTER_CONDITION {
+  currency: BUSINESS__FIELD__CURRENCY__COMMON_FILTER_CONDITION
+  created_at: BUSINESS__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  legacy_id: BUSINESS__FIELD__LEGACY_ID__COMMON_FILTER_CONDITION
+  name: BUSINESS__FIELD__NAME__COMMON_FILTER_CONDITION
+  logo_url: BUSINESS__FIELD__LOGO_URL__COMMON_FILTER_CONDITION
+  owner_id: BUSINESS__FIELD__OWNER_ID__COMMON_FILTER_CONDITION
+  tenant_id: BUSINESS__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  archived_at: BUSINESS__FIELD__ARCHIVED_AT__COMMON_FILTER_CONDITION
+  address: BUSINESS__FIELD__ADDRESS__COMMON_FILTER_CONDITION
+}
+
+input IN_APP_NOTIFICATION_WHERE_RELATION_FILTER_CONDITION {
+  tenant: IN_APP_NOTIFICATION_TENANT_WHERE_RELATION_FILTER_CONDITION
+}
+
+input LOAN_INSTALLMENT_LIST_COUNT_OR_CONDITION {
+  amount: LOAN_INSTALLMENT__FIELD__AMOUNT__COMMON_FILTER_CONDITION
+  vendor_id: LOAN_INSTALLMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  due_date: LOAN_INSTALLMENT__FIELD__DUE_DATE__COMMON_FILTER_CONDITION
+  paid_amount: LOAN_INSTALLMENT__FIELD__PAID_AMOUNT__COMMON_FILTER_CONDITION
+  paid_at: LOAN_INSTALLMENT__FIELD__PAID_AT__COMMON_FILTER_CONDITION
+  installment_id: LOAN_INSTALLMENT__FIELD__INSTALLMENT_ID__COMMON_FILTER_CONDITION
+  loan_id: LOAN_INSTALLMENT__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  business_id: LOAN_INSTALLMENT__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  installment_number: LOAN_INSTALLMENT__FIELD__INSTALLMENT_NUMBER__COMMON_FILTER_CONDITION
+  installment_status: LOAN_INSTALLMENT__FIELD__INSTALLMENT_STATUS__COMMON_FILTER_CONDITION
+  payment_id: LOAN_INSTALLMENT__FIELD__PAYMENT_ID__COMMON_FILTER_CONDITION
+  tenant_id: LOAN_INSTALLMENT__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input BUSINESS_LIST_COUNT_INPUT_SORT_PAYLOAD {
+  tenant_id: SORT_ENUM
+  logo_url: SORT_ENUM
+  created_at: SORT_ENUM
+  legacy_id: SORT_ENUM
+  currency: SORT_ENUM
+  owner_id: SORT_ENUM
+  address: SORT_ENUM
+  archived_at: SORT_ENUM
+  name: SORT_ENUM
+}
+
+type Business_List_Connection {
+}
+
+input Audit_Log_Relation_Connect_Payload {
+  tenant_id: String
+}
+
+input PAYMENT__FIELD__RECORDED_BY__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input TENANT__FIELD__PHONE__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input TENANT_DEVICE_WHERE_RELATION_FILTER_CONDITION {
+  device_key: DEVICE__FIELD__DEVICE_KEY__COMMON_FILTER_CONDITION
+  last_seen_at: DEVICE__FIELD__LAST_SEEN_AT__COMMON_FILTER_CONDITION
+  push_token: DEVICE__FIELD__PUSH_TOKEN__COMMON_FILTER_CONDITION
+  platform: DEVICE__FIELD__PLATFORM__COMMON_FILTER_CONDITION
+  app_version: DEVICE__FIELD__APP_VERSION__COMMON_FILTER_CONDITION
+  label: DEVICE__FIELD__LABEL__COMMON_FILTER_CONDITION
+  vendor_uid: DEVICE__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  auth_uid: DEVICE__FIELD__AUTH_UID__COMMON_FILTER_CONDITION
+  tenant_id: DEVICE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input TENANT_LIST_COUNT_INPUT_SORT_PAYLOAD {
+  legacy_vendor_id: SORT_ENUM
+  plan_expiry: SORT_ENUM
+  name: SORT_ENUM
+  phone: SORT_ENUM
+  owner_uid: SORT_ENUM
+}
+
+input REPORTCACHELIST_GROUPBY_INPUT {
+  key: String
+  value: String
+}
+
+type Update_AuditLog {
+}
+
+scalar String
+
+input BUSINESS__FIELD__LOGO_URL__COMMON_FILTER_CONDITION {
+  in: [String]
+  not_in: [String]
+  contains: String
+  eq: String
+  ne: String
+}
+
+input CUSTOMER_CONNECTION_FILTER_CONDITION {
+  connection_type: CONNECTION_TYPE_ENUM
+  _id: String
+  to_model: customer_MODEL_TYPE_ENUM
+  relation_type: RELATION_TYPE_ENUM
+}
+
+input TENANT_PRO_ACCESS_REQUEST_WHERE_RELATION_FILTER_CONDITION {
+  vendor_uid: PRO_ACCESS_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  email: PRO_ACCESS_REQUEST__FIELD__EMAIL__COMMON_FILTER_CONDITION
+  country_code: PRO_ACCESS_REQUEST__FIELD__COUNTRY_CODE__COMMON_FILTER_CONDITION
+  city: PRO_ACCESS_REQUEST__FIELD__CITY__COMMON_FILTER_CONDITION
+  request_status: PRO_ACCESS_REQUEST__FIELD__REQUEST_STATUS__COMMON_FILTER_CONDITION
+  source: PRO_ACCESS_REQUEST__FIELD__SOURCE__COMMON_FILTER_CONDITION
+  created_at: PRO_ACCESS_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  updated_at: PRO_ACCESS_REQUEST__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+}
+
+input REPORT_CACHE_LIST_COUNT_INPUT_SORT_PAYLOAD {
+  overdue_amount: SORT_ENUM
+  updated_at: SORT_ENUM
+  business_id: SORT_ENUM
+  tenant_id: SORT_ENUM
+  monthly_collected: SORT_ENUM
+}
+
+input Pro_Access_Request_Create_Payload {
+  _connect: Pro_Access_Request_List_Connect
+  email: String
+  updated_at: String
+  country_code: String
+  created_at: String
+  city: String
+  _id: String
+  vendor_uid: String
+  request_status: String
+  source: String
+}
+
+input CUSTOMER_DOCUMENT__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+  not_in: [String]
+  contains: String
+}
+
+input DEVICE_LIST_COUNT_OR_CONDITION {
+  push_token: DEVICE__FIELD__PUSH_TOKEN__COMMON_FILTER_CONDITION
+  platform: DEVICE__FIELD__PLATFORM__COMMON_FILTER_CONDITION
+  last_seen_at: DEVICE__FIELD__LAST_SEEN_AT__COMMON_FILTER_CONDITION
+  vendor_uid: DEVICE__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  tenant_id: DEVICE__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  device_key: DEVICE__FIELD__DEVICE_KEY__COMMON_FILTER_CONDITION
+  app_version: DEVICE__FIELD__APP_VERSION__COMMON_FILTER_CONDITION
+  label: DEVICE__FIELD__LABEL__COMMON_FILTER_CONDITION
+  auth_uid: DEVICE__FIELD__AUTH_UID__COMMON_FILTER_CONDITION
+}
+
+type Loan_List_Connection {
+}
+
+type Loan {
+}
+
+input LOAN__FIELD__START_DATE__COMMON_FILTER_CONDITION {
+  eq: String
+  ne: String
+  before: String
+  after: String
+  between: [String]
+}
+
+input LOAN__FIELD__LOAN_STATUS__COMMON_FILTER_CONDITION {
+  ne: String
+  in: [String]
+  eq: String
+}
+
+input TENANTFEATUREFLAGLIST_INPUT_WHERE_PAYLOAD {
+  OR: TENANTFEATUREFLAGLIST_OR_CONDITION
+  key: FEATURE_FLAG__FIELD__KEY__COMMON_FILTER_CONDITION
+  enabled: FEATURE_FLAG__FIELD__ENABLED__COMMON_FILTER_CONDITION
+  tenant_id: FEATURE_FLAG__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+}
+
+input PAYMENT_LIST_COUNT_INPUT_SORT_PAYLOAD {
+  payment_reference: SORT_ENUM
+  loan_id: SORT_ENUM
+  tenant_id: SORT_ENUM
+  installment_id: SORT_ENUM
+  customer_id: SORT_ENUM
+  payment_id: SORT_ENUM
+  vendor_id: SORT_ENUM
+  amount: SORT_ENUM
+  notes: SORT_ENUM
+  recorded_by: SORT_ENUM
+  recorded_at: SORT_ENUM
+  business_id: SORT_ENUM
+  customer_name: SORT_ENUM
+}
+
+input SUBSCRIPTION_REQUEST_LIST_COUNT_OR_CONDITION {
+  created_at: SUBSCRIPTION_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  vendor_uid: SUBSCRIPTION_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+  plan: SUBSCRIPTION_REQUEST__FIELD__PLAN__COMMON_FILTER_CONDITION
+  approved_at: SUBSCRIPTION_REQUEST__FIELD__APPROVED_AT__COMMON_FILTER_CONDITION
+  tenant_id: SUBSCRIPTION_REQUEST__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  submitted_by: SUBSCRIPTION_REQUEST__FIELD__SUBMITTED_BY__COMMON_FILTER_CONDITION
+  payment_method: SUBSCRIPTION_REQUEST__FIELD__PAYMENT_METHOD__COMMON_FILTER_CONDITION
+  txn_id: SUBSCRIPTION_REQUEST__FIELD__TXN_ID__COMMON_FILTER_CONDITION
+  amount_bdt: SUBSCRIPTION_REQUEST__FIELD__AMOUNT_BDT__COMMON_FILTER_CONDITION
+}
+
+input AUDIT_LOG_LIST_COUNT_KEY_CONDITION {
+  eq: String
+  ne: String
+  in: [String]
+}
+
+input LOAN_LIST_COUNT_INPUT_WHERE_PAYLOAD {
+  customer_id: LOAN__FIELD__CUSTOMER_ID__COMMON_FILTER_CONDITION
+  created_by: LOAN__FIELD__CREATED_BY__COMMON_FILTER_CONDITION
+  total_paid: LOAN__FIELD__TOTAL_PAID__COMMON_FILTER_CONDITION
+  total_interest: LOAN__FIELD__TOTAL_INTEREST__COMMON_FILTER_CONDITION
+  updated_at: LOAN__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  interest_rate: LOAN__FIELD__INTEREST_RATE__COMMON_FILTER_CONDITION
+  total_amount: LOAN__FIELD__TOTAL_AMOUNT__COMMON_FILTER_CONDITION
+  closed_at: LOAN__FIELD__CLOSED_AT__COMMON_FILTER_CONDITION
+  start_date: LOAN__FIELD__START_DATE__COMMON_FILTER_CONDITION
+  installment_count: LOAN__FIELD__INSTALLMENT_COUNT__COMMON_FILTER_CONDITION
+  item_name: LOAN__FIELD__ITEM_NAME__COMMON_FILTER_CONDITION
+  grand_total: LOAN__FIELD__GRAND_TOTAL__COMMON_FILTER_CONDITION
+  next_due_date: LOAN__FIELD__NEXT_DUE_DATE__COMMON_FILTER_CONDITION
+  remaining_installments: LOAN__FIELD__REMAINING_INSTALLMENTS__COMMON_FILTER_CONDITION
+  OR: LOAN_LIST_COUNT_OR_CONDITION
+  tenant_id: LOAN__FIELD__TENANT_ID__COMMON_FILTER_CONDITION
+  notes: LOAN__FIELD__NOTES__COMMON_FILTER_CONDITION
+  loan_id: LOAN__FIELD__LOAN_ID__COMMON_FILTER_CONDITION
+  principal_amount: LOAN__FIELD__PRINCIPAL_AMOUNT__COMMON_FILTER_CONDITION
+  installment_amount: LOAN__FIELD__INSTALLMENT_AMOUNT__COMMON_FILTER_CONDITION
+  down_payment: LOAN__FIELD__DOWN_PAYMENT__COMMON_FILTER_CONDITION
+  customer_phone: LOAN__FIELD__CUSTOMER_PHONE__COMMON_FILTER_CONDITION
+  paid_installments: LOAN__FIELD__PAID_INSTALLMENTS__COMMON_FILTER_CONDITION
+  vendor_id: LOAN__FIELD__VENDOR_ID__COMMON_FILTER_CONDITION
+  item_description: LOAN__FIELD__ITEM_DESCRIPTION__COMMON_FILTER_CONDITION
+  installment_type: LOAN__FIELD__INSTALLMENT_TYPE__COMMON_FILTER_CONDITION
+  created_at: LOAN__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  business_id: LOAN__FIELD__BUSINESS_ID__COMMON_FILTER_CONDITION
+  loan_status: LOAN__FIELD__LOAN_STATUS__COMMON_FILTER_CONDITION
+  interest_type: LOAN__FIELD__INTEREST_TYPE__COMMON_FILTER_CONDITION
+  total_outstanding: LOAN__FIELD__TOTAL_OUTSTANDING__COMMON_FILTER_CONDITION
+  customer_name: LOAN__FIELD__CUSTOMER_NAME__COMMON_FILTER_CONDITION
+  first_payment_date: LOAN__FIELD__FIRST_PAYMENT_DATE__COMMON_FILTER_CONDITION
+}
+
+input PROACCESSREQUESTLIST_OR_CONDITION {
+  email: PRO_ACCESS_REQUEST__FIELD__EMAIL__COMMON_FILTER_CONDITION
+  country_code: PRO_ACCESS_REQUEST__FIELD__COUNTRY_CODE__COMMON_FILTER_CONDITION
+  city: PRO_ACCESS_REQUEST__FIELD__CITY__COMMON_FILTER_CONDITION
+  request_status: PRO_ACCESS_REQUEST__FIELD__REQUEST_STATUS__COMMON_FILTER_CONDITION
+  source: PRO_ACCESS_REQUEST__FIELD__SOURCE__COMMON_FILTER_CONDITION
+  created_at: PRO_ACCESS_REQUEST__FIELD__CREATED_AT__COMMON_FILTER_CONDITION
+  updated_at: PRO_ACCESS_REQUEST__FIELD__UPDATED_AT__COMMON_FILTER_CONDITION
+  vendor_uid: PRO_ACCESS_REQUEST__FIELD__VENDOR_UID__COMMON_FILTER_CONDITION
+}
+
+input LOAN__FIELD__INTEREST_TYPE__COMMON_FILTER_CONDITION {
+  in: [String]
+  eq: String
+  ne: String
+}

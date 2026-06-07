@@ -99,7 +99,7 @@ export interface User {
   updated_at?: string;
 }
 
-/** Login via system GraphQL `loginUser`. Password path: use `email` or `phone` per project settings. Google OAuth code path: `authMethod: 'google'`, `code`, `state` from redirect (get `state` first via `googleOAuthState`). */
+/** Login via system GraphQL `loginUser`. Password path: use `email` or `phone` per project settings. Google OAuth code path: `authMethod: 'google'`, `code`, `state` from redirect (get `state` first via `googleOAuthState`). Native mobile: `authMethod: 'google_id_token'`, `idToken` from `google_sign_in`. */
 export interface LoginUserParams {
   projectId: string;
   password?: string;
@@ -108,6 +108,7 @@ export interface LoginUserParams {
   authMethod?: string;
   code?: string;
   state?: string;
+  idToken?: string;
 }
 
 export interface GoogleOAuthStateResponse {

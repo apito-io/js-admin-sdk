@@ -188,7 +188,7 @@ These calls use the admin client and system GraphQL endpoint. They mirror the Go
 | `searchUsers(projectId, limit?, offset?)` | List project end-users (`email`, `phone`, optional `tenant_id`). |
 | `searchTenantsByDomain(projectId, domain)` | Exact domain lookup in project scope; returns `{ tenant }` (null if no match). |
 | `createUser(projectId, params)` | Create a local-password user; `params`: `{ password, role?, email?, phone? }`. |
-| `loginUser(params)` | General: `{ projectId, password, email? or phone? }`. Google: **`googleOAuthState(projectId)`** then **`loginUser({ projectId, authMethod: 'google', code, state })`**. |
+| `loginUser(params)` | General: `{ projectId, password, email? or phone? }`. Google OAuth: **`googleOAuthState(projectId)`** then **`loginUser({ projectId, authMethod: 'google', code, state })`**. Native mobile: **`loginUser({ projectId, authMethod: 'google_id_token', idToken })`**. |
 | `googleOAuthState(projectId)` | Returns **`{ state }`** for the Google authorize URL. |
 | `updateUser(userId, params)` | Mutate `email`, `phone`, and/or `role` only. |
 | `resetUserPassword(userId, password)` | Admin password reset. |
@@ -196,9 +196,9 @@ These calls use the admin client and system GraphQL endpoint. They mirror the Go
 
 ### Files (REST)
 
-REST base is derived from `baseURL` by stripping `/graphql`, or set `restBaseURL` on the client config (typically `http://host:5050/system`).
+REST base is derived from `baseURL` by stripping `/graphql` (when GraphQL is `/system/graphql`, defaults to **`/secured`**), or set `restBaseURL` explicitly (e.g. `http://host:5050/secured`).
 
-File **metadata** is stored in the **project database** `files` table (not the system DB). On Pro/SaaS engines, pass `tenantId` on the client or `X-Apito-Tenant-ID` so list/upload/delete target the tenant project DB. REST paths are unchanged: full URLs are `/system/files/upload`, `/system/files/list`, and `/system/files/delete`.
+File **metadata** is stored in the **project database** `files` table (not the system DB). On Pro/SaaS engines, pass `tenantId` on the client or `X-Apito-Tenant-ID` so list/upload/delete target the tenant project DB. Default `restBaseURL` resolves to `/secured` when GraphQL uses `/system/graphql`; full URLs are `/secured/files/upload`, `/secured/files/list`, and `/secured/files/delete`.
 
 | Method | Description |
 |--------|-------------|
@@ -396,6 +396,25 @@ This client mirrors the Go `go-internal-sdk` package and the `InternalSDKOperati
 - **`TypedOperations`:** `data` is deep-cloned via `JSON.parse(JSON.stringify(...))`, matching the Go SDK’s marshal/unmarshal approach for typed document `data`.
 
 ## 🏗️ Development
+
+### GraphQL codegen (v3.4.0+)
+
+The SDK can emit **per-model GraphQL documents** and **TanStack Query v5 hooks** from a checked-in engine introspection snapshot.
+
+```bash
+# 1. Refresh schema/apito_introspection.json from your engine (introspection query + X-Apito-Key)
+# 2. Regenerate operations + types
+npm run gen          # gen:operations + gen:types
+# or separately:
+npm run gen:operations   # → codegen/operations/*.graphql, codegen/schema.graphql
+npm run gen:types        # → src/generated/types.ts, sdk.ts, hooks.ts
+```
+
+**Exports:** `getSdk`, `createApitoFetcher`, `useApitoFetcher`, generated hooks, and naming helpers (`apitoGraphQLComposedTypeName`, `DocumentBuilder`, …) from the package root.
+
+**Optional peer:** `@tanstack/react-query` ^5 (for generated hooks only; core `ApitoClient` does not require React).
+
+See [CONTRACT.md](CONTRACT.md) for the cross-SDK naming/operation contract shared with Flutter and Go admin SDKs.
 
 ### Building from Source
 

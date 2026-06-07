@@ -30,7 +30,12 @@ import { FILES_DELETE_PATH, FILES_LIST_PATH, FILES_UPLOAD_PATH } from './filesPa
 function deriveRestBaseURL(graphqlURL: string): string {
   const u = graphqlURL.trim().replace(/\/$/, '');
   if (u.endsWith('/graphql')) {
-    return u.slice(0, -'/graphql'.length);
+    const base = u.slice(0, -'/graphql'.length);
+    // Project file REST lives on /secured even when GraphQL uses /system/graphql.
+    if (base.endsWith('/system')) {
+      return `${base.slice(0, -'/system'.length)}/secured`;
+    }
+    return base;
   }
   return u;
 }
@@ -246,6 +251,13 @@ export class ApitoClient implements InjectedDBOperationInterface {
       }
       variables.code = code;
       variables.state = state;
+    } else if (authMethod === 'google_id_token') {
+      variables.auth_method = 'google_id_token';
+      const idToken = (params.idToken ?? '').trim();
+      if (!idToken) {
+        throw new ValidationError('id_token is required for google_id_token login');
+      }
+      variables.id_token = idToken;
     } else {
       const password = (params.password ?? '').trim();
       if (!password) {
@@ -262,8 +274,8 @@ export class ApitoClient implements InjectedDBOperationInterface {
     }
 
     const query = `
-      query LoginUser($project_id: String!, $password: String, $auth_method: String, $email: String, $phone: String, $code: String, $state: String) {
-        loginUser(project_id: $project_id, password: $password, auth_method: $auth_method, email: $email, phone: $phone, code: $code, state: $state) {
+      query LoginUser($project_id: String!, $password: String, $auth_method: String, $email: String, $phone: String, $code: String, $state: String, $id_token: String) {
+        loginUser(project_id: $project_id, password: $password, auth_method: $auth_method, email: $email, phone: $phone, code: $code, state: $state, id_token: $id_token) {
           token
           user {
             id
@@ -505,7 +517,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
     return ok;
   }
 
-  /** Upload a project file via POST /system/files/upload (metadata in project DB). */
+  /** Upload a project file via POST /secured/files/upload (metadata in project DB). */
   async uploadFile(params: UploadFileParams): Promise<File> {
     const size =
       params.content instanceof ArrayBuffer
@@ -532,7 +544,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
     return body.file;
   }
 
-  /** List project files via GET /system/files/list. */
+  /** List project files via GET /secured/files/list. */
   async listFiles(
     fileType?: string,
     limit?: number,
@@ -554,7 +566,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
     };
   }
 
-  /** Delete project files via POST /system/files/delete. */
+  /** Delete project files via POST /secured/files/delete. */
   async deleteFiles(ids: string[]): Promise<DeleteFilesResponse> {
     if (!ids?.length) {
       throw new ValidationError('ids are required');

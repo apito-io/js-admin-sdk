@@ -5,11 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.0] - 2026-06-05
+
+### Added
+
+- **`loginUser` `google_id_token`** — native mobile Google sign-in via `idToken` on `LoginUserParams`.
+
+### Changed
+
+- **Project files REST** — default `restBaseURL` resolves to `/secured` (was `/system` when GraphQL used `/system/graphql`). Full paths: `/secured/files/upload|list|delete`.
+
+## [3.4.0] - 2026-06-05
+
+### Added
+
+- **Naming engine** — `src/naming/apitoGraphqlNames.ts` (shared contract with Flutter/Go/refine-apito); golden vectors in `test/fixtures/naming_vectors.json`.
+- **Operation emitter** — `npm run gen:operations` reads `schema/apito_introspection.json`, writes `codegen/schema.graphql`, `codegen/introspection.normalized.json`, and `codegen/operations/{model}.graphql` (5 ops per model).
+- **graphql-codegen pipeline** — `npm run gen:types` → `src/generated/types.ts`, `sdk.ts`, `hooks.ts`; `npm run gen` runs both.
+- **TanStack React Query v5 hooks** — optional peer `@tanstack/react-query`; `createApitoFetcher` / `useApitoFetcher` / `getSdk` exported from `src/generated/`.
+- **Public exports** — `DocumentBuilder`, `parseIntrospection`, naming helpers, and generated types/hooks from package root.
+
+### Changed
+
+- **Cross-SDK contract** — documented in [CONTRACT.md](CONTRACT.md) and [SYNC_SUMMARY.md](SYNC_SUMMARY.md).
+
 ## [3.3.0] - 2026-05-28
 
 ### Changed
 
-- **Project files storage** — Document and export REST path constants (`FILES_*_PATH`). File metadata is persisted in the **project DB** `files` table (engine migration from system DB); REST URLs remain `/system/files/*`. SaaS callers should pass `tenantId` on the client config.
+- **Project files storage** — Document and export REST path constants (`FILES_*_PATH`). File metadata is persisted in the **project DB** `files` table (engine migration from system DB); REST URLs were `/system/files/*` at this release (**moved to `/secured/files/*` in 3.5.0**). SaaS callers should pass `tenantId` on the client config.
 
 ## [3.2.0] - 2026-05-18
 
