@@ -188,7 +188,7 @@ These calls use the admin client and system GraphQL endpoint. They mirror the Go
 | `searchUsers(projectId, limit?, offset?)` | List project end-users (`email`, `phone`, optional `tenant_id`). |
 | `searchTenantsByDomain(projectId, domain)` | Exact domain lookup in project scope; returns `{ tenant }` (null if no match). |
 | `createUser(projectId, params)` | Create a local-password user; `params`: `{ password, role?, email?, phone? }`. |
-| `loginUser(params)` | General: `{ projectId, password, email? or phone? }`. Google OAuth: **`googleOAuthState(projectId)`** then **`loginUser({ projectId, authMethod: 'google', code, state })`**. Native mobile: **`loginUser({ projectId, authMethod: 'google_id_token', idToken })`**. |
+| `loginUser(params)` | General: `{ projectId, password, email? or phone? }`. SaaS per-tenant DB: **`tenantId` required**. Google OAuth: **`googleOAuthState(projectId)`** then **`loginUser({ projectId, authMethod: 'google', code, state })`**. Native mobile: **`loginUser({ projectId, authMethod: 'google_id_token', idToken })`**. |
 | `googleOAuthState(projectId)` | Returns **`{ state }`** for the Google authorize URL. |
 | `updateUser(userId, params)` | Mutate `email`, `phone`, and/or `role` only. |
 | `resetUserPassword(userId, password)` | Admin password reset. |

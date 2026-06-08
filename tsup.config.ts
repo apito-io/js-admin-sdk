@@ -19,6 +19,7 @@ export default defineConfig([
     dts: true,
     clean: true,
     noExternal: ['axios'],
+    external: ['react', 'react-dom', '@tanstack/react-query', 'graphql'],
     banner,
   },
   // CJS for Node scripts — axios remains a normal dependency.

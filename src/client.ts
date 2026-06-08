@@ -241,6 +241,10 @@ export class ApitoClient implements InjectedDBOperationInterface {
     const variables: Record<string, any> = {
       project_id: params.projectId,
     };
+    const tenantId = (params.tenantId ?? '').trim();
+    if (tenantId) {
+      variables.tenant_id = tenantId;
+    }
 
     if (authMethod === 'google') {
       variables.auth_method = 'google';
@@ -274,8 +278,8 @@ export class ApitoClient implements InjectedDBOperationInterface {
     }
 
     const query = `
-      query LoginUser($project_id: String!, $password: String, $auth_method: String, $email: String, $phone: String, $code: String, $state: String, $id_token: String) {
-        loginUser(project_id: $project_id, password: $password, auth_method: $auth_method, email: $email, phone: $phone, code: $code, state: $state, id_token: $id_token) {
+      query LoginUser($project_id: String!, $tenant_id: String, $password: String, $auth_method: String, $email: String, $phone: String, $code: String, $state: String, $id_token: String) {
+        loginUser(project_id: $project_id, tenant_id: $tenant_id, password: $password, auth_method: $auth_method, email: $email, phone: $phone, code: $code, state: $state, id_token: $id_token) {
           token
           user {
             id

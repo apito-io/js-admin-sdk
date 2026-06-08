@@ -18,8 +18,19 @@ export * from './types';
 export * from './naming/apitoGraphqlNames';
 export { DocumentBuilder } from './naming/documentBuilder';
 export { parseIntrospection, introspectionToSdl } from './naming/schemaReader';
+export { resolveModelDataFields, resolveModelDataFieldNames } from './naming/dataFieldSelection';
 export type { ApitoSchema, ApitoSchemaModel, ApitoSchemaField } from './naming/schemaReader';
 export * from './generated';
+export * from './headless/types';
+export * from './headless/filterVariables';
+export * from './headless/documents';
+export * from './headless/context';
+export * from './headless/fetcher';
+export * from './headless/serializeGraphQLQuery';
+export * from './headless/hooks';
+export * from './headless/form';
+export * from './headless/select';
+export * from './headless/refineDataProvider';
 
 // Re-export commonly used types for convenience
 export type {

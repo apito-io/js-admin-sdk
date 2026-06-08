@@ -1,14 +1,16 @@
 import type { ApitoClient } from '../client';
 import type { GraphQLResponse } from '../types';
+import { serializeGraphQLQuery, type GraphQLQueryInput } from '../headless/serializeGraphQLQuery';
 
 export type ApitoFetcher = (
-  query: string,
-  variables?: Record<string, unknown>
+  query: GraphQLQueryInput,
+  variables?: Record<string, unknown>,
 ) => Promise<GraphQLResponse>;
 
 /** Build a fetcher that delegates to ApitoClient.executeGraphQL. */
 export function createApitoFetcher(client: ApitoClient): ApitoFetcher {
-  return (query, variables) => client.executeGraphQL(query, variables);
+  return (query, variables) =>
+    client.executeGraphQL(serializeGraphQLQuery(query), variables);
 }
 
 /** React Query fetcher hook factory — pass client via context in your app. */

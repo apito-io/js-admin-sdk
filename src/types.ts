@@ -99,9 +99,10 @@ export interface User {
   updated_at?: string;
 }
 
-/** Login via system GraphQL `loginUser`. Password path: use `email` or `phone` per project settings. Google OAuth code path: `authMethod: 'google'`, `code`, `state` from redirect (get `state` first via `googleOAuthState`). Native mobile: `authMethod: 'google_id_token'`, `idToken` from `google_sign_in`. */
+/** Login via system GraphQL `loginUser`. Password path: use `email` or `phone` per project settings. Google OAuth code path: `authMethod: 'google'`, `code`, `state` from redirect (get `state` first via `googleOAuthState`). Native mobile: `authMethod: 'google_id_token'`, `idToken` from `google_sign_in`. SaaS per-tenant separate DB: pass `tenantId` (required by engine). */
 export interface LoginUserParams {
   projectId: string;
+  tenantId?: string;
   password?: string;
   email?: string;
   phone?: string;
