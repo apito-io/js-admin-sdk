@@ -81,11 +81,11 @@
     "axios": "^1.14.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.7",
-    "@graphql-codegen/typescript": "^4.1.6",
-    "@graphql-codegen/typescript-generic-sdk": "^4.0.3",
-    "@graphql-codegen/typescript-operations": "^4.6.1",
-    "@graphql-codegen/typescript-react-query": "^6.1.1",
+    "@graphql-codegen/cli": "^7.1.2",
+    "@graphql-codegen/typescript": "^6.0.2",
+    "@graphql-codegen/typescript-generic-sdk": "^5.0.1",
+    "@graphql-codegen/typescript-operations": "^6.0.3",
+    "@graphql-codegen/typescript-react-query": "^7.0.1",
     "@tanstack/react-query": "^5.90.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.5.0",
