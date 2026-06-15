@@ -1,11 +1,16 @@
 # JS Admin SDK — Cross-SDK Sync Summary
 
-**Package:** `@apito-io/js-admin-sdk` (v3.6.0)  
-**Aligned with:** `flutter_admin_sdk` v0.4.0, `go-admin-sdk` v2.5.0
+**Package:** `@apito-io/js-admin-sdk` (v3.6.1)  
+**Aligned with:** `flutter_admin_sdk` v0.4.3, `go-admin-sdk` v2.5.1
 
 ## Shared contract
 
 See [CONTRACT.md](CONTRACT.md).
+
+## v3.6.1 (2026-06-15)
+
+- **`loginUser` Google** — engine auto-links verified email to existing user; new errors documented (no SDK API change)
+- **`createUser` / `updateUser`** — engine enforces project-wide email/phone uniqueness on open-core
 
 ## v3.6.0 (2026-06-08)
 

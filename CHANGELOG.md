@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.1] - 2026-06-15
+
+### Changed
+
+- **`loginUser` Google auth (engine behavior)** — When `authMethod` is `google` or `google_id_token` and no user matches `google_sub`, the engine requires a verified Google email, then auto-links an existing project user with the same normalized email (password unchanged) or creates a new Google user. New GraphQL errors: `google email not verified`, `google account already linked to another user`, `multiple users matched this email`. No SDK signature changes; handle these in client error handling.
+- **`createUser` / `updateUser` uniqueness (engine behavior)** — Open-core projects now reject duplicate email and phone project-wide (aligned with pro). Stable GraphQL errors: `email already exists for this project`, `phone already exists for this project`. No schema or SDK API changes.
+
 ## [3.6.0] - 2026-06-08
 
 ### Added

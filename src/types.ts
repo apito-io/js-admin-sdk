@@ -99,7 +99,7 @@ export interface User {
   updated_at?: string;
 }
 
-/** Login via system GraphQL `loginUser`. Password path: use `email` or `phone` per project settings. Google OAuth code path: `authMethod: 'google'`, `code`, `state` from redirect (get `state` first via `googleOAuthState`). Native mobile: `authMethod: 'google_id_token'`, `idToken` from `google_sign_in`. SaaS per-tenant separate DB: pass `tenantId` (required by engine). */
+/** Login via system GraphQL `loginUser`. Password path: use `email` or `phone` per project settings. Google OAuth code path: `authMethod: 'google'`, `code`, `state` from redirect (get `state` first via `googleOAuthState`). Native mobile: `authMethod: 'google_id_token'`, `idToken` from `google_sign_in`. SaaS per-tenant separate DB: pass `tenantId` (required by engine). Google paths: engine may auto-link a verified email to an existing user (no duplicate signup); errors include `google email not verified`, `google account already linked to another user`, `multiple users matched this email`. */
 export interface LoginUserParams {
   projectId: string;
   tenantId?: string;
@@ -117,13 +117,14 @@ export interface GoogleOAuthStateResponse {
 }
 
 export interface CreateUserParams {
+  /** Engine rejects duplicate email project-wide: `email already exists for this project`. */
   password: string;
   role?: string;
   email?: string;
   phone?: string;
 }
 
-/** Optional fields for `updateUser`; omitted keys are not sent. */
+/** Optional fields for `updateUser`; omitted keys are not sent. Engine rejects duplicate email/phone project-wide. */
 export interface UpdateUserParams {
   email?: string;
   phone?: string;

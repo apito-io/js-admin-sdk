@@ -234,7 +234,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /**
-   * Project user login (system GraphQL `loginUser`). Password path: pass `password` and `email` or `phone` per project Authentication settings. Google OAuth path: `authMethod: 'google'` with `code` and `state` from the redirect; call `googleOAuthState(projectId)` before opening Google to obtain `state`.
+   * Project user login (system GraphQL `loginUser`). Password path: pass `password` and `email` or `phone` per project Authentication settings. Google OAuth path: `authMethod: 'google'` with `code` and `state` from the redirect; call `googleOAuthState(projectId)` before opening Google to obtain `state`. Google paths may auto-link a verified email to an existing user; handle engine errors `google email not verified`, `google account already linked to another user`, `multiple users matched this email`.
    */
   async loginUser(params: LoginUserParams): Promise<LoginUserResponse> {
     const authMethod = (params.authMethod ?? 'general').trim().toLowerCase() || 'general';
@@ -400,7 +400,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /**
-   * Create a project user (local password). Use `email` and/or `phone` per engine validation for the project identifier mode.
+   * Create a project user (local password). Use `email` and/or `phone` per engine validation for the project identifier mode. Engine errors: `email already exists for this project`, `phone already exists for this project`.
    */
   async createUser(projectId: string, params: CreateUserParams): Promise<User> {
     const password = (params.password ?? '').trim();
@@ -441,7 +441,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /**
-   * Update a project user. Project scope is implied by the API key. Only include fields to change.
+   * Update a project user. Project scope is implied by the API key. Only include fields to change. Engine errors: `email already exists for this project`, `phone already exists for this project`.
    */
   async updateUser(userId: string, params: UpdateUserParams): Promise<User> {
     const uid = (userId ?? '').trim();
