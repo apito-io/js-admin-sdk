@@ -16,6 +16,10 @@ import {
   UsersResponse,
   TenantByDomainResponse,
   TenantCatalogSearchRow,
+  TenantCatalogListItem,
+  GetTenantsResponse,
+  CreateTenantParams,
+  UpdateTenantParams,
   LoginUserParams,
   CreateUserParams,
   UpdateUserParams,
@@ -328,16 +332,17 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /**
-   * Search project end-users.
+   * Search project end-users. On pro SaaS, pass `tenantId` to scope the list to one catalog tenant.
    */
   async searchUsers(
     projectId: string,
     limit?: number,
-    offset?: number
+    offset?: number,
+    tenantId?: string
   ): Promise<UsersResponse> {
     const query = `
-      query SearchUsers($project_id: String!, $limit: Int, $offset: Int) {
-        searchUsers(project_id: $project_id, limit: $limit, offset: $offset) {
+      query SearchUsers($project_id: String!, $limit: Int, $offset: Int, $tenant_id: String) {
+        searchUsers(project_id: $project_id, limit: $limit, offset: $offset, tenant_id: $tenant_id) {
           count
           users {
             id
@@ -356,6 +361,8 @@ export class ApitoClient implements InjectedDBOperationInterface {
     const variables: Record<string, any> = { project_id: projectId };
     if (limit !== undefined) variables.limit = limit;
     if (offset !== undefined) variables.offset = offset;
+    const tid = (tenantId ?? '').trim();
+    if (tid) variables.tenant_id = tid;
     const response = await this.executeGraphQL(query, variables);
     const raw = response.data?.searchUsers;
     if (!raw) {
@@ -399,6 +406,111 @@ export class ApitoClient implements InjectedDBOperationInterface {
     return { tenant };
   }
 
+  /** List SaaS catalog tenants for the authenticated project (system GraphQL only). */
+  async getTenants(): Promise<GetTenantsResponse> {
+    const query = `
+      query GetTenants {
+        getTenants {
+          tenants {
+            id
+            name
+            domain
+            icon
+            data
+          }
+        }
+      }
+    `;
+    const response = await this.executeGraphQL(query, {});
+    const raw = response.data?.getTenants;
+    if (!raw) {
+      throw new ValidationError('Invalid response format for getTenants');
+    }
+    const tenants = (raw.tenants ?? []) as TenantCatalogListItem[];
+    return { tenants };
+  }
+
+  /** Provision a SaaS catalog tenant (system GraphQL only). */
+  async createTenant(params: CreateTenantParams): Promise<TenantCatalogSearchRow> {
+    const name = (params.name ?? '').trim();
+    if (!name) {
+      throw new ValidationError('name is required');
+    }
+    const query = `
+      mutation CreateTenant($name: String!, $data: String, $domain: String) {
+        createTenant(name: $name, data: $data, domain: $domain) {
+          id
+          name
+          status
+          domain
+          data
+        }
+      }
+    `;
+    const variables: Record<string, any> = { name };
+    const data = (params.data ?? '').trim();
+    if (data) variables.data = data;
+    const domain = (params.domain ?? '').trim();
+    if (domain) variables.domain = domain;
+    const response = await this.executeGraphQL(query, variables);
+    const row = response.data?.createTenant as TenantCatalogSearchRow | undefined;
+    if (!row?.id) {
+      throw new ValidationError('Invalid response format for createTenant');
+    }
+    return row;
+  }
+
+  /** Update catalog tenant name/data/domain. */
+  async updateTenant(tenantId: string, params: UpdateTenantParams): Promise<TenantCatalogSearchRow> {
+    const tid = (tenantId ?? '').trim();
+    if (!tid) {
+      throw new ValidationError('tenantId is required');
+    }
+    if (params.name === undefined && params.data === undefined && params.domain === undefined) {
+      throw new ValidationError('at least one field must be provided');
+    }
+    const query = `
+      mutation UpdateTenant($tenant_id: String!, $name: String, $data: String, $domain: String) {
+        updateTenant(tenant_id: $tenant_id, name: $name, data: $data, domain: $domain) {
+          id
+          name
+          status
+          domain
+          data
+        }
+      }
+    `;
+    const variables: Record<string, any> = { tenant_id: tid };
+    if (params.name !== undefined) variables.name = params.name;
+    if (params.data !== undefined) variables.data = params.data;
+    if (params.domain !== undefined) variables.domain = params.domain;
+    const response = await this.executeGraphQL(query, variables);
+    const row = response.data?.updateTenant as TenantCatalogSearchRow | undefined;
+    if (!row?.id) {
+      throw new ValidationError('Invalid response format for updateTenant');
+    }
+    return row;
+  }
+
+  /** Hard-delete a catalog tenant row. */
+  async deleteTenant(tenantId: string): Promise<boolean> {
+    const tid = (tenantId ?? '').trim();
+    if (!tid) {
+      throw new ValidationError('tenantId is required');
+    }
+    const query = `
+      mutation DeleteTenant($tenant_id: String!) {
+        deleteTenant(tenant_id: $tenant_id)
+      }
+    `;
+    const response = await this.executeGraphQL(query, { tenant_id: tid });
+    const ok = response.data?.deleteTenant;
+    if (typeof ok !== 'boolean') {
+      throw new ValidationError('Invalid response format for deleteTenant');
+    }
+    return ok;
+  }
+
   /**
    * Create a project user (local password). Use `email` and/or `phone` per engine validation for the project identifier mode. Engine errors: `email already exists for this project`, `phone already exists for this project`.
    */
@@ -408,8 +520,8 @@ export class ApitoClient implements InjectedDBOperationInterface {
       throw new ValidationError('password is required');
     }
     const query = `
-      mutation CreateUser($project_id: String!, $password: String!, $role: String, $email: String, $phone: String) {
-        createUser(project_id: $project_id, password: $password, role: $role, email: $email, phone: $phone) {
+      mutation CreateUser($project_id: String!, $password: String!, $role: String, $email: String, $phone: String, $tenant_id: String) {
+        createUser(project_id: $project_id, password: $password, role: $role, email: $email, phone: $phone, tenant_id: $tenant_id) {
           id
           email
           phone
@@ -432,6 +544,8 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (email) variables.email = email;
     const phone = (params.phone ?? '').trim();
     if (phone) variables.phone = phone;
+    const tenantId = (params.tenantId ?? '').trim();
+    if (tenantId) variables.tenant_id = tenantId;
     const response = await this.executeGraphQL(query, variables);
     const u = response.data?.createUser;
     if (!u?.id) {
@@ -448,12 +562,17 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (!uid) {
       throw new ValidationError('userId is required');
     }
-    if (params.email === undefined && params.phone === undefined && params.role === undefined) {
+    if (
+      params.email === undefined &&
+      params.phone === undefined &&
+      params.role === undefined &&
+      params.tenantId === undefined
+    ) {
       throw new ValidationError('at least one field must be provided');
     }
     const query = `
-      mutation UpdateUser($user_id: String!, $email: String, $phone: String, $role: String) {
-        updateUser(user_id: $user_id, email: $email, phone: $phone, role: $role) {
+      mutation UpdateUser($user_id: String!, $email: String, $phone: String, $role: String, $tenant_id: String) {
+        updateUser(user_id: $user_id, email: $email, phone: $phone, role: $role, tenant_id: $tenant_id) {
           id
           email
           phone
@@ -470,6 +589,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (params.email !== undefined) variables.email = params.email;
     if (params.phone !== undefined) variables.phone = params.phone;
     if (params.role !== undefined) variables.role = params.role;
+    if (params.tenantId !== undefined) variables.tenant_id = params.tenantId;
     const response = await this.executeGraphQL(query, variables);
     const u = response.data?.updateUser;
     if (!u?.id) {

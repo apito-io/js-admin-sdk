@@ -1,11 +1,15 @@
 # JS Admin SDK — Cross-SDK Sync Summary
 
-**Package:** `@apito-io/js-admin-sdk` (v3.6.1)  
-**Aligned with:** `flutter_admin_sdk` v0.4.3, `go-admin-sdk` v2.5.1
+**Package:** `@apito-io/js-admin-sdk` (v3.7.0)  
+**Aligned with:** `flutter_admin_sdk` v0.5.0, `go-admin-sdk` v2.6.0
 
 ## Shared contract
 
 See [CONTRACT.md](CONTRACT.md).
+
+## v3.7.0 (2026-06-11)
+
+- **`tenantId` on user CRUD** — `searchUsers`, `createUser`, `updateUser` pass optional GraphQL `tenant_id` (pro SaaS)
 
 ## v3.6.1 (2026-06-15)
 

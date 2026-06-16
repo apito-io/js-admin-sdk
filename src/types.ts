@@ -122,6 +122,8 @@ export interface CreateUserParams {
   role?: string;
   email?: string;
   phone?: string;
+  /** Pro SaaS: catalog tenant id; sent as GraphQL `tenant_id`. Omit on general projects. */
+  tenantId?: string;
 }
 
 /** Optional fields for `updateUser`; omitted keys are not sent. Engine rejects duplicate email/phone project-wide. */
@@ -129,6 +131,8 @@ export interface UpdateUserParams {
   email?: string;
   phone?: string;
   role?: string;
+  /** Pro SaaS: catalog tenant scope; sent as GraphQL `tenant_id`. */
+  tenantId?: string;
 }
 
 export interface LoginUserResponse {
@@ -185,6 +189,31 @@ export interface TenantByDomainResponse {
   tenant: TenantCatalogSearchRow | null;
 }
 
+/** One SaaS catalog tenant row from getTenants (includes icon). */
+export interface TenantCatalogListItem {
+  id: string;
+  name: string;
+  domain?: string;
+  icon?: string;
+  data?: string;
+}
+
+export interface GetTenantsResponse {
+  tenants: TenantCatalogListItem[];
+}
+
+export interface CreateTenantParams {
+  name: string;
+  data?: string;
+  domain?: string;
+}
+
+export interface UpdateTenantParams {
+  name?: string;
+  data?: string;
+  domain?: string;
+}
+
 export interface ClientConfig {
   baseURL: string;
   /** REST base (e.g. http://host:5050/system); derived from baseURL when omitted */
@@ -225,8 +254,17 @@ export interface InjectedDBOperationInterface {
   generateTenantToken(tenantId: string, duration?: string, role?: string): Promise<string>;
   loginUser(params: LoginUserParams): Promise<LoginUserResponse>;
   googleOAuthState(projectId: string): Promise<GoogleOAuthStateResponse>;
-  searchUsers(projectId: string, limit?: number, offset?: number): Promise<UsersResponse>;
+  searchUsers(
+    projectId: string,
+    limit?: number,
+    offset?: number,
+    tenantId?: string
+  ): Promise<UsersResponse>;
   searchTenantsByDomain(projectId: string, domain: string): Promise<TenantByDomainResponse>;
+  getTenants(): Promise<GetTenantsResponse>;
+  createTenant(params: CreateTenantParams): Promise<TenantCatalogSearchRow>;
+  updateTenant(tenantId: string, params: UpdateTenantParams): Promise<TenantCatalogSearchRow>;
+  deleteTenant(tenantId: string): Promise<boolean>;
   createUser(projectId: string, params: CreateUserParams): Promise<User>;
   updateUser(userId: string, params: UpdateUserParams): Promise<User>;
   resetUserPassword(userId: string, password: string): Promise<boolean>;

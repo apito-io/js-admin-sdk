@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.7.0] - 2026-06-11
+
+### Added
+
+- **`tenantId` on user CRUD** — optional `tenantId` on `searchUsers` (4th arg), `CreateUserParams`, and `UpdateUserParams`; sent as GraphQL `tenant_id` on pro SaaS engines. Omit on general projects. Required for correct SaaS migrations when catalog tenant is known (otherwise engine may default to first active tenant on `createUser`).
+
+### Changed
+
+- **Docs** — README auth table and CONTRACT note tenant-aware `searchUsers` / `createUser` / `updateUser`.
+
 ## [3.6.1] - 2026-06-15
 
 ### Changed
