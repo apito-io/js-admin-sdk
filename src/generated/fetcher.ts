@@ -13,7 +13,5 @@ export function createApitoFetcher(client: ApitoClient): ApitoFetcher {
     client.executeGraphQL(serializeGraphQLQuery(query), variables);
 }
 
-/** React Query fetcher hook factory — pass client via context in your app. */
-export function useApitoFetcher(client: ApitoClient): ApitoFetcher {
-  return createApitoFetcher(client);
-}
+/** React Query fetcher — reads ApitoProvider context (used by generated hooks). */
+export { useApitoFetcher } from '../headless/context';

@@ -4,35 +4,43 @@ const banner = {
   js: '// @apito-io/js-admin-sdk - Admin SDK for Apito GraphQL API',
 };
 
+const shared = {
+  splitting: false,
+  sourcemap: true,
+  minify: true,
+  dts: true,
+  clean: true,
+  external: ['react', 'react-dom', '@tanstack/react-query', 'graphql'],
+  banner,
+} as const;
+
 export default defineConfig([
-  // ESM for browsers, Astro, Cloudflare Workers, Vite — bundle axios (no Node require chain).
   {
-    entry: ['src/index.ts'],
+    entry: {
+      index: 'src/index.ts',
+      react: 'src/react/index.ts',
+      ui: 'src/ui/index.ts',
+    },
     format: ['esm'],
     platform: 'browser',
     target: 'es2022',
     outDir: 'dist',
     outExtension: () => ({ js: '.mjs' }),
-    splitting: false,
-    sourcemap: true,
-    minify: true,
-    dts: true,
-    clean: true,
     noExternal: ['axios'],
-    external: ['react', 'react-dom', '@tanstack/react-query', 'graphql'],
-    banner,
+    ...shared,
   },
-  // CJS for Node scripts — axios remains a normal dependency.
   {
-    entry: ['src/index.ts'],
+    entry: {
+      index: 'src/index.ts',
+      react: 'src/react/index.ts',
+      ui: 'src/ui/index.ts',
+    },
     format: ['cjs'],
     platform: 'node',
     target: 'es2020',
     outDir: 'dist',
-    splitting: false,
-    sourcemap: true,
-    minify: true,
-    external: ['axios'],
-    banner,
+    external: ['axios', 'react', 'react-dom', '@tanstack/react-query', 'graphql'],
+    ...shared,
+    dts: false,
   },
 ]);

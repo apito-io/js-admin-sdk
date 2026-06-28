@@ -1,19 +1,36 @@
 import {
   apitoConnectionFilterConditionType,
   apitoGraphQLComposedTypeName,
+  apitoListCountKeyConditionType,
   apitoListCountWhereInputType,
   apitoListGraphQLTypeName,
+  apitoListKeyConditionType,
   apitoMultipleResourceName,
   apitoSingularGraphQLTypeName,
   apitoSingularResourceName,
   apitoSortInputType,
   apitoWhereInputType,
+  apitoWhereRelationFilterConditionType,
+  listCountQueryRootKey,
+  listQueryRootKey,
   pascalFromAnyModelId,
 } from './apitoGraphqlNames';
 
+export type DocumentBuilderOptions = {
+  /** When false, list/count omit the `connection` argument (Protiva staff/notice). */
+  supportsConnection?: boolean;
+};
+
 /** Builds GraphQL operation strings (aligned with flutter_admin_sdk DocumentBuilder). */
 export class DocumentBuilder {
-  constructor(private readonly model: string) {}
+  private readonly supportsConnection: boolean;
+
+  constructor(
+    private readonly model: string,
+    options: DocumentBuilderOptions = {},
+  ) {
+    this.supportsConnection = options.supportsConnection !== false;
+  }
 
   private get listField() {
     return apitoMultipleResourceName(this.model);
@@ -32,6 +49,10 @@ export class DocumentBuilder {
   }
 
   buildListQuery(fields: string[]): string {
+    if (!this.supportsConnection) {
+      return this.buildListQueryWithoutConnection(fields);
+    }
+
     const vars = [
       `$connection: ${apitoConnectionFilterConditionType(this.model)}`,
       `$where: ${apitoWhereInputType(this.model)}`,
@@ -58,6 +79,38 @@ export class DocumentBuilder {
   }    ${this.countField}(connection: $connection, where: $whereCount, page: $page, limit: $limit) {
       total
     }
+}`;
+  }
+
+  /** List/count without `connection` (legacy Protiva v3 list fields). */
+  buildListQueryWithoutConnection(fields: string[]): string {
+    const listField = listQueryRootKey(this.model);
+    const countField = listCountQueryRootKey(this.model);
+    const vars = [
+      `$where: ${apitoWhereInputType(this.model)}`,
+      `$whereCount: ${apitoListCountWhereInputType(this.model)}`,
+      `$sort: ${apitoSortInputType(this.model)}`,
+      `$page: Int`,
+      `$limit: Int`,
+    ].join(',\n    ');
+
+    return `query Get${this.listPascal}(
+    ${vars}
+) {
+  ${listField}(where: $where, sort: $sort, page: $page, limit: $limit) {
+    id
+    data {
+      ${fields.join('\n      ')}
+    }
+    meta {
+      created_at
+      status
+      updated_at
+    }
+  }
+  ${countField}(where: $whereCount, page: $page, limit: $limit) {
+    total
+  }
 }`;
   }
 

@@ -62,6 +62,8 @@ export default defineConfig({
 
 Node scripts can still use `require('@apito-io/js-admin-sdk')` (CJS build, axios as peer dependency).
 
+**Cloudflare Workers engine (`cloudflare_full`):** The SDK runs in workerd, but if your `baseURL` points at the Workers-hosted engine, `generateTenantToken` and tenant catalog mutations are not implemented on Workers v1. `loginUser` password login works; Google OAuth (`authMethod: 'google'` / `'google_id_token'`) does not. See [CONTRACT.md](CONTRACT.md#cloudflare-workers-v1-cloudflare_full).
+
 ## 🎯 Quick Start
 
 ```javascript
@@ -390,7 +392,7 @@ const createdTodos = await Promise.all(
 This client mirrors the Go `go-internal-sdk` package and the `InternalSDKOperation` interface from `github.com/apito-io/types`.
 
 - **Tenant header:** In Go, set `context.WithValue(ctx, "tenant_id", id)` before calls. In JavaScript, set `tenantId` on `ClientConfig`, or pass `{ tenantId }` to `executeGraphQL` options where relevant.
-- **`generateTenantToken(tenantId, duration?, role?)`:** Matches engine `generateTenantToken` — `tenant_id`, `duration` (`YYYY-MM-DD`; omit for default one year ahead in UTC), optional `role` (omit for engine default `admin`). Sends `X-Apito-Tenant-ID` for the mutation. Auth uses the client `apiKey`.
+- **`generateTenantToken(tenantId, duration?, role?)`:** Matches engine `generateTenantToken` — `tenant_id`, `duration` (`YYYY-MM-DD`; omit for default one year ahead in UTC), optional `role` (omit for engine default `admin`). Sends `X-Apito-Tenant-ID` for the mutation. Auth uses the client `apiKey`. Not available on Cloudflare Workers v1.
 - **GraphQL errors:** The Go client returns `(response, err)` when the response includes `errors`. This SDK throws `GraphQLError` with `graphQLErrors` and the full payload on `response`; use `error.partialData` to read `data` when the server returns partial success.
 - **`searchResources` filter:** Only `_key`, `page`, `limit`, `where`, and `search` are forwarded. Extra keys are ignored so unknown GraphQL variables cannot break the request.
 - **`TypedOperations`:** `data` is deep-cloned via `JSON.parse(JSON.stringify(...))`, matching the Go SDK’s marshal/unmarshal approach for typed document `data`.

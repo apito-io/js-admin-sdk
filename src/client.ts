@@ -135,6 +135,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
   /**
    * Generate a tenant-scoped API key. Matches engine `generateTenantToken`: `tenant_id`, `duration`, optional `role`.
    * Auth uses `X-Apito-Key` (client `apiKey`).
+   * Not available on Cloudflare Workers v1 (`tenant management is not available on Cloudflare Workers v1`).
    *
    * @param tenantId Catalog tenant id (`tenant_id` in the mutation).
    * @param duration Expiry calendar day `YYYY-MM-DD`. If omitted/empty, defaults to one year ahead in UTC.
@@ -238,7 +239,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /**
-   * Project user login (system GraphQL `loginUser`). Password path: pass `password` and `email` or `phone` per project Authentication settings. Google OAuth path: `authMethod: 'google'` with `code` and `state` from the redirect; call `googleOAuthState(projectId)` before opening Google to obtain `state`. Google paths may auto-link a verified email to an existing user; handle engine errors `google email not verified`, `google account already linked to another user`, `multiple users matched this email`.
+   * Project user login (system GraphQL `loginUser`). Password path: pass `password` and `email` or `phone` per project Authentication settings. Google OAuth path: `authMethod: 'google'` with `code` and `state` from the redirect; call `googleOAuthState(projectId)` before opening Google to obtain `state`. Google paths may auto-link a verified email to an existing user; handle engine errors `google email not verified`, `google account already linked to another user`, `multiple users matched this email`. On Cloudflare Workers v1, Google paths are unavailable; password login is supported.
    */
   async loginUser(params: LoginUserParams): Promise<LoginUserResponse> {
     const authMethod = (params.authMethod ?? 'general').trim().toLowerCase() || 'general';

@@ -1,24 +1,36 @@
 {
   "name": "@apito-io/js-admin-sdk",
-  "version": "3.7.0",
-  "description": "Admin JavaScript SDK for Apito GraphQL API (mirrors go-internal-sdk)",
+  "version": "1.0.0",
+  "description": "Admin JavaScript SDK for Apito GraphQL API — core, react headless, ui contracts",
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "apito-codegen": "./bin/apito-codegen.mjs"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "workerd": "./dist/index.mjs",
-      "worker": "./dist/index.mjs",
-      "browser": "./dist/index.mjs",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js",
       "default": "./dist/index.mjs"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.js",
+      "default": "./dist/react.mjs"
+    },
+    "./ui": {
+      "types": "./dist/ui.d.ts",
+      "import": "./dist/ui.mjs",
+      "require": "./dist/ui.js",
+      "default": "./dist/ui.mjs"
     }
   },
   "files": [
     "dist",
-    "src",
+    "bin",
     "scripts"
   ],
   "engines": {
@@ -26,12 +38,9 @@
   },
   "scripts": {
     "start": "tsup --watch",
-    "build": "tsup && cp dist/index.d.mts dist/index.d.ts",
+    "build": "tsup && node scripts/postbuild-dts.mjs",
     "test": "jest --passWithNoTests",
-    "lint": "eslint src --ext .ts",
-    "prepare": "tsup",
-    "size": "size-limit",
-    "analyze": "size-limit --why",
+    "lint": "eslint src --ext .ts,.tsx",
     "gen:operations": "tsx scripts/gen-operations.ts",
     "gen:types": "graphql-codegen --config codegen.ts",
     "gen": "npm run gen:operations && npm run gen:types",
@@ -44,39 +53,14 @@
     "react-dom": ">=18.0.0"
   },
   "peerDependenciesMeta": {
-    "@tanstack/react-query": {
-      "optional": true
-    },
-    "react": {
-      "optional": true
-    },
-    "react-dom": {
-      "optional": true
-    },
-    "graphql": {
-      "optional": true
-    }
+    "@tanstack/react-query": { "optional": true },
+    "react": { "optional": true },
+    "react-dom": { "optional": true },
+    "graphql": { "optional": true }
   },
-  "keywords": [
-    "apito",
-    "sdk",
-    "graphql",
-    "api",
-    "javascript",
-    "typescript",
-    "headless-cms",
-    "backend"
-  ],
+  "keywords": ["apito", "sdk", "graphql", "admin", "typescript"],
   "author": "Apito Team",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/apito-io/js-admin-sdk.git"
-  },
-  "bugs": {
-    "url": "https://github.com/apito-io/js-admin-sdk/issues"
-  },
-  "homepage": "https://docs.apito.io",
   "dependencies": {
     "axios": "^1.14.0"
   },
@@ -89,6 +73,7 @@
     "@tanstack/react-query": "^5.90.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.5.0",
+    "@types/react": "^19.1.8",
     "@typescript-eslint/eslint-plugin": "^8.58.0",
     "@typescript-eslint/parser": "^8.58.0",
     "eslint": "^10.1.0",
@@ -96,23 +81,14 @@
     "eslint-plugin-prettier": "^5.5.5",
     "jest": "^30.3.0",
     "prettier": "^3.8.1",
+    "react": "^19.1.0",
     "size-limit": "^12.0.1",
     "ts-jest": "^29.4.9",
     "tsup": "^8.5.1",
     "tsx": "^4.20.5",
-    "typescript": "~6.0.2",
+    "typescript": "~5.8.3",
     "inflection": "^3.0.0"
   },
-  "size-limit": [
-    {
-      "path": "dist/index.js",
-      "limit": "50 KB"
-    },
-    {
-      "path": "dist/index.mjs",
-      "limit": "120 KB"
-    }
-  ],
   "publishConfig": {
     "access": "public"
   }

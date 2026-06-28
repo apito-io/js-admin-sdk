@@ -50,6 +50,18 @@ All SDKs expose:
 
 Pro SaaS user ops accept optional **`tenantId`** / GraphQL `tenant_id` on `searchUsers`, `createUser`, and `updateUser` (in addition to `loginUser`). Omit on general projects.
 
+### Cloudflare Workers v1 (`cloudflare_full`)
+
+When the engine URL is a Cloudflare Worker (`-tags cloudflare`), the SDK contract is unchanged but some operations are **not implemented** on Workers v1:
+
+| Operation | Workers v1 |
+|-----------|------------|
+| `generateTenantToken`, `getTenants`, `createTenant`, `updateTenant`, `deleteTenant`, `searchTenantsByDomain` | GraphQL error: `tenant management is not available on Cloudflare Workers v1` |
+| `loginUser` (password / general) | Supported |
+| `loginUser` (`google`, `google_id_token`), `googleOAuthState` | GraphQL error: `google login is not available on Cloudflare Workers v1` |
+
+Use the native/pro engine for tenant lifecycle and Google end-user login, or handle these errors in client code.
+
 ## 5. Codegen outputs (JS)
 
 | Step | Command | Output |

@@ -331,6 +331,16 @@ export function formatApitoConnectionSubselections(
     .join('\n');
 }
 
+/** GraphQL list field name (e.g. `staffList`). */
+export function listQueryRootKey(resource: string): string {
+  return apitoMultipleResourceName(resource);
+}
+
+/** GraphQL list count field name (e.g. `staffListCount`). */
+export function listCountQueryRootKey(resource: string): string {
+  return `${listQueryRootKey(resource)}Count`;
+}
+
 export function buildApitoCreateMutation(
   resource: string,
   fields: string[]

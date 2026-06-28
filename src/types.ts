@@ -99,7 +99,7 @@ export interface User {
   updated_at?: string;
 }
 
-/** Login via system GraphQL `loginUser`. Password path: use `email` or `phone` per project settings. Google OAuth code path: `authMethod: 'google'`, `code`, `state` from redirect (get `state` first via `googleOAuthState`). Native mobile: `authMethod: 'google_id_token'`, `idToken` from `google_sign_in`. SaaS per-tenant separate DB: pass `tenantId` (required by engine). Google paths: engine may auto-link a verified email to an existing user (no duplicate signup); errors include `google email not verified`, `google account already linked to another user`, `multiple users matched this email`. */
+/** Login via system GraphQL `loginUser`. Password path: use `email` or `phone` per project settings. Google OAuth code path: `authMethod: 'google'`, `code`, `state` from redirect (get `state` first via `googleOAuthState`). Native mobile: `authMethod: 'google_id_token'`, `idToken` from `google_sign_in`. SaaS per-tenant separate DB: pass `tenantId` (required by engine). Google paths: engine may auto-link a verified email to an existing user (no duplicate signup); errors include `google email not verified`, `google account already linked to another user`, `multiple users matched this email`. On Cloudflare Workers v1, Google paths are unavailable (`google login is not available on Cloudflare Workers v1`); password login is supported. */
 export interface LoginUserParams {
   projectId: string;
   tenantId?: string;
