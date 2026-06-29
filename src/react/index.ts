@@ -26,12 +26,27 @@ export {
 
 export {
   buildApitoFilterVariables,
+  buildListQueryVariables,
   transformRelationFilters,
+  buildListConnectionScope,
+  buildListRelationFilter,
+  isRelationCrudFilter,
+  mergeListRelationFilters,
+  relationEqFilter,
   apitoWhereTypeName,
   apitoSortTypeName,
   type ApitoFilterVariables,
+  type ApitoListRelationFilter,
   type BuildFilterVariablesOptions,
+  type BuildListQueryVariablesOptions,
 } from "../headless/filterVariables";
+export type { ApitoRelationCrudFilter } from "../headless/types";
+export {
+  antdSorterToCrudSort,
+  crudSortToAntdOrder,
+  resolveSortField,
+  type AntdSortOrder,
+} from "../headless/tableSort";
 
 export {
   APITO_TENANT_QUERY_KEY,
@@ -82,3 +97,30 @@ export {
   type ApitoMenuResource,
   type ApitoMenuTreeItem,
 } from "../headless/menuTree";
+
+export {
+  autoMapColumns,
+  buildDefaultMutation,
+  buildExportRows,
+  downloadTextFile,
+  fetchAllListPages,
+  getExportHeaders,
+  mapParsedRows,
+  rowsToCsvContent,
+  validateImportRows,
+  type ApitoExportConfig,
+  type ApitoImportColumn,
+  type ApitoImportColumnMapping,
+  type ApitoImportConfig,
+  type ApitoImportFileType,
+  type ApitoImportMutationInput,
+  type ApitoImportRelationColumn,
+  type ApitoImportRowError,
+  type ApitoImportSchema,
+  type ApitoImportSchemaIssue,
+  type ApitoImportValidationResult,
+  type ApitoParsedImportFile,
+  type ApitoValidatedImportRow,
+} from "../headless/importExport";
+
+export { ensureImageFileName } from "../headless/mediaUpload";

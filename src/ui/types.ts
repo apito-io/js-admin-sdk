@@ -1,5 +1,10 @@
 import type { ComponentType, ReactNode } from "react";
 
+import type {
+  ApitoExportConfig,
+  ApitoImportConfig,
+} from "../headless/importExport";
+import type { ApitoFetcher } from "../headless/fetcher";
 import type { CrudFilter, CrudSort, ListPagePagination } from "../headless/types";
 
 export type ApitoLinkProps = {
@@ -89,6 +94,8 @@ export type ApitoListProps<TModel> = {
   onFiltersChange?: (filters: CrudFilter[]) => void;
   sorters?: CrudSort[];
   onSortersChange?: (sorters: CrudSort[]) => void;
+  /** Ant Table dataIndex key → Apito GraphQL sort field */
+  sortFieldMap?: Record<string, string>;
   rowKey?: keyof TModel | ((record: TModel) => string);
   actions?: ApitoListAction<TModel>[];
   /** When set and canCreate !== false, renders default Create button unless headerButtons overrides */
@@ -108,6 +115,138 @@ export type ApitoListProps<TModel> = {
   /** Extra toolbar (filters UI) above the table */
   toolbar?: ReactNode;
   linkComponent?: ApitoLinkComponent;
+  importConfig?: ApitoImportConfig;
+  exportConfig?: ApitoExportConfig;
+  /** Pass from app when using importConfig (avoids duplicate SDK context in linked UI package) */
+  fetcher?: ApitoFetcher;
+  importCreateDocument?: unknown;
+  importUpdateDocument?: unknown;
+  onImported?: () => void;
+  onExportRecords?: () => Promise<Array<Record<string, unknown>>>;
+};
+
+export type ApitoImportButtonProps = {
+  resource: string;
+  config: ApitoImportConfig;
+  /** Required when UI package resolves a different SDK copy than the app provider */
+  fetcher: ApitoFetcher;
+  createDocument?: unknown;
+  updateDocument?: unknown;
+  onImported?: () => void;
+  children?: ReactNode;
+  loading?: boolean;
+  disabled?: boolean;
+};
+
+export type ApitoExportButtonProps = {
+  resource: string;
+  config: ApitoExportConfig;
+  onExportRecords: () => Promise<Array<Record<string, unknown>>>;
+  children?: ReactNode;
+  loading?: boolean;
+  disabled?: boolean;
+};
+
+export type ApitoImportModalProps = {
+  open: boolean;
+  onClose: () => void;
+  config: ApitoImportConfig;
+  fetcher: ApitoFetcher;
+  createDocument?: unknown;
+  updateDocument?: unknown;
+  onImported?: () => void;
+};
+
+export type ApitoMediaUploadResult = {
+  public_url: string;
+  file_id: string;
+};
+
+/** App-injected upload (e.g. same-origin route → SDK `uploadFile`). */
+export type ApitoMediaUploader = (
+  file: File,
+  options?: { onProgress?: (percent: number) => void },
+) => Promise<ApitoMediaUploadResult>;
+
+export type ApitoMediaDeleter = (
+  ids: string[],
+  options?: { urls?: string[] },
+) => Promise<unknown>;
+
+export type ApitoMediaFileResolver = (url: string) => Promise<string | null>;
+
+export type ApitoImageUploadLabels = {
+  onlyImages: string;
+  fileTooLarge: string;
+  uploadFailed: string;
+  imageUploaded: string;
+  uploadFailedFallback: string;
+  clickToUpload: string;
+  camera: string;
+  gallery: string;
+  uploading: string;
+  change: string;
+  cropImage: string;
+  upload: string;
+  cancel: string;
+  select: string;
+  capture: string;
+  cameraAccess: string;
+};
+
+export type ApitoGalleryUploaderLabels = {
+  title: string;
+  addImage: string;
+  preview: string;
+  maxImagesReached: string;
+  imageDeleted: string;
+  deleteFailed: string;
+};
+
+export type ApitoImageUploadProps = {
+  value?: string;
+  onChange?: (value: string) => void;
+  onUploadSuccess?: (
+    result: ApitoMediaUploadResult & {
+      uploaderId?: string;
+      image_type?: string;
+      image_name?: string;
+      filename?: string;
+      success?: boolean;
+    },
+  ) => void;
+  /** Injected from app — avoids duplicate SDK context in linked UI package */
+  uploadMedia: ApitoMediaUploader;
+  labels?: Partial<ApitoImageUploadLabels>;
+  maxSize?: number;
+  aspect?: number;
+  quality?: number;
+  maxWidth?: number;
+  maxHeight?: number;
+  circularCrop?: boolean;
+  uploadText?: string;
+  imageType?: string;
+  imageName?: string;
+  showCamera?: boolean;
+  displayWidth?: string | number;
+  displayHeight?: string | number;
+  previewSize?: "small" | "medium" | "large";
+  uploaderId?: string;
+};
+
+export type ApitoGalleryUploaderProps = {
+  value?: string[];
+  onChange?: (value: string[]) => void;
+  uploadMedia: ApitoMediaUploader;
+  deleteMedia: ApitoMediaDeleter;
+  resolveFileId?: ApitoMediaFileResolver;
+  labels?: Partial<ApitoGalleryUploaderLabels>;
+  maxImages?: number;
+  uploadText?: string;
+  imageType?: string;
+  imageName?: string;
+  onUploadSuccess?: (result: ApitoMediaUploadResult & Record<string, unknown>) => void;
+  onDeleteSuccess?: (deletedUrl: string, response: unknown) => void;
 };
 
 export type ApitoFormProps<TModel = Record<string, unknown>> = {
@@ -162,4 +301,71 @@ export type ApitoResourceLayoutProps = {
   breadcrumb?: ReactNode;
   headerButtons?: ReactNode;
   children: ReactNode;
+};
+
+/** Bridge from generated `useListPage` / `useStudentList` into AntD table hooks. */
+export type ApitoListPageBridge<TRecord = Record<string, unknown>> = {
+  dataSource: TRecord[];
+  total: number;
+  isLoading: boolean;
+  isFetching: boolean;
+  error: Error | null;
+  filters: CrudFilter[];
+  setFilters: (filters: CrudFilter[]) => void;
+  sorters: CrudSort[];
+  setSorters: (sorters: CrudSort[]) => void;
+  pagination: ListPagePagination;
+  setPagination: (pagination: ListPagePagination) => void;
+  refetch: () => void;
+};
+
+export type UseApitoTableOptions<TRecord = Record<string, unknown>> = {
+  list: ApitoListPageBridge<TRecord>;
+  /** Map search form values to SDK CrudFilter[] (include relationEqFilter as needed). */
+  mapSearchToFilters?: (
+    values: Record<string, unknown>,
+  ) => CrudFilter[] | Promise<CrudFilter[]>;
+  permanentFilters?: CrudFilter[];
+  /** Ant Table dataIndex key → Apito GraphQL sort field */
+  sortFieldMap?: Record<string, string>;
+  syncWithLocation?: boolean;
+  getLocationSearch?: () => Record<string, string>;
+  setLocationSearch?: (values: Record<string, string>) => void;
+};
+
+export type UseApitoTableResult<TRecord = Record<string, unknown>> = {
+  tableProps: {
+    dataSource: TRecord[];
+    loading: boolean;
+    pagination: {
+      current: number;
+      pageSize: number;
+      total: number;
+      onChange: (page: number, pageSize: number) => void;
+    };
+    onChange: (
+      pagination: { current?: number; pageSize?: number },
+      _filters: unknown,
+      sorter: unknown,
+    ) => void;
+  };
+  searchFormProps: {
+    form: unknown;
+    onFinish: (values: Record<string, unknown>) => void | Promise<void>;
+  };
+  filters: CrudFilter[];
+  setFilters: (filters: CrudFilter[]) => void;
+  sorters: CrudSort[];
+  setSorters: (sorters: CrudSort[]) => void;
+  tableQuery: {
+    data: { data: TRecord[]; total: number };
+    isLoading: boolean;
+    isFetching: boolean;
+    refetch: () => void;
+    error: Error | null;
+  };
+  /** Apply sortOrder to column defs for controlled server-side sorting */
+  withServerSortOrder: <TCol extends { key?: string; dataIndex?: unknown; sorter?: unknown }>(
+    columns: TCol[],
+  ) => TCol[];
 };

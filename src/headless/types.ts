@@ -10,10 +10,19 @@ export type ApitoRecord<TData = Record<string, unknown>> = {
   meta?: ApitoRecordMeta;
 };
 
-export type CrudFilter = {
-  field: string;
-  operator: string;
-  value?: unknown;
+export type CrudFilter =
+  | {
+      field: string;
+      operator: string;
+      value?: unknown;
+    }
+  | ApitoRelationCrudFilter;
+
+/** GraphQL list `relation` filter in Refine-style filter arrays. */
+export type ApitoRelationCrudFilter = {
+  relation: string;
+  operator: "eq";
+  value: string;
 };
 
 export type CrudSort = {

@@ -52,30 +52,31 @@ export class ApitoClient implements InjectedDBOperationInterface {
   private baseURL: string;
   private restBaseURL: string;
   private apiKey: string;
+  private bearerToken?: string;
   private tenantId?: string;
 
   constructor(config: ClientConfig) {
     this.baseURL = config.baseURL;
     this.restBaseURL = (config.restBaseURL ?? '').trim() || deriveRestBaseURL(config.baseURL);
-    this.apiKey = config.apiKey;
+    this.apiKey = (config.apiKey ?? '').trim();
+    this.bearerToken = config.bearerToken?.trim() || undefined;
     this.tenantId = config.tenantId;
+
+    if (!this.bearerToken && !this.apiKey) {
+      throw new Error('ClientConfig requires apiKey or bearerToken');
+    }
+
+    const defaultHeaders: Record<string, string> = {
+      'Content-Type': 'application/json',
+      ...this.authHeaders(),
+    };
 
     // Create axios instance with default configuration
     this.httpClient = axios.create({
       timeout: config.timeout || 30000,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(this.apiKey.startsWith('cli-') || this.apiKey.startsWith('sdk-')
-          ? { 'X-Apito-Sync-Key': this.apiKey }
-          : { 'X-Apito-Key': this.apiKey }),
-      },
+      headers: defaultHeaders,
       ...config.httpClient,
     });
-
-    // Add tenant ID to headers if provided
-    if (this.tenantId) {
-      this.httpClient.defaults.headers['X-Apito-Tenant-ID'] = this.tenantId;
-    }
   }
 
   /**
@@ -95,14 +96,8 @@ export class ApitoClient implements InjectedDBOperationInterface {
 
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
-        ...(this.apiKey.startsWith('cli-') || this.apiKey.startsWith('sdk-')
-          ? { 'X-Apito-Sync-Key': this.apiKey }
-          : { 'X-Apito-Key': this.apiKey }),
+        ...this.authHeaders(options?.tenantId),
       };
-
-      if (options?.tenantId || this.tenantId) {
-        headers['X-Apito-Tenant-ID'] = options?.tenantId || this.tenantId!;
-      }
 
       const response = await this.httpClient.post<GraphQLResponse>(
         this.baseURL,
@@ -174,11 +169,14 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   private authHeaders(tenantId?: string): Record<string, string> {
-    const headers: Record<string, string> = {
-      ...(this.apiKey.startsWith('cli-') || this.apiKey.startsWith('sdk-')
-        ? { 'X-Apito-Sync-Key': this.apiKey }
-        : { 'X-Apito-Key': this.apiKey }),
-    };
+    const headers: Record<string, string> = {};
+    if (this.bearerToken) {
+      headers.Authorization = `Bearer ${this.bearerToken}`;
+    } else if (this.apiKey.startsWith('cli-') || this.apiKey.startsWith('sdk-')) {
+      headers['X-Apito-Sync-Key'] = this.apiKey;
+    } else {
+      headers['X-Apito-Key'] = this.apiKey;
+    }
     const tid = tenantId ?? this.tenantId;
     if (tid) {
       headers['X-Apito-Tenant-ID'] = tid;
@@ -230,8 +228,13 @@ export class ApitoClient implements InjectedDBOperationInterface {
       return body as T;
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        const data = error.response?.data as { message?: unknown; error?: unknown };
         const msg =
-          (error.response?.data as { message?: string })?.message ?? error.message;
+          typeof data?.message === 'string'
+            ? data.message
+            : typeof data?.error === 'string'
+              ? data.error
+              : error.message;
         throw new ApitoError(msg, 'HTTP_ERROR', error.response?.status, error.response?.data);
       }
       throw error;

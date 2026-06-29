@@ -1,10 +1,23 @@
-import type { CrudFilter, CrudSort, ApitoListConnection } from "./types";
+import type { CrudFilter, CrudSort } from "./types";
+import type { ApitoListConnection } from "./types";
+import type { ApitoListRelationFilter } from "./listRelationFilters";
 import {
   apitoListCountSortInputType,
   apitoListCountWhereInputType,
   apitoSortInputType,
   apitoWhereInputType,
 } from "../naming/apitoGraphqlNames";
+import { transformRelationFilters } from "./listRelationFilters";
+
+export type { ApitoListRelationFilter } from "./listRelationFilters";
+export {
+  buildListRelationFilter,
+  isRelationCrudFilter,
+  mergeListRelationFilters,
+  relationEqFilter,
+  transformRelationFilters,
+} from "./listRelationFilters";
+export { buildListConnectionScope } from "./listConnectionFilters";
 
 export type ApitoFilterVariables = {
   where?: Record<string, unknown>;
@@ -14,87 +27,14 @@ export type ApitoFilterVariables = {
   limit?: number;
   page?: number;
   skip?: number;
+  /** GraphQL list `relation` — preferred for has_one / has_many / many_to_many filters. */
+  relation?: ApitoListRelationFilter;
+  /**
+   * GraphQL list `connection` — parent-document scoped lists only.
+   * Prefer `relation` via {@link transformRelationFilters}.
+   */
   connection?: ApitoListConnection;
 };
-
-const SYSTEM_RELATION_FILTER_FIELDS = new Set([
-  "system_class_id",
-  "system_exam_id",
-  "system_student_id",
-  "system_teacher_id",
-  "system_section_id",
-  "system_institute_id",
-  "system_tenant_id",
-  "system_grade_config_id",
-  "system_mark_config_id",
-  "system_fee_config_id",
-  "system_category_id",
-]);
-
-const CONNECTION_PRIORITY = [
-  "system_exam_id",
-  "system_class_id",
-  "system_student_id",
-  "system_teacher_id",
-  "system_grade_config_id",
-  "system_mark_config_id",
-  "system_fee_config_id",
-] as const;
-
-function isFieldFilter(filter: CrudFilter): boolean {
-  return typeof filter.field === "string";
-}
-
-function buildConnection(field: string, parentId: string): ApitoListConnection {
-  return {
-    _id: parentId,
-    connection_type: "forward",
-    relation_type: "has_many",
-  };
-}
-
-/** Move system_* relation filters from `where` into GraphQL `connection`. */
-export function transformRelationFilters(filters: CrudFilter[] | undefined): {
-  filters: CrudFilter[];
-  connection?: ApitoListConnection;
-} {
-  if (!filters?.length) {
-    return { filters: [] };
-  }
-
-  const relationCandidates: Array<{ field: string; value: string }> = [];
-  const kept: CrudFilter[] = [];
-
-  for (const filter of filters) {
-    if (
-      isFieldFilter(filter) &&
-      SYSTEM_RELATION_FILTER_FIELDS.has(filter.field) &&
-      filter.value != null &&
-      filter.value !== ""
-    ) {
-      relationCandidates.push({
-        field: filter.field,
-        value: String(filter.value),
-      });
-      continue;
-    }
-
-    kept.push(filter);
-  }
-
-  const chosen = CONNECTION_PRIORITY.map((field) =>
-    relationCandidates.find((candidate) => candidate.field === field),
-  ).find(Boolean);
-
-  if (!chosen) {
-    return { filters: kept };
-  }
-
-  return {
-    filters: kept,
-    connection: buildConnection(chosen.field, chosen.value),
-  };
-}
 
 export type BuildFilterVariablesOptions = {
   resource: string;
@@ -104,6 +44,45 @@ export type BuildFilterVariablesOptions = {
   /** When true, use ListCount where/sort types (for count-only queries). */
   forCount?: boolean;
 };
+
+export type BuildListQueryVariablesOptions = {
+  resource: string;
+  filters?: CrudFilter[];
+  sorters?: CrudSort[];
+  pagination?: { current?: number; pageSize?: number };
+  /** When false, omit GraphQL `relation` even if relation filters are present. */
+  supportsRelation?: boolean;
+};
+
+/** Build full GraphQL list query variables (where, whereCount, sort, pagination, relation). */
+export function buildListQueryVariables(
+  options: BuildListQueryVariablesOptions,
+): Record<string, unknown> {
+  const { filters = [], sorters = [], pagination, supportsRelation = true } =
+    options;
+  const { filters: resolvedFilters, relation } = transformRelationFilters(filters);
+  const base = buildApitoFilterVariables({
+    resource: options.resource,
+    filters: resolvedFilters,
+    sorters,
+    pagination,
+  });
+  const countVars = buildApitoFilterVariables({
+    resource: options.resource,
+    filters: resolvedFilters,
+    sorters,
+    pagination,
+    forCount: true,
+  });
+  const vars: Record<string, unknown> = {
+    ...base,
+    ...(countVars.where ? { whereCount: countVars.where } : {}),
+  };
+  if (supportsRelation !== false && relation) {
+    vars.relation = relation;
+  }
+  return vars;
+}
 
 function mapOperator(op: string): string {
   const map: Record<string, string> = {
@@ -135,7 +114,7 @@ function buildWhereFromFilters(
   if (!filters.length) return undefined;
   const and: Record<string, unknown>[] = [];
   for (const f of filters) {
-    if (!f.field) continue;
+    if (!("field" in f) || !f.field) continue;
     const op = mapOperator(f.operator);
     and.push({ [f.field]: { [op]: f.value } });
   }

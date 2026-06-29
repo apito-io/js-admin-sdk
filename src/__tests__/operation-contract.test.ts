@@ -20,6 +20,7 @@ describe('operation doc contract', () => {
     expect(doc).toContain('mutation UpdateLoan(');
     expect(doc).toContain('mutation DeleteLoan(');
     expect(doc).toContain('LOANLIST_INPUT_WHERE_PAYLOAD');
+    expect(doc).toContain('LOAN_WHERE_RELATION_FILTER_CONDITION');
     expect(doc).toContain('Loan_Create_Payload');
   });
 

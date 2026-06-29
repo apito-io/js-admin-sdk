@@ -1,5 +1,4 @@
 import {
-  apitoConnectionFilterConditionType,
   apitoGraphQLComposedTypeName,
   apitoListCountKeyConditionType,
   apitoListCountWhereInputType,
@@ -17,7 +16,7 @@ import {
 } from './apitoGraphqlNames';
 
 export type DocumentBuilderOptions = {
-  /** When false, list/count omit the `connection` argument (Protiva staff/notice). */
+  /** When false, list/count omit the `relation` argument (e.g. staff/notice). */
   supportsConnection?: boolean;
 };
 
@@ -54,7 +53,7 @@ export class DocumentBuilder {
     }
 
     const vars = [
-      `$connection: ${apitoConnectionFilterConditionType(this.model)}`,
+      `$relation: ${apitoWhereRelationFilterConditionType(this.model)}`,
       `$where: ${apitoWhereInputType(this.model)}`,
       `$whereCount: ${apitoListCountWhereInputType(this.model)}`,
       `$sort: ${apitoSortInputType(this.model)}`,
@@ -65,7 +64,7 @@ export class DocumentBuilder {
     return `query Get${this.listPascal}(
     ${vars}
 ) {
-  ${this.listField}(connection: $connection, where: $where, sort: $sort, page: $page, limit: $limit) {
+  ${this.listField}(relation: $relation, where: $where, sort: $sort, page: $page, limit: $limit) {
     id
     data {
       ${fields.join('\n      ')}
@@ -76,7 +75,7 @@ export class DocumentBuilder {
       status
       updated_at
     }
-  }    ${this.countField}(connection: $connection, where: $whereCount, page: $page, limit: $limit) {
+  }    ${this.countField}(relation: $relation, where: $whereCount, page: $page, limit: $limit) {
       total
     }
 }`;

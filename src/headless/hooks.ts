@@ -14,7 +14,7 @@ import {
   normalizeApitoFormSaveInput,
 } from "./formValues";
 import { apitoGraphQLRequest } from "./graphqlFetcher";
-import { buildApitoFilterVariables, transformRelationFilters } from "./filterVariables";
+import { buildApitoFilterVariables, buildListQueryVariables } from "./filterVariables";
 import {
   invalidateApitoDataQueries,
   invalidateApitoQueriesAfterMutation,
@@ -50,7 +50,6 @@ export type UseListPageOptions<TRecord extends ApitoRecord = ApitoRecord> = {
   initialSorters?: CrudSort[];
   initialPagination?: ListPagePagination;
   supportsConnection?: boolean;
-  connection?: unknown[];
   enabled?: boolean;
 };
 
@@ -83,43 +82,23 @@ export function useListPage<TRecord extends ApitoRecord = ApitoRecord>(
     options.initialPagination ?? { current: 1, pageSize: 10 },
   );
 
-  const variables = useMemo(() => {
-    const { filters: resolvedFilters, connection: relationConnection } =
-      transformRelationFilters(filters);
-    const base = buildApitoFilterVariables({
-      resource: options.resource,
-      filters: resolvedFilters,
+  const variables = useMemo(
+    () =>
+      buildListQueryVariables({
+        resource: options.resource,
+        filters,
+        sorters,
+        pagination,
+        supportsRelation: options.supportsConnection !== false,
+      }),
+    [
+      options.resource,
+      options.supportsConnection,
+      filters,
       sorters,
       pagination,
-    });
-    const countVars = buildApitoFilterVariables({
-      resource: options.resource,
-      filters: resolvedFilters,
-      sorters,
-      pagination,
-      forCount: true,
-    });
-    const vars = {
-      ...base,
-      ...(countVars.where ? { whereCount: countVars.where } : {}),
-    };
-    if (options.supportsConnection !== false) {
-      if (relationConnection) {
-        return { ...vars, connection: relationConnection };
-      }
-      if (options.connection?.length) {
-        return { ...vars, connection: options.connection };
-      }
-    }
-    return vars;
-  }, [
-    options.resource,
-    options.supportsConnection,
-    options.connection,
-    filters,
-    sorters,
-    pagination,
-  ]);
+    ],
+  );
 
   const query = options.useListQuery(fetcher, variables, {
     enabled: options.enabled !== false,

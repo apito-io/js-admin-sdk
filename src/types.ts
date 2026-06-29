@@ -218,7 +218,10 @@ export interface ClientConfig {
   baseURL: string;
   /** REST base (e.g. http://host:5050/system); derived from baseURL when omitted */
   restBaseURL?: string;
-  apiKey: string;
+  /** System or sync API key (`X-Apito-Key` / `X-Apito-Sync-Key`). Omit when using `bearerToken`. */
+  apiKey?: string;
+  /** Staff session token for `/secured/*` routes (`Authorization: Bearer`). */
+  bearerToken?: string;
   timeout?: number;
   httpClient?: any;
   tenantId?: string;
