@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.7.1] - 2026-06-22
+
+### Changed
+
+- **Cloudflare Workers v1 (`cloudflare_full`)** — Document engine compatibility: `generateTenantToken` and related tenant catalog mutations return `tenant management is not available on Cloudflare Workers v1`. `loginUser` password/general path is unchanged on Workers; Google paths (`authMethod: 'google'` / `'google_id_token'`, plus `googleOAuthState`) return `google login is not available on Cloudflare Workers v1`. No SDK API or signature changes — use the native/pro engine for tenant provisioning and Google end-user login, or handle these GraphQL errors when targeting a Workers URL.
+
 ## [3.7.0] - 2026-06-11
 
 ### Added

@@ -1,6 +1,6 @@
 {
   "name": "@apito-io/js-admin-sdk",
-  "version": "3.7.0",
+  "version": "3.7.1",
   "description": "Admin JavaScript SDK for Apito GraphQL API (mirrors go-internal-sdk)",
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
