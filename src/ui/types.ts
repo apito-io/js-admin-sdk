@@ -3,6 +3,8 @@ import type { ComponentType, ReactNode } from "react";
 import type {
   ApitoExportConfig,
   ApitoImportConfig,
+  ApitoImportRowsContext,
+  ApitoValidatedImportRow,
 } from "../headless/importExport";
 import type { ApitoFetcher } from "../headless/fetcher";
 import type { CrudFilter, CrudSort, ListPagePagination } from "../headless/types";
@@ -81,6 +83,25 @@ export type ApitoListAction<TModel> = {
   danger?: boolean;
 };
 
+export type ApitoTableRowActionsProps = {
+  resource: string;
+  recordItemId: string;
+  canEdit?: boolean;
+  canShow?: boolean;
+  canDelete?: boolean;
+  hideText?: boolean;
+  size?: "small" | "middle" | "large";
+  editTo?: string;
+  showTo?: string;
+  editRoute?: string;
+  showRoute?: string;
+  onDelete?: () => void | Promise<void>;
+  deleteLoading?: boolean;
+  confirmTitle?: ReactNode;
+  confirmMessage?: ReactNode;
+  extra?: ReactNode;
+};
+
 export type ApitoListProps<TModel> = {
   title?: ReactNode;
   resource: string;
@@ -105,6 +126,11 @@ export type ApitoListProps<TModel> = {
   canCreate?: boolean;
   canEdit?: boolean;
   canShow?: boolean;
+  canDelete?: boolean;
+  onDeleteRecord?: (id: string) => void | Promise<void>;
+  deleteLoading?: boolean;
+  deleteConfirmTitle?: ReactNode;
+  deleteConfirmMessage?: ReactNode;
   hideDefaultRowActions?: boolean;
   headerButtons?:
     | ReactNode
@@ -133,6 +159,10 @@ export type ApitoImportButtonProps = {
   createDocument?: unknown;
   updateDocument?: unknown;
   onImported?: () => void;
+  onImportRows?: (
+    rows: ApitoValidatedImportRow[],
+    context: ApitoImportRowsContext,
+  ) => Promise<void>;
   children?: ReactNode;
   loading?: boolean;
   disabled?: boolean;
@@ -155,6 +185,11 @@ export type ApitoImportModalProps = {
   createDocument?: unknown;
   updateDocument?: unknown;
   onImported?: () => void;
+  /** When set, bypasses default per-row GraphQL import (domain batch importers) */
+  onImportRows?: (
+    rows: ApitoValidatedImportRow[],
+    context: ApitoImportRowsContext,
+  ) => Promise<void>;
 };
 
 export type ApitoMediaUploadResult = {
@@ -162,10 +197,17 @@ export type ApitoMediaUploadResult = {
   file_id: string;
 };
 
+export type ApitoMediaUploadFileType = "media" | "pdf" | "document" | "other";
+
+export type ApitoMediaFileKind = "image" | "pdf" | "document" | "other";
+
 /** App-injected upload (e.g. same-origin route → SDK `uploadFile`). */
 export type ApitoMediaUploader = (
   file: File,
-  options?: { onProgress?: (percent: number) => void },
+  options?: {
+    onProgress?: (percent: number) => void;
+    fileType?: ApitoMediaUploadFileType;
+  },
 ) => Promise<ApitoMediaUploadResult>;
 
 export type ApitoMediaDeleter = (
@@ -174,6 +216,15 @@ export type ApitoMediaDeleter = (
 ) => Promise<unknown>;
 
 export type ApitoMediaFileResolver = (url: string) => Promise<string | null>;
+
+/** Wired upload components read this from {@link ApitoProvider} or {@link ApitoMediaProvider}. */
+export type ApitoMediaConfig = {
+  uploadMedia: ApitoMediaUploader;
+  deleteMedia?: ApitoMediaDeleter;
+  resolveFileId?: ApitoMediaFileResolver;
+  imageUploadLabels?: Partial<ApitoImageUploadLabels>;
+  galleryUploaderLabels?: Partial<ApitoGalleryUploaderLabels>;
+};
 
 export type ApitoImageUploadLabels = {
   onlyImages: string;
@@ -201,6 +252,8 @@ export type ApitoGalleryUploaderLabels = {
   maxImagesReached: string;
   imageDeleted: string;
   deleteFailed: string;
+  invalidFileType?: string;
+  uploadFailed?: string;
 };
 
 export type ApitoImageUploadProps = {
@@ -232,6 +285,14 @@ export type ApitoImageUploadProps = {
   displayHeight?: string | number;
   previewSize?: "small" | "medium" | "large";
   uploaderId?: string;
+  /** HTML accept attribute. Default `image/*`. */
+  accept?: string;
+  /** Shorthand when `accept` is omitted */
+  acceptKinds?: ApitoMediaFileKind[];
+  /** Apito files API category. Inferred from file when omitted. */
+  fileType?: ApitoMediaUploadFileType;
+  /** When false, skip image-only validation (use with broader `accept`). */
+  imagesOnly?: boolean;
 };
 
 export type ApitoGalleryUploaderProps = {
@@ -245,6 +306,13 @@ export type ApitoGalleryUploaderProps = {
   uploadText?: string;
   imageType?: string;
   imageName?: string;
+  /** HTML accept attribute. Default `image/*` (gallery images). */
+  accept?: string;
+  /** Shorthand when `accept` is omitted, e.g. `['image','pdf']` for notice attachments. */
+  acceptKinds?: ApitoMediaFileKind[];
+  /** Default upload category when not inferred per file. */
+  fileType?: ApitoMediaUploadFileType;
+  maxSizeMb?: number;
   onUploadSuccess?: (result: ApitoMediaUploadResult & Record<string, unknown>) => void;
   onDeleteSuccess?: (deletedUrl: string, response: unknown) => void;
 };
@@ -369,3 +437,18 @@ export type UseApitoTableResult<TRecord = Record<string, unknown>> = {
     columns: TCol[],
   ) => TCol[];
 };
+
+export type ApitoResourceRouteMap = {
+  name: string;
+  list?: string;
+  create?: string;
+  edit?: string;
+  show?: string;
+};
+
+export type ApitoRouterAdapter = {
+  Link: ApitoLinkComponent;
+  navigate: (to: string, options?: { replace?: boolean }) => void;
+};
+
+export type ApitoCrudResourceAction = "list" | "create" | "edit" | "show";

@@ -29,4 +29,14 @@ describe('operation doc contract', () => {
     const full = new DocumentBuilder('loan').generateGraphqlFile(['loan_id']);
     expect(full).toContain(list.trim());
   });
+
+  it('omits relation connect/disconnect when supportsConnection is false', () => {
+    const doc = new DocumentBuilder('staff', { supportsConnection: false }).generateGraphqlFile([
+      'name',
+    ]);
+    expect(doc).not.toContain('Relation_Connect_Payload');
+    expect(doc).not.toContain('Relation_Disconnect_Payload');
+    expect(doc).toContain('mutation UpdateStaff(');
+    expect(doc).toContain('payload: $payload, status: published');
+  });
 });

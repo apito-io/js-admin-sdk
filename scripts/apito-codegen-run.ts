@@ -11,13 +11,17 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { DocumentBuilder } from '../src/naming/documentBuilder';
+import { formatApitoConnectionSubselections } from '../src/naming/apitoGraphqlNames';
 import { introspectionToSdl, parseIntrospection } from '../src/naming/schemaReader';
 import { normalizeIntrospection } from './normalize-introspection';
+import { buildConnectionMetaTypes } from './codegen-meta';
 
 export type ApitoModelConfig = {
   name: string;
   fields: string[];
   supportsConnection?: boolean;
+  /** When true, updates use deltaUpdate: false (required for models with `list` fields). */
+  fullPayloadUpdate?: boolean;
   connectionFields?: Record<string, string>;
   aliasFields?: Record<string, string>;
 };
@@ -92,7 +96,13 @@ function writeOperations(
       supportsConnection: model.supportsConnection,
     });
     const selection = model.fields.filter((f) => f !== 'id');
-    const doc = db.generateGraphqlFile(selection.length ? selection : ['id']);
+    const connectionBlock = model.connectionFields
+      ? formatApitoConnectionSubselections(
+          model.connectionFields,
+          model.aliasFields ?? {},
+        )
+      : '';
+    const doc = db.generateGraphqlFile(selection.length ? selection : ['id'], connectionBlock);
     fs.writeFileSync(path.join(opsDir, `${model.name}.graphql`), doc);
     console.log(`wrote operations/${model.name}.graphql`);
   }
@@ -170,6 +180,10 @@ function writeProjectHooks(
 
     const fieldsConst = `${camel}Fields`;
     const supportsConn = model.supportsConnection !== false;
+    const deltaUpdateLine = model.fullPayloadUpdate
+      ? '\n    deltaUpdate: false,'
+      : '';
+    const connectionMeta = buildConnectionMetaTypes(model);
 
     fs.writeFileSync(
       path.join(modelDir, 'meta.ts'),
@@ -178,15 +192,16 @@ import type { Get${pascal}ListQuery, Get${pascal}Query } from "../../types";
 
 export type ${pascal}Meta = NonNullable<Get${pascal}ListQuery["${gql}List"][number]["meta"]>;
 export type ${pascal}Data = NonNullable<Get${pascal}ListQuery["${gql}List"][number]["data"]>;
-export type ${pascal} = {
+${connectionMeta.relationTypeLines ? `${connectionMeta.relationTypeLines}\n` : ''}export type ${pascal} = {
   id: string;
   data: ${pascal}Data;
-  meta: ${pascal}Meta;
+  meta: ${pascal}Meta;${connectionMeta.relationFieldLines ? `\n${connectionMeta.relationFieldLines}` : ''}
 };
 
 export const ${fieldsConst} = [
 ${model.fields.map((f) => `  "${f}",`).join('\n')}
 ] as const;
+${connectionMeta.metaExports}
 `,
     );
 
@@ -245,7 +260,7 @@ export function use${pascal}Form(id?: string) {
   return useFormPage({
     resource: RESOURCE,
     id,
-    oneKey: ONE_KEY,
+    oneKey: ONE_KEY,${deltaUpdateLine}
     useOneQuery: (_fetcher, vars, opts) =>
       useGet${pascal}Query(vars, opts),
     createDocument: Create${pascal}Document,

@@ -7,6 +7,7 @@ export type {
   ApitoImportMutationInput,
   ApitoImportRelationColumn,
   ApitoImportRowError,
+  ApitoImportRowsContext,
   ApitoImportSchema,
   ApitoImportSchemaIssue,
   ApitoImportValidationResult,
@@ -23,8 +24,10 @@ export {
 
 export {
   buildExportRows,
+  deriveExportConnectionFieldsFromColumns,
   downloadTextFile,
   fetchAllListPages,
   getExportHeaders,
+  mapRecordToExportRowDefault,
   rowsToCsvContent,
 } from "./exporter";

@@ -13,10 +13,13 @@ export type { ApitoListRelationFilter } from "./listRelationFilters";
 export {
   buildListRelationFilter,
   isRelationCrudFilter,
+  listRelationFilterKey,
   mergeListRelationFilters,
   relationEqFilter,
+  relationEqFilterFromConnection,
   transformRelationFilters,
 } from "./listRelationFilters";
+export type { ListRelationFilterKeyConnection } from "./listRelationFilters";
 export { buildListConnectionScope } from "./listConnectionFilters";
 
 export type ApitoFilterVariables = {

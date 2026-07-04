@@ -1,7 +1,9 @@
 import {
   buildListRelationFilter,
   isRelationCrudFilter,
+  listRelationFilterKey,
   relationEqFilter,
+  relationEqFilterFromConnection,
   transformRelationFilters,
 } from "../headless/filterVariables";
 import { buildListConnectionScope } from "../headless/listConnectionFilters";
@@ -20,6 +22,52 @@ describe("list relation filters", () => {
     expect(buildListRelationFilter("class", "01CLASS")).toEqual({
       class: { _id: { eq: "01CLASS" } },
     });
+  });
+
+  it("listRelationFilterKey prefers known_as over target model (owner not users)", () => {
+    expect(
+      listRelationFilterKey({
+        known_as: "owner",
+        to_model: "users",
+        relation_type: "has_one",
+      }),
+    ).toBe("owner");
+  });
+
+  it("listRelationFilterKey falls back to public relation field name from to_model", () => {
+    expect(
+      listRelationFilterKey({
+        to_model: "food_category",
+        relation_type: "has_one",
+      }),
+    ).toBe("foodCategory");
+  });
+
+  it("relationEqFilterFromConnection builds owner-scoped filter for user_profile", () => {
+    expect(
+      relationEqFilterFromConnection(
+        {
+          known_as: "owner",
+          to_model: "users",
+          relation_type: "has_one",
+        },
+        "01USER",
+      ),
+    ).toEqual({
+      relation: "owner",
+      operator: "eq",
+      value: "01USER",
+    });
+    expect(
+      buildListRelationFilter(
+        listRelationFilterKey({
+          known_as: "owner",
+          to_model: "users",
+          relation_type: "has_one",
+        }),
+        "01USER",
+      ),
+    ).toEqual({ owner: { _id: { eq: "01USER" } } });
   });
 
   it("transformRelationFilters splits relation and where field filters", () => {

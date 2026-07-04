@@ -12,6 +12,8 @@ import {
 } from "react";
 
 import type { ApitoFetcher } from "./fetcher";
+import { ApitoMediaProvider } from "./mediaContext";
+import type { ApitoMediaConfig } from "../ui/types";
 
 type ApitoContextValue = {
   fetcher: ApitoFetcher;
@@ -24,12 +26,15 @@ export type ApitoProviderProps = {
   children: ReactNode;
   fetcher: ApitoFetcher;
   queryClient?: QueryClient;
+  /** When set, {@link useApitoMediaUpload} and wired upload fields work without manual injection. */
+  media?: ApitoMediaConfig;
 };
 
 export function ApitoProvider({
   children,
   fetcher,
   queryClient,
+  media,
 }: ApitoProviderProps) {
   const client = useMemo(
     () =>
@@ -45,11 +50,15 @@ export function ApitoProvider({
     [fetcher, client],
   );
 
-  return (
+  const tree = (
     <QueryClientProvider client={client}>
       <ApitoContext.Provider value={value}>{children}</ApitoContext.Provider>
     </QueryClientProvider>
   );
+
+  if (!media) return tree;
+
+  return <ApitoMediaProvider value={media}>{tree}</ApitoMediaProvider>;
 }
 
 /** @deprecated Use ApitoProvider — v3 alias removed in v4 docs; kept briefly for grep migration */

@@ -1,4 +1,15 @@
-import type { ApitoRelationCrudFilter, CrudFilter } from "./types";
+import { apitoConnectionFieldNameForRelation } from "../naming/apitoGraphqlNames";
+import type {
+  ApitoListConnection,
+  ApitoRelationCrudFilter,
+  CrudFilter,
+} from "./types";
+
+/** Connection metadata needed to resolve a list `relation` filter key. */
+export type ListRelationFilterKeyConnection = Pick<
+  ApitoListConnection,
+  "known_as" | "to_model" | "model" | "relation_type"
+>;
 
 /** GraphQL `relation` arg on `*List` / `*ListCount`. */
 export type ApitoListRelationFilter = Record<string, Record<string, unknown>>;
@@ -13,7 +24,36 @@ export function isRelationCrudFilter(
   );
 }
 
-/** List filter: scope rows by related document id (`relation: { class: { _id: { eq } } }`). */
+/**
+ * GraphQL key for `*List(relation: …)` — must match the **output relation field** on each row,
+ * not the mutation `connect` key (`{stored_model}_id`).
+ *
+ * Engine (open-core) builds `*_Where_Relation_Filter_Condition` with the same names as list/getOne
+ * relation fields: `known_as` when set (`owner`, `chef`, …), otherwise the public target model name
+ * (`foodCategory`, `users`, …). Before that fix the explorer could show `users` while the row field
+ * was `owner`; runtime SQL accepted both, but schema and clients should use the output field name.
+ * Use this helper when you have connection meta so apps do not guess the target model name.
+ */
+export function listRelationFilterKey(
+  connection: ListRelationFilterKeyConnection,
+): string {
+  const knownAs = connection.known_as?.trim();
+  if (knownAs) return knownAs;
+
+  const targetModel = (connection.to_model ?? connection.model)?.trim();
+  if (!targetModel) {
+    throw new Error(
+      "listRelationFilterKey: connection must include known_as or to_model/model",
+    );
+  }
+
+  return apitoConnectionFieldNameForRelation(
+    targetModel,
+    connection.relation_type === "has_many" ? "has_many" : "has_one",
+  );
+}
+
+/** List filter: scope rows by related document id. */
 export function relationEqFilter(
   relation: string,
   id: string,
@@ -23,6 +63,14 @@ export function relationEqFilter(
     operator: "eq",
     value: id.trim(),
   };
+}
+
+/** {@link relationEqFilter} using {@link listRelationFilterKey} from connection metadata. */
+export function relationEqFilterFromConnection(
+  connection: ListRelationFilterKeyConnection,
+  id: string,
+): ApitoRelationCrudFilter {
+  return relationEqFilter(listRelationFilterKey(connection), id);
 }
 
 export function buildListRelationFilter(
@@ -43,8 +91,9 @@ export function mergeListRelationFilters(
 /**
  * Split Refine-style filters into `where` field filters and GraphQL list `relation`.
  *
- * Use {@link relationEqFilter} for has_one / has_many / many_to_many scoping:
- * `relationEqFilter("class", classId)` → `relation: { class: { _id: { eq: classId } } }`
+ * Use {@link relationEqFilter} for has_one / has_many / many_to_many scoping.
+ * The relation key must match the output relation field name (`known_as` when set,
+ * otherwise the public target model name), e.g. `owner` not `users`.
  *
  * Do **not** use `connection` for this — that is a separate parent-document scope API.
  */

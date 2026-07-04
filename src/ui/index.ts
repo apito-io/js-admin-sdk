@@ -13,10 +13,14 @@ export type {
   ApitoLinkProps,
   ApitoListAction,
   ApitoListProps,
+  ApitoTableRowActionsProps,
   ApitoResourceLayoutProps,
   ApitoListPageBridge,
   UseApitoTableOptions,
   UseApitoTableResult,
+  ApitoResourceRouteMap,
+  ApitoRouterAdapter,
+  ApitoCrudResourceAction,
   ApitoRowActionsContext,
   ApitoSaveButtonProps,
   ApitoShowButtonProps,
@@ -32,6 +36,9 @@ export type {
   ApitoMediaFileResolver,
   ApitoImageUploadLabels,
   ApitoGalleryUploaderLabels,
+  ApitoMediaUploadFileType,
+  ApitoMediaFileKind,
+  ApitoMediaConfig,
 } from "./types";
 
 export type { ApitoFetcher } from "../headless/fetcher";

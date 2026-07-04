@@ -1,5 +1,11 @@
 /** Apito GraphQL date fields expect RFC3339 / ISO-8601, not bare YYYY-MM-DD. */
 
+import {
+  apitoMutationConnectHasManyIdsField,
+  apitoMutationConnectHasOneIdField,
+} from "../naming/apitoGraphqlNames";
+import { normalizeApitoRelationConnectMap } from "./mutationConnect";
+
 const ISO_DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 const ISO_DATE_TIME = /^\d{4}-\d{2}-\d{2}T/;
 
@@ -83,33 +89,86 @@ export function serializeApitoPayloadValues(
 export function stripEmptyRelationFields(
   values?: Record<string, unknown>,
 ): Record<string, unknown> | undefined {
-  if (!values || typeof values !== "object") return undefined;
-  const next: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(values)) {
-    if (value != null && value !== "") next[key] = value;
+  return normalizeApitoRelationConnectMap(values);
+}
+
+const RECORD_ROOT_SKIP_KEYS = new Set(["id", "data", "meta", "connect", "disconnect"]);
+
+function isHasOneRelationNode(
+  value: unknown,
+): value is { id: string; data?: unknown } {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    !Array.isArray(value) &&
+    "id" in value &&
+    typeof (value as { id: unknown }).id === "string"
+  );
+}
+
+function isHasManyRelationNodes(
+  value: unknown,
+): value is Array<{ id: string }> {
+  return (
+    Array.isArray(value) &&
+    value.length > 0 &&
+    value.every((item) => isHasOneRelationNode(item))
+  );
+}
+
+function relationConnectKey(fieldName: string, cardinality: "one" | "many"): string {
+  if (cardinality === "many") {
+    return apitoMutationConnectHasManyIdsField(fieldName);
   }
-  return Object.keys(next).length ? next : undefined;
+  return apitoMutationConnectHasOneIdField(fieldName);
+}
+
+/** Build mutation `connect` map from relation nodes on the Apito record root. */
+export function buildConnectFromApitoRecord(
+  record: Record<string, unknown>,
+): Record<string, unknown> | undefined {
+  const connect: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(record)) {
+    if (RECORD_ROOT_SKIP_KEYS.has(key)) continue;
+    if (isHasManyRelationNodes(value)) {
+      connect[relationConnectKey(key, "many")] = value.map((item) => item.id);
+      continue;
+    }
+    if (isHasOneRelationNode(value)) {
+      connect[relationConnectKey(key, "one")] = value.id;
+    }
+  }
+
+  return stripEmptyRelationFields(connect);
 }
 
 /** Map Apito record (with relations) to Ant Design nested form values. */
 export function apitoRecordToFormValues(
   record: Record<string, unknown>,
+  options?: {
+    relationConnectKeys?: Record<string, string>;
+  },
 ): Record<string, unknown> {
   const values: Record<string, unknown> = {
     data: record.data ?? {},
   };
   if (record.id) values.id = record.id;
 
-  const connect: Record<string, unknown> = {};
-  const classRel = record.class;
-  if (
-    classRel &&
-    typeof classRel === "object" &&
-    classRel !== null &&
-    "id" in classRel
-  ) {
-    connect.class_id = (classRel as { id: string }).id;
+  const connect = buildConnectFromApitoRecord(record) ?? {};
+  if (options?.relationConnectKeys) {
+    for (const [relationField, connectKey] of Object.entries(
+      options.relationConnectKeys,
+    )) {
+      const rel = record[relationField];
+      if (isHasManyRelationNodes(rel)) {
+        connect[connectKey] = rel.map((item) => item.id);
+      } else if (isHasOneRelationNode(rel)) {
+        connect[connectKey] = rel.id;
+      }
+    }
   }
+
   const strippedConnect = stripEmptyRelationFields(connect);
   if (strippedConnect) values.connect = strippedConnect;
 

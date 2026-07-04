@@ -6,7 +6,7 @@ import {
   useQueryClient,
   type UseQueryOptions,
 } from "@tanstack/react-query";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import { useApitoFetcher } from "./context";
 import {
@@ -23,12 +23,29 @@ import {
   serializeGraphQLQuery,
   type GraphQLQueryInput,
 } from "./serializeGraphQLQuery";
+import {
+  buildApitoCompatOneResult,
+  getSavedRecordId,
+  getSavedRecordNode,
+  type ApitoCompatOneResult,
+  type ApitoSavedMutationMeta,
+} from "./recordCompat";
 import type {
   ApitoRecord,
   CrudFilter,
   CrudSort,
   ListPagePagination,
 } from "./types";
+
+export {
+  buildApitoCompatOneResult,
+  buildApitoCompatQueryState,
+  getSavedRecordId,
+  getSavedRecordNode,
+  type ApitoCompatOneResult,
+  type ApitoCompatQueryState,
+  type ApitoSavedMutationMeta,
+} from "./recordCompat";
 
 export type UseListPageOptions<TRecord extends ApitoRecord = ApitoRecord> = {
   resource: string;
@@ -110,8 +127,8 @@ export function useListPage<TRecord extends ApitoRecord = ApitoRecord>(
     typeof countRaw === "number"
       ? countRaw
       : typeof countRaw === "object" &&
-          countRaw !== null &&
-          "total" in (countRaw as object)
+        countRaw !== null &&
+        "total" in (countRaw as object)
         ? Number((countRaw as { total: number }).total)
         : list.length;
 
@@ -140,6 +157,8 @@ export type UseFormPageOptions = {
   updateDocument?: GraphQLQueryInput;
   /** Pass true for partial Apito updates (recommended for edit forms). */
   deltaUpdate?: boolean;
+  /** Called after a successful create/update with parsed mutation metadata. */
+  onSaved?: (meta: ApitoSavedMutationMeta) => void;
   useOneQuery?: (
     fetcher: ReturnType<typeof useApitoFetcher>,
     variables: { id: string },
@@ -215,32 +234,63 @@ export function useFormPage(options: UseFormPageOptions) {
   });
 
   const record = oneQuery?.data?.[options.oneKey!] as ApitoRecord | undefined;
+  const [lastSavedMeta, setLastSavedMeta] = useState<
+    ApitoSavedMutationMeta | undefined
+  >(undefined);
+  const onSavedRef = useRef(options.onSaved);
+  onSavedRef.current = options.onSaved;
+
+  const notifySaved = useCallback(
+    (result: unknown, action: "create" | "update") => {
+      const record = getSavedRecordNode(result, options.resource);
+      const id = record?.id != null ? String(record.id) : options.id;
+      const meta: ApitoSavedMutationMeta = {
+        result,
+        id,
+        action,
+        resource: options.resource,
+        record,
+      };
+      setLastSavedMeta(meta);
+      onSavedRef.current?.(meta);
+      return meta;
+    },
+    [options.id, options.resource],
+  );
 
   const save = useCallback(
     async (values: Record<string, unknown>) => {
       const { payload, connect, disconnect } = normalizeApitoFormSaveInput(values);
       if (isEdit) {
         if (options.updateDocument) {
-          return updateMutation.mutateAsync({ payload, connect, disconnect });
+          const result = await updateMutation.mutateAsync({
+            payload,
+            connect,
+            disconnect,
+          });
+          return notifySaved(result, "update");
         }
         if (legacyUpdateMutation) {
-          return legacyUpdateMutation.mutateAsync({
+          const result = await legacyUpdateMutation.mutateAsync({
             id: options.id,
             deltaUpdate: options.deltaUpdate ?? true,
             payload,
             ...(connect ? { connect } : {}),
             ...(disconnect ? { disconnect } : {}),
           });
+          return notifySaved(result, "update");
         }
       } else {
         if (options.createDocument) {
-          return createMutation.mutateAsync({ payload, connect });
+          const result = await createMutation.mutateAsync({ payload, connect });
+          return notifySaved(result, "create");
         }
         if (legacyCreateMutation) {
-          return legacyCreateMutation.mutateAsync({
+          const result = await legacyCreateMutation.mutateAsync({
             payload,
             ...(connect ? { connect } : {}),
           });
+          return notifySaved(result, "create");
         }
       }
       throw new Error("No mutation configured for useFormPage");
@@ -250,10 +300,12 @@ export function useFormPage(options: UseFormPageOptions) {
       options.id,
       options.createDocument,
       options.updateDocument,
+      options.deltaUpdate,
       createMutation,
       updateMutation,
       legacyCreateMutation,
       legacyUpdateMutation,
+      notifySaved,
     ],
   );
 
@@ -272,6 +324,8 @@ export function useFormPage(options: UseFormPageOptions) {
     initialValues: record ? apitoRecordToFormValues(record) : {},
     save,
     isSaving,
+    lastSavedMeta,
+    getSavedRecordId: (result: unknown) => getSavedRecordId(result, options.resource),
   };
 }
 
@@ -292,15 +346,56 @@ export type UseShowPageOptions = {
 
 export function useShowPage<TRecord extends ApitoRecord = ApitoRecord>(
   options: UseShowPageOptions,
-) {
+): ApitoCompatOneResult<TRecord> & {
+  error: Error | null;
+  refetch: () => void;
+} {
   const fetcher = useApitoFetcher();
   const query = options.useOneQuery(fetcher, { id: options.id });
   const record = query.data?.[options.oneKey] as TRecord | undefined;
 
-  return {
-    record,
+  const compat = buildApitoCompatOneResult(record, {
     isLoading: query.isLoading,
+    isFetching: query.isLoading,
     error: query.error,
+    refetch: query.refetch,
+  });
+
+  return {
+    ...compat,
+    error: query.error,
+    refetch: query.refetch,
+  };
+}
+
+/** Refine-compatible alias for `useShowPage` with optional id enable gate. */
+export function useOnePage<TRecord extends ApitoRecord = ApitoRecord>(
+  options: UseShowPageOptions & { enabled?: boolean },
+): ApitoCompatOneResult<TRecord> & {
+  error: Error | null;
+  refetch: () => void;
+} {
+  const fetcher = useApitoFetcher();
+  const enabled = options.enabled !== false;
+  const query = options.useOneQuery(
+    fetcher,
+    { id: options.id },
+    { enabled },
+  );
+  const record = enabled
+    ? (query.data?.[options.oneKey] as TRecord | undefined)
+    : undefined;
+
+  const compat = buildApitoCompatOneResult(record, {
+    isLoading: enabled ? query.isLoading : false,
+    isFetching: enabled ? query.isLoading : false,
+    error: enabled ? query.error : null,
+    refetch: query.refetch,
+  });
+
+  return {
+    ...compat,
+    error: enabled ? query.error : null,
     refetch: query.refetch,
   };
 }

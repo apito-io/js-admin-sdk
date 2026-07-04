@@ -24,8 +24,16 @@ export * from './generated';
 export * from './headless/types';
 export * from './headless/filterVariables';
 export * from './headless/documents';
+export {
+  buildMutationConnectFromConnection,
+  buildMutationConnectHasMany,
+  buildMutationConnectHasOne,
+  mutationConnectHasManyKey,
+  mutationConnectHasOneKey,
+  normalizeApitoRelationConnectMap,
+  normalizeApitoRelationConnectValue,
+} from "./headless/mutationConnect";
 export { createBearerApitoFetcher } from './headless/fetcher';
-export type { ApitoFetcher } from './headless/fetcher';
 export * from './headless/serializeGraphQLQuery';
 
 // Re-export commonly used types for convenience

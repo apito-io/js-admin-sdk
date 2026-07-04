@@ -15,7 +15,12 @@ export type ApitoImportSchema<T> = {
 
 export type ApitoImportFileType = "csv" | "xlsx";
 
-export type ApitoImportColumnType = "string" | "number" | "boolean" | "date";
+export type ApitoImportColumnType =
+  | "string"
+  | "number"
+  | "boolean"
+  | "date"
+  | "media";
 
 export type ApitoImportRelationColumn = {
   /** GraphQL relation name, e.g. `class` */
@@ -31,6 +36,8 @@ export type ApitoImportColumn = {
   required?: boolean;
   aliases?: string[];
   type?: ApitoImportColumnType;
+  /** Apito `data` field to read when it differs from `id` (e.g. `image_url` → `image`). */
+  sourceField?: string;
   relation?: ApitoImportRelationColumn;
   /** Marks this column as the record id used for update detection */
   isId?: boolean;
@@ -88,6 +95,10 @@ export type ApitoImportConfig<TRow extends Record<string, unknown> = Record<stri
   ) => "create" | "update" | "skip";
   /** Map validated row to Apito mutation input */
   mapRowToMutation?: (row: ApitoValidatedImportRow) => ApitoImportMutationInput;
+  /** Cross-row validation after per-row checks (e.g. carry-forward rules) */
+  validateAllRows?: (
+    rows: ApitoValidatedImportRow[],
+  ) => ApitoValidatedImportRow[];
 };
 
 export type ApitoExportConfig<TRow extends Record<string, unknown> = Record<string, unknown>> = {
@@ -97,4 +108,14 @@ export type ApitoExportConfig<TRow extends Record<string, unknown> = Record<stri
   meta?: Record<string, unknown>;
   filenamePrefix?: string;
   mapRecordToRow?: (record: Record<string, unknown>) => TRow;
+  /** When one record expands to multiple export rows (e.g. food sizes) */
+  flattenRecordsToRows?: (
+    records: Array<Record<string, unknown>>,
+  ) => Array<Record<string, string>>;
+};
+
+/** Progress reporter passed to custom `onImportRows` handlers */
+export type ApitoImportRowsContext = {
+  /** Call after each row/batch is processed; omit `total` to keep the modal row count */
+  reportProgress: (processed: number, total?: number) => void;
 };

@@ -72,6 +72,16 @@ function defaultValidateRow(
   return errors;
 }
 
+function dedupeRowErrors(errors: ApitoImportRowError[]): ApitoImportRowError[] {
+  const seen = new Set<string>();
+  return errors.filter((error) => {
+    const key = `${error.field}\0${error.message}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 function resolveOperation(
   row: ApitoValidatedImportRow,
   config: ApitoImportConfig,
@@ -174,13 +184,20 @@ export function validateImportRows(
       row._errors.push(...config.validateRow(row));
     }
 
+    row._errors = dedupeRowErrors(row._errors);
+
     const operation = resolveOperation(row, config);
     row._operation = operation === "skip" ? "create" : operation;
     row._isValid = row._errors.length === 0 && operation !== "skip";
     return row;
   });
 
-  const dataRows = rows.filter((row) => !isRowEmpty(row, columnIds));
+  let dataRows = rows.filter((row) => !isRowEmpty(row, columnIds));
+
+  if (config.validateAllRows) {
+    dataRows = config.validateAllRows(dataRows);
+  }
+
   const validRows = dataRows.filter((row) => row._isValid);
   const errorCount = dataRows.filter((row) => !row._isValid).length;
   const newCount = validRows.filter((row) => row._operation === "create").length;
@@ -211,6 +228,15 @@ export function buildDefaultMutation(
       const relationValue = getStr(value);
       if (relationValue) {
         connect[column.relation.connectKey] = relationValue;
+      }
+      continue;
+    }
+    if (column.type === "media" || column.id.toLowerCase().endsWith("_url")) {
+      const url = getStr(value);
+      if (url) {
+        const field =
+          (column.sourceField ?? column.id.replace(/_url$/i, "")) || column.id;
+        payload[field] = { url };
       }
       continue;
     }

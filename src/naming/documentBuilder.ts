@@ -47,7 +47,7 @@ export class DocumentBuilder {
     return apitoSingularGraphQLTypeName(this.model);
   }
 
-  buildListQuery(fields: string[]): string {
+  buildListQuery(fields: string[], connectionBlock = ''): string {
     if (!this.supportsConnection) {
       return this.buildListQueryWithoutConnection(fields);
     }
@@ -61,6 +61,10 @@ export class DocumentBuilder {
       `$limit: Int`,
     ].join('\n    ');
 
+    const connectionLines = connectionBlock
+      ? `\n    ${connectionBlock.split('\n').join('\n    ')}\n`
+      : '\n';
+
     return `query Get${this.listPascal}(
     ${vars}
 ) {
@@ -69,7 +73,7 @@ export class DocumentBuilder {
     data {
       ${fields.join('\n      ')}
     }
-    
+    ${connectionLines}
     meta {
       created_at
       status
@@ -113,14 +117,18 @@ export class DocumentBuilder {
 }`;
   }
 
-  buildGetQuery(fields: string[]): string {
+  buildGetQuery(fields: string[], connectionBlock = ''): string {
+    const connectionLines = connectionBlock
+      ? `\n    ${connectionBlock.split('\n').join('\n    ')}\n`
+      : '\n';
+
     return `query Get${this.singularPascal}($id: String!) {
   ${this.singularField}(_id: $id) {
     id
     data {
       ${fields.join('\n      ')}
     }
-    
+    ${connectionLines}
     meta {
       created_at
       status
@@ -132,6 +140,21 @@ export class DocumentBuilder {
 
   buildCreateMutation(fields: string[]): string {
     const payload = apitoGraphQLComposedTypeName(this.model, 'Create_Payload');
+    if (!this.supportsConnection) {
+      return `mutation Create${this.singularPascal}($payload: ${payload}!) {
+  create${this.singularPascal}(payload: $payload, status: published) {
+    id
+    data {
+      ${fields.join('\n      ')}
+    }
+    meta {
+      created_at
+      status
+      updated_at
+    }
+  }
+}`;
+    }
     const connect = apitoGraphQLComposedTypeName(this.model, 'Relation_Connect_Payload');
     return `mutation Create${this.singularPascal}($payload: ${payload}!, $connect: ${connect}) {
   create${this.singularPascal}(payload: $payload, connect: $connect, status: published) {
@@ -150,6 +173,25 @@ export class DocumentBuilder {
 
   buildUpdateMutation(fields: string[]): string {
     const payload = apitoGraphQLComposedTypeName(this.model, 'Update_Payload');
+    if (!this.supportsConnection) {
+      return `mutation Update${this.singularPascal}(
+    $id: String!,
+    $deltaUpdate: Boolean,
+    $payload: ${payload}!
+) {
+  update${this.singularPascal}(_id: $id, deltaUpdate: $deltaUpdate, payload: $payload, status: published) {
+    id
+    data {
+      ${fields.join('\n      ')}
+    }
+    meta {
+      created_at
+      status
+      updated_at
+    }
+  }
+}`;
+    }
     const connect = apitoGraphQLComposedTypeName(this.model, 'Relation_Connect_Payload');
     const disconnect = apitoGraphQLComposedTypeName(this.model, 'Relation_Disconnect_Payload');
     return `mutation Update${this.singularPascal}(
@@ -181,16 +223,16 @@ export class DocumentBuilder {
 }`;
   }
 
-  generateGraphqlFile(fieldNames: string[]): string {
+  generateGraphqlFile(fieldNames: string[], connectionBlock = ''): string {
     const fields = fieldNames.filter((f) => f !== 'id');
     const resolved = fields.length > 0 ? fields : ['id'];
     return [
       '# AUTO-GENERATED — DO NOT EDIT',
       `# Model: ${this.model}`,
       '',
-      this.buildListQuery(resolved),
+      this.buildListQuery(resolved, connectionBlock),
       '',
-      this.buildGetQuery(resolved),
+      this.buildGetQuery(resolved, connectionBlock),
       '',
       this.buildCreateMutation(resolved),
       '',

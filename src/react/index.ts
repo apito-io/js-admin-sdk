@@ -6,6 +6,13 @@ export {
 } from "../headless/context";
 export type { ApitoProviderProps } from "../headless/context";
 export {
+  ApitoMediaProvider,
+  useApitoMediaUpload,
+  useApitoImageUploadLabels,
+  useApitoGalleryUploaderLabels,
+} from "../headless/mediaContext";
+export type { ApitoMediaProviderProps } from "../headless/mediaContext";
+export {
   isApitoDateFormValue,
   isApitoDateString,
   serializeApitoDateValue,
@@ -13,7 +20,18 @@ export {
   serializeApitoPayloadValues,
   normalizeApitoFormSaveInput,
   apitoRecordToFormValues,
+  buildConnectFromApitoRecord,
+  stripEmptyRelationFields,
 } from "../headless/formValues";
+export {
+  buildMutationConnectFromConnection,
+  buildMutationConnectHasMany,
+  buildMutationConnectHasOne,
+  mutationConnectHasManyKey,
+  mutationConnectHasOneKey,
+  normalizeApitoRelationConnectMap,
+  normalizeApitoRelationConnectValue,
+} from "../headless/mutationConnect";
 export {
   apitoGraphQLRequest,
   useApitoGraphQLFetcher,
@@ -31,12 +49,15 @@ export {
   buildListConnectionScope,
   buildListRelationFilter,
   isRelationCrudFilter,
+  listRelationFilterKey,
   mergeListRelationFilters,
   relationEqFilter,
+  relationEqFilterFromConnection,
   apitoWhereTypeName,
   apitoSortTypeName,
   type ApitoFilterVariables,
   type ApitoListRelationFilter,
+  type ListRelationFilterKeyConnection,
   type BuildFilterVariablesOptions,
   type BuildListQueryVariablesOptions,
 } from "../headless/filterVariables";
@@ -67,6 +88,7 @@ export {
   useListPage,
   useFormPage,
   useShowPage,
+  useOnePage,
   useDeleteRecord,
   useApitoQuery,
   useApitoCustomQuery,
@@ -77,6 +99,16 @@ export {
   type UseShowPageOptions,
   type UseApitoCustomQueryOptions,
 } from "../headless/hooks";
+
+export {
+  buildApitoCompatOneResult,
+  buildApitoCompatQueryState,
+  getSavedRecordId,
+  getSavedRecordNode,
+  type ApitoCompatOneResult,
+  type ApitoCompatQueryState,
+  type ApitoSavedMutationMeta,
+} from "../headless/recordCompat";
 
 export type {
   ApitoRecord,
@@ -102,9 +134,11 @@ export {
   autoMapColumns,
   buildDefaultMutation,
   buildExportRows,
+  deriveExportConnectionFieldsFromColumns,
   downloadTextFile,
   fetchAllListPages,
   getExportHeaders,
+  mapRecordToExportRowDefault,
   mapParsedRows,
   rowsToCsvContent,
   validateImportRows,
@@ -124,3 +158,19 @@ export {
 } from "../headless/importExport";
 
 export { ensureImageFileName } from "../headless/mediaUpload";
+export {
+  acceptAllowsOnlyImages,
+  defaultUploadFileTypeForKind,
+  extractMediaUrlFromValue,
+  fileMatchesAccept,
+  formatMediaUrlForExport,
+  inferMediaFileKind,
+  isHttpMediaUrl,
+  isImageMediaUrl,
+  isMediaLikeValue,
+  isPdfMediaUrl,
+  resolveMediaAccept,
+  type ApitoMediaAcceptOptions,
+  type ApitoMediaFileKind,
+  type ApitoMediaUploadFileType,
+} from "../headless/mediaUpload";
