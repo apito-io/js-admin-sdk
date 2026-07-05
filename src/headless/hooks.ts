@@ -6,11 +6,12 @@ import {
   useQueryClient,
   type UseQueryOptions,
 } from "@tanstack/react-query";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useApitoFetcher } from "./context";
 import {
-  apitoRecordToFormValues,
+  apitoRecordToAntdFormValues,
+  apitoRecordToCompatRecord,
   normalizeApitoFormSaveInput,
 } from "./formValues";
 import { apitoGraphQLRequest } from "./graphqlFetcher";
@@ -64,6 +65,8 @@ export type UseListPageOptions<TRecord extends ApitoRecord = ApitoRecord> = {
   listKey: string;
   countKey: string;
   initialFilters?: CrudFilter[];
+  /** Re-synced when this array changes (e.g. default date range). Merged before user/search filters. */
+  permanentFilters?: CrudFilter[];
   initialSorters?: CrudSort[];
   initialPagination?: ListPagePagination;
   supportsConnection?: boolean;
@@ -89,9 +92,38 @@ export function useListPage<TRecord extends ApitoRecord = ApitoRecord>(
   options: UseListPageOptions<TRecord>,
 ): UseListPageResult<TRecord> {
   const fetcher = useApitoFetcher();
-  const [filters, setFilters] = useState<CrudFilter[]>(
-    options.initialFilters ?? [],
+  const permanentFilters = options.permanentFilters ?? [];
+  const permanentKey = useMemo(
+    () => JSON.stringify(permanentFilters),
+    [permanentFilters],
   );
+  const [filters, setFilters] = useState<CrudFilter[]>(
+    options.permanentFilters ?? options.initialFilters ?? [],
+  );
+  const setFiltersRef = useRef(setFilters);
+  setFiltersRef.current = setFilters;
+
+  useEffect(() => {
+    if (options.permanentFilters === undefined) {
+      return;
+    }
+    const nextPermanent = JSON.parse(permanentKey) as CrudFilter[];
+    setFiltersRef.current((prev) => {
+      const permanentFields = new Set(
+        nextPermanent
+          .filter((f): f is CrudFilter & { field: string } => "field" in f)
+          .map((f) => f.field),
+      );
+      const rest = prev.filter(
+        (f) => !("field" in f) || !permanentFields.has(f.field),
+      );
+      const next = [...nextPermanent, ...rest];
+      if (JSON.stringify(next) === JSON.stringify(prev)) {
+        return prev;
+      }
+      return next;
+    });
+  }, [permanentKey, options.permanentFilters]);
   const [sorters, setSorters] = useState<CrudSort[]>(
     options.initialSorters ?? [],
   );
@@ -233,7 +265,11 @@ export function useFormPage(options: UseFormPageOptions) {
       void invalidateApitoQueriesAfterMutation(queryClient, options.resource),
   });
 
-  const record = oneQuery?.data?.[options.oneKey!] as ApitoRecord | undefined;
+  const rawRecord = oneQuery?.data?.[options.oneKey!] as ApitoRecord | undefined;
+  const record = useMemo(
+    () => apitoRecordToCompatRecord(rawRecord as Record<string, unknown> | undefined),
+    [rawRecord],
+  );
   const [lastSavedMeta, setLastSavedMeta] = useState<
     ApitoSavedMutationMeta | undefined
   >(undefined);
@@ -316,12 +352,22 @@ export function useFormPage(options: UseFormPageOptions) {
     legacyUpdateMutation?.isPending ||
     false;
 
+  const initialValues = useMemo(
+    () =>
+      record
+        ? apitoRecordToAntdFormValues(record as Record<string, unknown>, {
+            recordId: options.id,
+          })
+        : {},
+    [record, options.id],
+  );
+
   return {
     isEdit,
     isLoading: oneQuery?.isLoading ?? false,
     error: oneQuery?.error ?? null,
     record,
-    initialValues: record ? apitoRecordToFormValues(record) : {},
+    initialValues,
     save,
     isSaving,
     lastSavedMeta,
@@ -352,7 +398,10 @@ export function useShowPage<TRecord extends ApitoRecord = ApitoRecord>(
 } {
   const fetcher = useApitoFetcher();
   const query = options.useOneQuery(fetcher, { id: options.id });
-  const record = query.data?.[options.oneKey] as TRecord | undefined;
+  const rawRecord = query.data?.[options.oneKey] as TRecord | undefined;
+  const record = apitoRecordToCompatRecord(
+    rawRecord as Record<string, unknown> | undefined,
+  ) as TRecord | undefined;
 
   const compat = buildApitoCompatOneResult(record, {
     isLoading: query.isLoading,
@@ -383,7 +432,9 @@ export function useOnePage<TRecord extends ApitoRecord = ApitoRecord>(
     { enabled },
   );
   const record = enabled
-    ? (query.data?.[options.oneKey] as TRecord | undefined)
+    ? (apitoRecordToCompatRecord(
+        query.data?.[options.oneKey] as Record<string, unknown> | undefined,
+      ) as TRecord | undefined)
     : undefined;
 
   const compat = buildApitoCompatOneResult(record, {

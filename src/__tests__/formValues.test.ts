@@ -1,8 +1,12 @@
 import {
+  apitoRecordToAntdFormValues,
+  apitoRecordToCompatRecord,
   apitoRecordToFormValues,
   buildConnectFromApitoRecord,
   isApitoDateString,
+  mergeApitoRecordForCompat,
   normalizeApitoFormSaveInput,
+  prepareApitoMutationPayload,
   serializeApitoDateValue,
   serializeApitoPayloadValues,
 } from "../headless/formValues";
@@ -89,6 +93,50 @@ describe("apitoRecordToFormValues", () => {
       connect: {
         food_category_id: "01CAT",
       },
+    });
+  });
+});
+
+describe("mergeApitoRecordForCompat", () => {
+  it("keeps relation nodes from raw record alongside connect keys from form values", () => {
+    const raw = {
+      id: "01ORDER",
+      data: { order_no: "O1" },
+      foodList: [{ id: "01FOOD", data: { name: "Sprite" } }],
+    };
+    const formValues = apitoRecordToFormValues(raw);
+    expect(mergeApitoRecordForCompat(raw, formValues)).toEqual({
+      id: "01ORDER",
+      data: { order_no: "O1" },
+      foodList: [{ id: "01FOOD", data: { name: "Sprite" } }],
+      connect: { food_ids: ["01FOOD"] },
+    });
+  });
+});
+
+describe("apitoRecordToCompatRecord", () => {
+  it("returns merged record for show/edit compat", () => {
+    const raw = {
+      id: "01FOOD",
+      data: { name: "Sprite" },
+      category: { id: "01CAT", data: { name: "Drinks" } },
+    };
+    const compat = apitoRecordToCompatRecord(raw);
+    expect(compat?.category).toEqual({ id: "01CAT", data: { name: "Drinks" } });
+    expect(compat?.connect).toEqual({ category_id: "01CAT" });
+  });
+});
+
+describe("prepareApitoMutationPayload", () => {
+  it("filters by allowed fields and serializes dates", () => {
+    expect(
+      prepareApitoMutationPayload(
+        { name: "Demo", join_date: "2026-06-16", extra: "x" },
+        ["name", "join_date"],
+      ),
+    ).toEqual({
+      name: "Demo",
+      join_date: "2026-06-16T00:00:00.000Z",
     });
   });
 });

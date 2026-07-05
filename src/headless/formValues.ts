@@ -148,6 +148,7 @@ export function apitoRecordToFormValues(
   record: Record<string, unknown>,
   options?: {
     relationConnectKeys?: Record<string, string>;
+    preserveRelationNodes?: boolean;
   },
 ): Record<string, unknown> {
   const values: Record<string, unknown> = {
@@ -172,7 +173,129 @@ export function apitoRecordToFormValues(
   const strippedConnect = stripEmptyRelationFields(connect);
   if (strippedConnect) values.connect = strippedConnect;
 
+  if (options?.preserveRelationNodes) {
+    for (const [key, value] of Object.entries(record)) {
+      if (RECORD_ROOT_SKIP_KEYS.has(key)) continue;
+      if (isHasManyRelationNodes(value) || isHasOneRelationNode(value)) {
+        values[key] = value;
+      }
+    }
+  }
+
   return values;
+}
+
+/** Merge raw GraphQL record with form values so relation nodes survive alongside connect keys. */
+export function mergeApitoRecordForCompat(
+  rawRecord: Record<string, unknown> | undefined,
+  formValues: Record<string, unknown> | undefined,
+): Record<string, unknown> | undefined {
+  if (!rawRecord && !formValues) return undefined;
+  if (rawRecord && formValues) {
+    return { ...rawRecord, ...formValues };
+  }
+  return rawRecord ?? formValues;
+}
+
+export type ApitoDateParser = (value: string) => unknown;
+
+function parseGraphqlFieldName(field: string): string {
+  return field.split(/\s|\{/)[0].trim();
+}
+
+function isEmptyPayloadValue(value: unknown): boolean {
+  if (value == null) return true;
+  if (
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    typeof (value as { format?: unknown }).format !== "function"
+  ) {
+    const obj = value as Record<string, unknown>;
+    if (Object.keys(obj).length === 0) return true;
+    return Object.values(obj).every((v) => v == null);
+  }
+  return false;
+}
+
+function normalizeDataDatesForForm(
+  data: Record<string, unknown>,
+  dateParser?: ApitoDateParser,
+): Record<string, unknown> {
+  const next: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(data)) {
+    if (isApitoDateString(value) && dateParser) {
+      next[key] = dateParser(value);
+      continue;
+    }
+    next[key] = value;
+  }
+  return next;
+}
+
+/** Map Apito record to Ant Design form initial values (relations + connect + optional date parse). */
+export function apitoRecordToAntdFormValues(
+  record: Record<string, unknown>,
+  options?: {
+    relationConnectKeys?: Record<string, string>;
+    fields?: readonly string[];
+    dateParser?: ApitoDateParser;
+    recordId?: string;
+  },
+): Record<string, unknown> {
+  const formValues = apitoRecordToFormValues(record, {
+    relationConnectKeys: options?.relationConnectKeys,
+  });
+  const merged = mergeApitoRecordForCompat(record, formValues);
+  if (!merged) return {};
+
+  const normalizeData = (data: Record<string, unknown>) =>
+    normalizeDataDatesForForm(data, options?.dateParser);
+
+  if (
+    merged.data &&
+    typeof merged.data === "object" &&
+    !Array.isArray(merged.data)
+  ) {
+    const normalized = {
+      ...merged,
+      data: normalizeData(merged.data as Record<string, unknown>),
+    };
+    return options?.recordId
+      ? { ...normalized, id: String(merged.id ?? options.recordId) }
+      : normalized;
+  }
+
+  return {
+    data: normalizeData(record.data as Record<string, unknown> ?? {}),
+    ...(options?.recordId ? { id: options.recordId } : {}),
+  };
+}
+
+/** Build mutation payload with optional field allowlist and empty-value stripping. */
+export function prepareApitoMutationPayload(
+  values: Record<string, unknown>,
+  allowedFields?: readonly string[],
+): Record<string, unknown> {
+  const allowed = allowedFields?.map(parseGraphqlFieldName);
+  const payload: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(values)) {
+    if (allowed?.length && !allowed.includes(key)) continue;
+    if (isEmptyPayloadValue(value)) continue;
+    payload[key] = serializeApitoFormFieldValue(value);
+  }
+  return payload;
+}
+
+/** Compat record for show/edit: relations from API + connect keys for forms. */
+export function apitoRecordToCompatRecord(
+  record: Record<string, unknown> | undefined,
+  options?: {
+    relationConnectKeys?: Record<string, string>;
+  },
+): Record<string, unknown> | undefined {
+  if (!record) return undefined;
+  const formValues = apitoRecordToFormValues(record, options);
+  return mergeApitoRecordForCompat(record, formValues);
 }
 
 export function normalizeApitoFormSaveInput(values: Record<string, unknown>): {

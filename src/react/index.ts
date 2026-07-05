@@ -20,8 +20,13 @@ export {
   serializeApitoPayloadValues,
   normalizeApitoFormSaveInput,
   apitoRecordToFormValues,
+  apitoRecordToAntdFormValues,
+  apitoRecordToCompatRecord,
+  mergeApitoRecordForCompat,
+  prepareApitoMutationPayload,
   buildConnectFromApitoRecord,
   stripEmptyRelationFields,
+  type ApitoDateParser,
 } from "../headless/formValues";
 export {
   buildMutationConnectFromConnection,
@@ -109,6 +114,14 @@ export {
   type ApitoCompatQueryState,
   type ApitoSavedMutationMeta,
 } from "../headless/recordCompat";
+
+export {
+  createApitoResourceClient,
+  type ApitoResourceClient,
+  type ApitoResourceRegistry,
+  type ApitoResourceListParams,
+  type ApitoResourceMutationParams,
+} from "../headless/resourceClient";
 
 export type {
   ApitoRecord,

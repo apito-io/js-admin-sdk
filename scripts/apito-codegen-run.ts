@@ -232,6 +232,7 @@ const ONE_KEY = "${gql}";
 export function use${pascal}List(options?: {
   enabled?: boolean;
   initialFilters?: CrudFilter[];
+  permanentFilters?: CrudFilter[];
   initialPagination?: { current: number; pageSize: number };
 }) {
   return useListPage<${pascal}>({
@@ -241,6 +242,7 @@ export function use${pascal}List(options?: {
     supportsConnection: ${supportsConn},
     enabled: options?.enabled,
     initialFilters: options?.initialFilters,
+    permanentFilters: options?.permanentFilters,
     initialPagination: options?.initialPagination,
     useListQuery: (_fetcher, variables, opts) =>
       useGet${pascal}ListQuery(variables, opts),
@@ -427,7 +429,190 @@ const RESOURCE = "${model.name}";
 export * from "./types";
 export * from "./hooks";
 export * from "./sdk";
+export * from "./resource-registry";
 ${config.models.map((m) => `export * from "./models/${m.name}";`).join('\n')}
+`,
+  );
+}
+
+function gqlResourceNameFromModel(model: string): string {
+  return model
+    .split('_')
+    .map((part, i) => (i === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
+    .join('');
+}
+
+function writeResourceRegistry(config: ApitoCodegenConfig, outDir: string): void {
+  const entries = config.models.map((model) => {
+    const pascal = pascalCase(model.name);
+    const gql = gqlResourceNameFromModel(model.name);
+    const supportsConn = model.supportsConnection !== false;
+    return { model, pascal, gql, supportsConn };
+  });
+
+  const hookImports = entries
+    .map(
+      ({ model, pascal }) =>
+        `import { use${pascal}List, use${pascal}Form, useDelete${pascal} } from "./models/${model.name}";`,
+    )
+    .join('\n');
+
+  const documentImports = entries
+    .map(
+      ({ pascal }) =>
+        `  Create${pascal}Document,\n  Update${pascal}Document,\n  Delete${pascal}Document,\n  Get${pascal}ListDocument,\n  Get${pascal}Document,`,
+    )
+    .join('\n');
+
+  const listHooks = entries
+    .map(({ model, pascal }) => `  ${model.name}: use${pascal}List,`)
+    .join('\n');
+
+  const formHooks = entries
+    .map(({ model, pascal }) => `  ${model.name}: use${pascal}Form,`)
+    .join('\n');
+
+  const deleteHooks = entries
+    .map(({ model, pascal }) => `  ${model.name}: useDelete${pascal},`)
+    .join('\n');
+
+  const createDocs = entries
+    .map(({ model, pascal }) => `  ${model.name}: Create${pascal}Document,`)
+    .join('\n');
+
+  const updateDocs = entries
+    .map(({ model, pascal }) => `  ${model.name}: Update${pascal}Document,`)
+    .join('\n');
+
+  const deleteDocs = entries
+    .map(({ model, pascal }) => `  ${model.name}: Delete${pascal}Document,`)
+    .join('\n');
+
+  const listKeys = entries
+    .map(({ model, gql }) => `  ${model.name}: "${gql}List",`)
+    .join('\n');
+
+  const countKeys = entries
+    .map(({ model, gql }) => `  ${model.name}: "${gql}ListCount",`)
+    .join('\n');
+
+  const oneKeys = entries
+    .map(({ model, gql }) => `  ${model.name}: "${gql}",`)
+    .join('\n');
+
+  const listDocuments = entries
+    .map(({ model, pascal }) => `  ${model.name}: Get${pascal}ListDocument,`)
+    .join('\n');
+
+  const oneDocuments = entries
+    .map(({ model, pascal }) => `  ${model.name}: Get${pascal}Document,`)
+    .join('\n');
+
+  const supportsConnection = entries
+    .map(({ model, supportsConn }) => `  ${model.name}: ${supportsConn},`)
+    .join('\n');
+
+  const resourceNames = entries.map((e) => `"${e.model.name}"`).join(' | ');
+
+  fs.writeFileSync(
+    path.join(outDir, 'resource-registry.ts'),
+    `/** AUTO-GENERATED — do not edit. */
+"use client";
+
+import type {
+  ApitoResourceRegistry,
+  CrudFilter,
+  GraphQLQueryInput,
+} from "@apito-io/js-admin-sdk/react";
+${hookImports}
+import {
+${documentImports}
+} from "./hooks";
+
+export type ApitoResourceName = ${resourceNames};
+
+export const APITO_LIST_HOOKS = {
+${listHooks}
+} as const;
+
+export const APITO_FORM_HOOKS = {
+${formHooks}
+} as const;
+
+export const APITO_DELETE_HOOKS = {
+${deleteHooks}
+} as const;
+
+export const APITO_CREATE_DOCUMENTS = {
+${createDocs}
+} as unknown as Record<string, GraphQLQueryInput>;
+
+export const APITO_UPDATE_DOCUMENTS = {
+${updateDocs}
+} as unknown as Record<string, GraphQLQueryInput>;
+
+export const APITO_DELETE_DOCUMENTS = {
+${deleteDocs}
+} as unknown as Record<string, GraphQLQueryInput>;
+
+const LIST_KEYS: Record<string, string> = {
+${listKeys}
+};
+
+const COUNT_KEYS: Record<string, string> = {
+${countKeys}
+};
+
+const ONE_KEYS: Record<string, string> = {
+${oneKeys}
+};
+
+const LIST_DOCUMENTS = {
+${listDocuments}
+} as unknown as Record<string, GraphQLQueryInput>;
+
+const ONE_DOCUMENTS = {
+${oneDocuments}
+} as unknown as Record<string, GraphQLQueryInput>;
+
+const SUPPORTS_CONNECTION: Record<string, boolean> = {
+${supportsConnection}
+};
+
+export const apitoResourceRegistry: ApitoResourceRegistry = {
+  getListDocument: (resource) => LIST_DOCUMENTS[resource],
+  getOneDocument: (resource) => ONE_DOCUMENTS[resource],
+  getCreateDocument: (resource) => APITO_CREATE_DOCUMENTS[resource],
+  getUpdateDocument: (resource) => APITO_UPDATE_DOCUMENTS[resource],
+  getDeleteDocument: (resource) => APITO_DELETE_DOCUMENTS[resource],
+  getListKey: (resource) => LIST_KEYS[resource] ?? \`\${resource}List\`,
+  getCountKey: (resource) => COUNT_KEYS[resource] ?? \`\${resource}ListCount\`,
+  getOneKey: (resource) => ONE_KEYS[resource] ?? resource,
+  supportsConnection: (resource) => SUPPORTS_CONNECTION[resource] !== false,
+};
+
+export function useApitoResourceList(
+  resource: ApitoResourceName,
+  options?: {
+    enabled?: boolean;
+    initialFilters?: CrudFilter[];
+    initialPagination?: { current: number; pageSize: number };
+    permanentFilters?: CrudFilter[];
+  },
+) {
+  const hook = APITO_LIST_HOOKS[resource];
+  return hook(options);
+}
+
+export function useApitoResourceForm(resource: ApitoResourceName, id?: string) {
+  const hook = APITO_FORM_HOOKS[resource];
+  return hook(id);
+}
+
+export function useApitoResourceDelete(resource: ApitoResourceName) {
+  const hook = APITO_DELETE_HOOKS[resource];
+  return hook();
+}
 `,
   );
 }
@@ -462,6 +647,7 @@ async function main() {
   }
 
   writeProjectHooks(config, outDir);
+  writeResourceRegistry(config, outDir);
   console.log(`apito-codegen complete → ${outDir}`);
 }
 
