@@ -54,6 +54,9 @@ export {
   buildListConnectionScope,
   buildListRelationFilter,
   isRelationCrudFilter,
+  isLogicalCrudFilter,
+  orCrudFilter,
+  andCrudFilter,
   listRelationFilterKey,
   mergeListRelationFilters,
   relationEqFilter,
@@ -66,7 +69,7 @@ export {
   type BuildFilterVariablesOptions,
   type BuildListQueryVariablesOptions,
 } from "../headless/filterVariables";
-export type { ApitoRelationCrudFilter } from "../headless/types";
+export type { ApitoRelationCrudFilter, CrudLogicalCrudFilter } from "../headless/types";
 export {
   antdSorterToCrudSort,
   crudSortToAntdOrder,

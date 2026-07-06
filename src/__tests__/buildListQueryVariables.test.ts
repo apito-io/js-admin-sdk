@@ -41,6 +41,28 @@ describe("buildListQueryVariables", () => {
     expect(vars.page).toBe(1);
     expect(vars.limit).toBe(10);
   });
+
+  it("maps OR filter groups to GraphQL where.OR", () => {
+    const vars = buildListQueryVariables({
+      resource: "food",
+      filters: [
+        {
+          operator: "or",
+          value: [
+            { field: "name", operator: "contains", value: "bbq" },
+            { field: "short_code", operator: "contains", value: "bbq" },
+          ],
+        },
+      ],
+    });
+
+    expect(vars.where).toEqual({
+      OR: {
+        name: { contains: "bbq" },
+        short_code: { contains: "bbq" },
+      },
+    });
+  });
 });
 
 describe("tableSort helpers", () => {

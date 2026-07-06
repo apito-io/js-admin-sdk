@@ -16,7 +16,18 @@ export type CrudFilter =
       operator: string;
       value?: unknown;
     }
-  | ApitoRelationCrudFilter;
+  | ApitoRelationCrudFilter
+  | CrudLogicalCrudFilter;
+
+/** Refine-style OR / AND group for GraphQL `where.OR` / `where.AND`. */
+export type CrudLogicalCrudFilter = {
+  operator: "or" | "and";
+  value: Array<{
+    field: string;
+    operator: string;
+    value?: unknown;
+  }>;
+};
 
 /** GraphQL list `relation` filter in Refine-style filter arrays. */
 export type ApitoRelationCrudFilter = {

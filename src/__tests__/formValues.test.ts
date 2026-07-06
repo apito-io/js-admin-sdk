@@ -24,6 +24,12 @@ describe("serializeApitoDateValue", () => {
     );
   });
 
+  it("preserves explicit timezone offset strings", () => {
+    expect(serializeApitoDateValue("2026-07-07T00:42:25+06:00")).toBe(
+      "2026-07-07T00:42:25+06:00",
+    );
+  });
+
   it("detects apito date strings", () => {
     expect(isApitoDateString("2026-06-16")).toBe(true);
     expect(isApitoDateString("2026-06-16T12:00:00Z")).toBe(true);

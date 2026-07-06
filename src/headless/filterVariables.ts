@@ -9,6 +9,58 @@ import {
 } from "../naming/apitoGraphqlNames";
 import { transformRelationFilters } from "./listRelationFilters";
 
+export type { CrudLogicalCrudFilter } from "./types";
+
+export function isLogicalCrudFilter(
+  filter: CrudFilter,
+): filter is import("./types").CrudLogicalCrudFilter {
+  return (
+    "operator" in filter &&
+    (filter.operator === "or" || filter.operator === "and") &&
+    Array.isArray(filter.value)
+  );
+}
+
+/** Build a Refine-style OR filter group for Apito GraphQL `where.OR`. */
+export function orCrudFilter(
+  ...branches: Array<{ field: string; operator: string; value?: unknown }>
+): CrudFilter {
+  return { operator: "or", value: branches };
+}
+
+/** Build a Refine-style AND filter group for Apito GraphQL `where.AND`. */
+export function andCrudFilter(
+  ...branches: Array<{ field: string; operator: string; value?: unknown }>
+): CrudFilter {
+  return { operator: "and", value: branches };
+}
+
+function buildFieldWhereCondition(
+  field: string,
+  operator: string,
+  value: unknown,
+): Record<string, unknown> {
+  const op = mapOperator(operator);
+  return { [field]: { [op]: value } };
+}
+
+function buildLogicalWhereCondition(
+  operator: "or" | "and",
+  branches: Array<{ field: string; operator: string; value?: unknown }>,
+): Record<string, unknown> | undefined {
+  const logicalKey = operator.toUpperCase() as "OR" | "AND";
+  const logicalObj: Record<string, unknown> = {};
+  for (const branch of branches) {
+    if (!branch.field) continue;
+    Object.assign(
+      logicalObj,
+      buildFieldWhereCondition(branch.field, branch.operator, branch.value),
+    );
+  }
+  if (!Object.keys(logicalObj).length) return undefined;
+  return { [logicalKey]: logicalObj };
+}
+
 export type { ApitoListRelationFilter } from "./listRelationFilters";
 export {
   buildListRelationFilter,
@@ -117,9 +169,13 @@ function buildWhereFromFilters(
   if (!filters.length) return undefined;
   const and: Record<string, unknown>[] = [];
   for (const f of filters) {
+    if (isLogicalCrudFilter(f)) {
+      const logical = buildLogicalWhereCondition(f.operator, f.value);
+      if (logical) and.push(logical);
+      continue;
+    }
     if (!("field" in f) || !f.field) continue;
-    const op = mapOperator(f.operator);
-    and.push({ [f.field]: { [op]: f.value } });
+    and.push(buildFieldWhereCondition(f.field, f.operator, f.value ?? null));
   }
   if (!and.length) return undefined;
   return Object.assign({}, ...and);
