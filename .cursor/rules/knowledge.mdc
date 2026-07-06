@@ -1,5 +1,7 @@
 ---
-alwaysApply: true
+description: Knowledge entry point for js-admin-sdk — read .knowledge/README.md before coding in apito/sdk/js-admin-sdk
+globs: apito/sdk/js-admin-sdk/**
+alwaysApply: false
 ---
 
 # Knowledge base — js-admin-sdk
