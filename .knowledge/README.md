@@ -3,7 +3,7 @@
 Part of the **apito** ecosystem. See `/.knowledge/projects/apito.md` for how this repo fits and its blast radius.
 
 ## Read order
-1. This file. 2. `ARCHITECTURE.md`. 3. `DECISIONS.md`. 4. `../.memory/CURRENT.md` and `../.memory/HANDOFF.md`.
+1. This file. 2. `ARCHITECTURE.md`. 3. `features/README.md` (vertical workflows; shared concepts in `apito/.knowledge/features/`). 4. `DECISIONS.md`. 5. `../.memory/CURRENT.md` and `../.memory/HANDOFF.md`.
 
 ## Purpose
 - _TODO: one-paragraph description of what this repo does._
