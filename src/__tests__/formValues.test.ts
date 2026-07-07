@@ -24,9 +24,9 @@ describe("serializeApitoDateValue", () => {
     );
   });
 
-  it("preserves explicit timezone offset strings", () => {
+  it("normalizes offset ISO strings to UTC Z", () => {
     expect(serializeApitoDateValue("2026-07-07T00:42:25+06:00")).toBe(
-      "2026-07-07T00:42:25+06:00",
+      "2026-07-06T18:42:25.000Z",
     );
   });
 

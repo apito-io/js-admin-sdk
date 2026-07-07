@@ -50,11 +50,6 @@ export function serializeApitoDateValue(value: unknown): string | undefined {
     const trimmed = value.trim();
     if (!trimmed) return undefined;
     if (ISO_DATE_TIME.test(trimmed)) {
-      // Preserve explicit offset — Apito SQLite `between` is lexicographic; apps
-      // like Rosna store food_order dates as Asia/Dhaka (+06:00) via toApitoFoodOrderDate.
-      if (/[+-]\d{2}:\d{2}$/.test(trimmed)) {
-        return trimmed;
-      }
       const parsed = new Date(trimmed);
       return Number.isNaN(parsed.getTime()) ? undefined : parsed.toISOString();
     }
