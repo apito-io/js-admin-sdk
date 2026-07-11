@@ -4,6 +4,11 @@ Not git history — the *reasoning* behind changes. Newest on top.
 Format per entry: date, **Changed**, **Why**, **Affected**.
 
 ---
+## 2026-07-10
+- **Changed:** `searchTenants({ projectId, limit?, offset?, q? })` on admin client; types + CONTRACT + README; test stub in `client.test.ts`.
+- **Why:** Parity with engine system GraphQL for SaaS tenant catalog console; enables consumer migration off raw queries.
+- **Affected:** `src/client.ts`, `src/types.ts`, `CONTRACT.md`, `CHANGELOG.md`, `README.md`; apito-console-v4 TenantsTab.
+
 ## 2026-07-07
 - **Changed:** SDK **1.0.4** — logical OR/AND list filters (`orCrudFilter`, `andCrudFilter`); `buildWhereFromFilters` emits `where.OR`/`where.AND`; `serializeApitoDateValue` keeps explicit offsets.
 - **Why:** Rosna food-catalog search OR filters were silently dropped; food-order date `between` mismatched UTC saves vs `+06:00` list bounds.

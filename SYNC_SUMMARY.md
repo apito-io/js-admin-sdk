@@ -1,11 +1,16 @@
 # JS Admin SDK — Cross-SDK Sync Summary
 
-**Package:** `@apito-io/js-admin-sdk` (v3.7.1)  
-**Aligned with:** `flutter_admin_sdk` v0.6.1, `go-admin-sdk` v2.6.1
+**Package:** `@apito-io/js-admin-sdk` (v3.8.0)  
+**Aligned with:** `flutter_admin_sdk` v0.6.3, `go-admin-sdk` v2.6.2
 
 ## Shared contract
 
 See [CONTRACT.md](CONTRACT.md).
+
+## v3.8.0 (2026-07-11)
+
+- **`searchTenants`** — paginated SaaS catalog search with optional `q`
+- **`searchUsers` optional `q`** — 5th arg free-text filter (email, username, phone, id)
 
 ## v3.7.1 (2026-06-22)
 

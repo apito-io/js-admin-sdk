@@ -4,7 +4,7 @@
 - Nothing in flight.
 
 ## Next
-- Consumers (rosna, protiva) on linked `1.0.4` — publish/npm if needed outside monorepo.
+- Go/Flutter parity for `searchTenants` (JS shipped 2026-07-10).
 
 ## Last Updated
-2026-07-07
+2026-07-10

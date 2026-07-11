@@ -251,7 +251,7 @@ describe('ApitoClient', () => {
       }
       const client = getTestClient();
       try {
-        const { count, users } = await client.searchUsers(projectId, 10, 0);
+        const { count, users } = await client.searchUsers(projectId, 10, 0, undefined, 'alice');
         expect(count).toBeGreaterThanOrEqual(0);
         console.log('✅ searchUsers:', count, users?.length);
       } catch (error) {
@@ -272,6 +272,22 @@ describe('ApitoClient', () => {
         console.log('✅ searchTenantsByDomain:', tenant ? 'match' : 'no match');
       } catch (error) {
         console.log('searchTenantsByDomain failed (may be expected):', error);
+      }
+    }, 30000);
+
+    it('should search tenants when APITO_PROJECT_ID is set', async () => {
+      const projectId = process.env.APITO_PROJECT_ID;
+      if (!projectId) {
+        console.log('searchTenants: skipped — set APITO_PROJECT_ID');
+        return;
+      }
+      const client = getTestClient();
+      try {
+        const { count, tenants } = await client.searchTenants(projectId, 10, 0);
+        expect(count).toBeGreaterThanOrEqual(0);
+        console.log('✅ searchTenants:', count, tenants?.length);
+      } catch (error) {
+        console.log('searchTenants failed (may be expected):', error);
       }
     }, 30000);
 

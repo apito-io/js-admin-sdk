@@ -4,16 +4,14 @@
 - `master`
 
 ## Done
-- **1.0.4** — `orCrudFilter` / `andCrudFilter`, logical OR/AND in `buildWhereFromFilters`, `serializeApitoDateValue` offset preservation.
-
-## Broken / watch
-- None known.
+- **2026-07-10** — `searchTenants()` for SaaS tenant catalog.
+- **1.0.4** — `orCrudFilter` / `andCrudFilter`, logical OR/AND in `buildWhereFromFilters`.
 
 ## Next
-- Publish `1.0.4` to npm if non-monorepo consumers need it.
+- Publish version bump if non-monorepo consumers need `searchTenants`.
 
 ## Do not touch
 - Generated `dist/` (build artifact; not committed).
 
 ## Last Updated
-2026-07-07
+2026-07-10

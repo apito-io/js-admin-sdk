@@ -18,6 +18,7 @@ import {
   TenantCatalogSearchRow,
   TenantCatalogListItem,
   GetTenantsResponse,
+  SearchTenantsResponse,
   CreateTenantParams,
   UpdateTenantParams,
   LoginUserParams,
@@ -337,16 +338,18 @@ export class ApitoClient implements InjectedDBOperationInterface {
 
   /**
    * Search project end-users. On pro SaaS, pass `tenantId` to scope the list to one catalog tenant.
+   * Optional `q` filters email, username, phone, or id (case-insensitive contains).
    */
   async searchUsers(
     projectId: string,
     limit?: number,
     offset?: number,
-    tenantId?: string
+    tenantId?: string,
+    q?: string
   ): Promise<UsersResponse> {
     const query = `
-      query SearchUsers($project_id: String!, $limit: Int, $offset: Int, $tenant_id: String) {
-        searchUsers(project_id: $project_id, limit: $limit, offset: $offset, tenant_id: $tenant_id) {
+      query SearchUsers($project_id: String!, $limit: Int, $offset: Int, $tenant_id: String, $q: String) {
+        searchUsers(project_id: $project_id, limit: $limit, offset: $offset, tenant_id: $tenant_id, q: $q) {
           count
           users {
             id
@@ -367,6 +370,8 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (offset !== undefined) variables.offset = offset;
     const tid = (tenantId ?? '').trim();
     if (tid) variables.tenant_id = tid;
+    const needle = (q ?? '').trim();
+    if (needle) variables.q = needle;
     const response = await this.executeGraphQL(query, variables);
     const raw = response.data?.searchUsers;
     if (!raw) {
@@ -408,6 +413,49 @@ export class ApitoClient implements InjectedDBOperationInterface {
     }
     const tenant = (raw.tenant ?? null) as TenantCatalogSearchRow | null;
     return { tenant };
+  }
+
+  /**
+   * Search SaaS catalog tenants with optional text filter and pagination (system GraphQL only).
+   */
+  async searchTenants(
+    projectId: string,
+    limit?: number,
+    offset?: number,
+    q?: string
+  ): Promise<SearchTenantsResponse> {
+    const query = `
+      query SearchTenants($project_id: String!, $limit: Int, $offset: Int, $q: String) {
+        searchTenants(project_id: $project_id, limit: $limit, offset: $offset, q: $q) {
+          count
+          tenants {
+            id
+            name
+            status
+            domain
+            icon
+            data
+            created_at
+          }
+        }
+      }
+    `;
+    const variables: Record<string, any> = { project_id: projectId };
+    if (limit !== undefined) variables.limit = limit;
+    if (offset !== undefined) variables.offset = offset;
+    const needle = (q ?? '').trim();
+    if (needle) variables.q = needle;
+    const response = await this.executeGraphQL(query, variables);
+    const raw = response.data?.searchTenants;
+    if (!raw) {
+      throw new ValidationError('Invalid response format for searchTenants');
+    }
+    let count = 0;
+    if (typeof raw.count === 'number') {
+      count = raw.count;
+    }
+    const tenants = (raw.tenants ?? []) as TenantCatalogSearchRow[];
+    return { tenants, count };
   }
 
   /** List SaaS catalog tenants for the authenticated project (system GraphQL only). */

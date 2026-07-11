@@ -46,9 +46,9 @@ All SDKs expose:
 
 - **GraphQL CRUD** (system GraphQL via `ApitoClient`; optional generated `getSdk` + TanStack hooks in JS)
 - **REST storage**: `uploadFile`, `listFiles`, `deleteFiles` at `/secured/files/upload|list|delete` (paths relative to `restBaseURL`, default `/secured`)
-- **Auth/admin**: `generateTenantToken`, `getTenants`, `createTenant`, `updateTenant`, `deleteTenant`, `loginUser` (password, Google OAuth code, **`google_id_token`**), `googleOAuthState`, `searchUsers`, `searchTenantsByDomain`, `createUser`, `updateUser`, `resetUserPassword`, `deleteUser`
+- **Auth/admin**: `generateTenantToken`, `getTenants`, `searchTenants`, `createTenant`, `updateTenant`, `deleteTenant`, `loginUser` (password, Google OAuth code, **`google_id_token`**), `googleOAuthState`, `searchUsers`, `searchTenantsByDomain`, `createUser`, `updateUser`, `resetUserPassword`, `deleteUser`
 
-Pro SaaS user ops accept optional **`tenantId`** / GraphQL `tenant_id` on `searchUsers`, `createUser`, and `updateUser` (in addition to `loginUser`). Omit on general projects.
+Pro SaaS user ops accept optional **`tenantId`** / GraphQL `tenant_id` on `searchUsers`, `createUser`, and `updateUser` (in addition to `loginUser`). Omit on general projects. `searchUsers` also accepts optional **`q`** (email, username, phone, id contains).
 
 ### Cloudflare Workers v1 (`cloudflare_full`)
 
@@ -56,7 +56,7 @@ When the engine URL is a Cloudflare Worker (`-tags cloudflare`), the SDK contrac
 
 | Operation | Workers v1 |
 |-----------|------------|
-| `generateTenantToken`, `getTenants`, `createTenant`, `updateTenant`, `deleteTenant`, `searchTenantsByDomain` | GraphQL error: `tenant management is not available on Cloudflare Workers v1` |
+| `generateTenantToken`, `getTenants`, `searchTenants`, `createTenant`, `updateTenant`, `deleteTenant`, `searchTenantsByDomain` | GraphQL error: `tenant management is not available on Cloudflare Workers v1` |
 | `loginUser` (password / general) | Supported |
 | `loginUser` (`google`, `google_id_token`), `googleOAuthState` | GraphQL error: `google login is not available on Cloudflare Workers v1` |
 

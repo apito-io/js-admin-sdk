@@ -176,13 +176,20 @@ export interface DeleteFilesResponse {
   message?: string;
 }
 
-/** One SaaS catalog tenant row from searchTenantsByDomain. */
+/** One SaaS catalog tenant row from searchTenantsByDomain or searchTenants. */
 export interface TenantCatalogSearchRow {
   id: string;
   name: string;
   status?: string;
   domain?: string;
+  icon?: string;
   data?: string;
+  created_at?: string;
+}
+
+export interface SearchTenantsResponse {
+  tenants: TenantCatalogSearchRow[];
+  count: number;
 }
 
 export interface TenantByDomainResponse {
@@ -261,9 +268,16 @@ export interface InjectedDBOperationInterface {
     projectId: string,
     limit?: number,
     offset?: number,
-    tenantId?: string
+    tenantId?: string,
+    q?: string
   ): Promise<UsersResponse>;
   searchTenantsByDomain(projectId: string, domain: string): Promise<TenantByDomainResponse>;
+  searchTenants(
+    projectId: string,
+    limit?: number,
+    offset?: number,
+    q?: string
+  ): Promise<SearchTenantsResponse>;
   getTenants(): Promise<GetTenantsResponse>;
   createTenant(params: CreateTenantParams): Promise<TenantCatalogSearchRow>;
   updateTenant(tenantId: string, params: UpdateTenantParams): Promise<TenantCatalogSearchRow>;
