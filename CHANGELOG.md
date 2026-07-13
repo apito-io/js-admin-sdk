@@ -5,11 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.9.0] - 2026-07-13
+
+### Changed
+
+- **`deleteTenant`** — documented and implemented as **soft delete** (`status=deleted`). Content and mirror rows remain until Console hard delete.
+- **`searchTenants`** — optional `status` argument (`active`, `deleted`, `all`).
+
 ## [3.8.0] - 2026-07-11
 
 ### Added
 
-- **`searchTenants(projectId, limit?, offset?, q?)`** — paginated SaaS catalog search with `count` and optional free-text filter (`name`, `id`, `domain`, `data`). Complements `getTenants` (full list) and `searchTenantsByDomain` (exact domain).
+- **`searchTenants(projectId, limit?, offset?, q?, status?)`** — paginated SaaS catalog search with `count` and optional free-text filter (`name`, `id`, `domain`, `data`). Optional `status`: `active` (default), `deleted`, or `all`. Complements `getTenants` (full list) and `searchTenantsByDomain` (exact domain).
 - **`searchUsers` optional `q`** — 5th argument filters email, username, phone, or id (case-insensitive contains). Parity with engine `searchUsers` GraphQL.
 
 ## [1.0.4] - 2026-07-07

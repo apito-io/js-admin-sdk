@@ -276,7 +276,8 @@ export interface InjectedDBOperationInterface {
     projectId: string,
     limit?: number,
     offset?: number,
-    q?: string
+    q?: string,
+    status?: string
   ): Promise<SearchTenantsResponse>;
   getTenants(): Promise<GetTenantsResponse>;
   createTenant(params: CreateTenantParams): Promise<TenantCatalogSearchRow>;

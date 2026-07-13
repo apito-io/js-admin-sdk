@@ -416,17 +416,19 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /**
-   * Search SaaS catalog tenants with optional text filter and pagination (system GraphQL only).
+   * Search SaaS catalog tenants with optional text filter, status filter, and pagination (system GraphQL only).
+   * status: active (default), deleted, or all.
    */
   async searchTenants(
     projectId: string,
     limit?: number,
     offset?: number,
-    q?: string
+    q?: string,
+    status?: string
   ): Promise<SearchTenantsResponse> {
     const query = `
-      query SearchTenants($project_id: String!, $limit: Int, $offset: Int, $q: String) {
-        searchTenants(project_id: $project_id, limit: $limit, offset: $offset, q: $q) {
+      query SearchTenants($project_id: String!, $limit: Int, $offset: Int, $q: String, $status: String) {
+        searchTenants(project_id: $project_id, limit: $limit, offset: $offset, q: $q, status: $status) {
           count
           tenants {
             id
@@ -445,6 +447,8 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (offset !== undefined) variables.offset = offset;
     const needle = (q ?? '').trim();
     if (needle) variables.q = needle;
+    const statusFilter = (status ?? '').trim();
+    if (statusFilter) variables.status = statusFilter;
     const response = await this.executeGraphQL(query, variables);
     const raw = response.data?.searchTenants;
     if (!raw) {
@@ -544,7 +548,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
     return row;
   }
 
-  /** Hard-delete a catalog tenant row. */
+  /** Soft-delete a catalog tenant row (status=deleted). Content and mirror remain until Console hard delete. */
   async deleteTenant(tenantId: string): Promise<boolean> {
     const tid = (tenantId ?? '').trim();
     if (!tid) {
