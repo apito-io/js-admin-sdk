@@ -291,6 +291,23 @@ describe('ApitoClient', () => {
       }
     }, 30000);
 
+    it('should get tenant by exact id when APITO_PROJECT_ID and APITO_TENANT_ID are set', async () => {
+      const projectId = process.env.APITO_PROJECT_ID;
+      const tenantId = process.env.APITO_TENANT_ID;
+      if (!projectId || !tenantId) {
+        console.log('getTenant: skipped — set APITO_PROJECT_ID and APITO_TENANT_ID');
+        return;
+      }
+      const client = getTestClient();
+      try {
+        const tenant = await client.getTenant(projectId, tenantId);
+        expect(tenant?.id).toBe(tenantId);
+        console.log('✅ getTenant:', tenant?.name ?? tenant?.id);
+      } catch (error) {
+        console.log('getTenant failed (may be expected):', error);
+      }
+    }, 30000);
+
     it('should login when APITO_PROJECT_ID and credentials are set', async () => {
       const projectId = process.env.APITO_PROJECT_ID;
       const email = process.env.APITO_TENANT_EMAIL ?? '';

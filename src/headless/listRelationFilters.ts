@@ -89,6 +89,43 @@ export function mergeListRelationFilters(
 }
 
 /**
+ * Merge updated permanent filters into the current list filter state.
+ *
+ * Permanent filters may be field filters (`field`) or relation filters
+ * (`relation` via {@link relationEqFilter}). Previous permanent entries for the
+ * same field/relation are replaced; other (search/user) filters are kept.
+ *
+ * Pass `previousPermanent` when the permanent set changes shape (e.g. field
+ * filter → relation filter) so stale permanent entries are still removed.
+ */
+export function mergePermanentListFilters(
+  prev: CrudFilter[],
+  nextPermanent: CrudFilter[],
+  previousPermanent: CrudFilter[] = [],
+): CrudFilter[] {
+  const permanentFields = new Set(
+    [...previousPermanent, ...nextPermanent]
+      .filter((f): f is CrudFilter & { field: string } => "field" in f)
+      .map((f) => f.field),
+  );
+  const permanentRelations = new Set(
+    [...previousPermanent, ...nextPermanent]
+      .filter(isRelationCrudFilter)
+      .map((f) => f.relation.trim()),
+  );
+  const rest = prev.filter((f) => {
+    if (isRelationCrudFilter(f)) {
+      return !permanentRelations.has(f.relation.trim());
+    }
+    if ("field" in f && typeof f.field === "string") {
+      return !permanentFields.has(f.field);
+    }
+    return true;
+  });
+  return [...nextPermanent, ...rest];
+}
+
+/**
  * Split Refine-style filters into `where` field filters and GraphQL list `relation`.
  *
  * Use {@link relationEqFilter} for has_one / has_many / many_to_many scoping.

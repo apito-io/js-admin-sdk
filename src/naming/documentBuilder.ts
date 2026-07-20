@@ -57,6 +57,8 @@ export class DocumentBuilder {
       `$where: ${apitoWhereInputType(this.model)}`,
       `$whereCount: ${apitoListCountWhereInputType(this.model)}`,
       `$sort: ${apitoSortInputType(this.model)}`,
+      `$_key: ${apitoListKeyConditionType(this.model)}`,
+      `$_keyCount: ${apitoListCountKeyConditionType(this.model)}`,
       `$page: Int`,
       `$limit: Int`,
     ].join('\n    ');
@@ -68,7 +70,7 @@ export class DocumentBuilder {
     return `query Get${this.listPascal}(
     ${vars}
 ) {
-  ${this.listField}(relation: $relation, where: $where, sort: $sort, page: $page, limit: $limit) {
+  ${this.listField}(relation: $relation, where: $where, sort: $sort, _key: $_key, page: $page, limit: $limit) {
     id
     data {
       ${fields.join('\n      ')}
@@ -79,7 +81,7 @@ export class DocumentBuilder {
       status
       updated_at
     }
-  }    ${this.countField}(relation: $relation, where: $whereCount, page: $page, limit: $limit) {
+  }    ${this.countField}(relation: $relation, where: $whereCount, _key: $_keyCount, page: $page, limit: $limit) {
       total
     }
 }`;
@@ -93,6 +95,8 @@ export class DocumentBuilder {
       `$where: ${apitoWhereInputType(this.model)}`,
       `$whereCount: ${apitoListCountWhereInputType(this.model)}`,
       `$sort: ${apitoSortInputType(this.model)}`,
+      `$_key: ${apitoListKeyConditionType(this.model)}`,
+      `$_keyCount: ${apitoListCountKeyConditionType(this.model)}`,
       `$page: Int`,
       `$limit: Int`,
     ].join(',\n    ');
@@ -100,7 +104,7 @@ export class DocumentBuilder {
     return `query Get${this.listPascal}(
     ${vars}
 ) {
-  ${listField}(where: $where, sort: $sort, page: $page, limit: $limit) {
+  ${listField}(where: $where, sort: $sort, _key: $_key, page: $page, limit: $limit) {
     id
     data {
       ${fields.join('\n      ')}
@@ -111,7 +115,7 @@ export class DocumentBuilder {
       updated_at
     }
   }
-  ${countField}(where: $whereCount, page: $page, limit: $limit) {
+  ${countField}(where: $whereCount, _key: $_keyCount, page: $page, limit: $limit) {
     total
   }
 }`;

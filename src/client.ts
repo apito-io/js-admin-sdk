@@ -462,6 +462,30 @@ export class ApitoClient implements InjectedDBOperationInterface {
     return { tenants, count };
   }
 
+  /**
+   * Load one SaaS catalog tenant by exact id (system GraphQL only).
+   * Uses `searchTenants` with `q` = tenant id and returns only an exact id match.
+   */
+  async getTenant(
+    projectId: string,
+    tenantId: string,
+    status?: string
+  ): Promise<TenantCatalogSearchRow | null> {
+    const pid = (projectId ?? '').trim();
+    const tid = (tenantId ?? '').trim();
+    if (!pid) {
+      throw new ValidationError('projectId is required');
+    }
+    if (!tid) {
+      throw new ValidationError('tenantId is required');
+    }
+    const { tenants } = await this.searchTenants(pid, 5, 0, tid, status ?? 'active');
+    if (!Array.isArray(tenants)) {
+      return null;
+    }
+    return tenants.find((row) => row?.id?.trim() === tid) ?? null;
+  }
+
   /** List SaaS catalog tenants for the authenticated project (system GraphQL only). */
   async getTenants(): Promise<GetTenantsResponse> {
     const query = `

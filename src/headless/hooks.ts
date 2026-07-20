@@ -15,7 +15,11 @@ import {
   normalizeApitoFormSaveInput,
 } from "./formValues";
 import { apitoGraphQLRequest } from "./graphqlFetcher";
-import { buildApitoFilterVariables, buildListQueryVariables } from "./filterVariables";
+import {
+  buildApitoFilterVariables,
+  buildListQueryVariables,
+  mergePermanentListFilters,
+} from "./filterVariables";
 import {
   invalidateApitoDataQueries,
   invalidateApitoQueriesAfterMutation,
@@ -102,22 +106,24 @@ export function useListPage<TRecord extends ApitoRecord = ApitoRecord>(
   );
   const setFiltersRef = useRef(setFilters);
   setFiltersRef.current = setFilters;
+  const previousPermanentKeyRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     if (options.permanentFilters === undefined) {
       return;
     }
     const nextPermanent = JSON.parse(permanentKey) as CrudFilter[];
+    const previousPermanent =
+      previousPermanentKeyRef.current !== undefined
+        ? (JSON.parse(previousPermanentKeyRef.current) as CrudFilter[])
+        : [];
+    previousPermanentKeyRef.current = permanentKey;
     setFiltersRef.current((prev) => {
-      const permanentFields = new Set(
-        nextPermanent
-          .filter((f): f is CrudFilter & { field: string } => "field" in f)
-          .map((f) => f.field),
+      const next = mergePermanentListFilters(
+        prev,
+        nextPermanent,
+        previousPermanent,
       );
-      const rest = prev.filter(
-        (f) => !("field" in f) || !permanentFields.has(f.field),
-      );
-      const next = [...nextPermanent, ...rest];
       if (JSON.stringify(next) === JSON.stringify(prev)) {
         return prev;
       }

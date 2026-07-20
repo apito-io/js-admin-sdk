@@ -63,6 +63,26 @@ describe("buildListQueryVariables", () => {
       },
     });
   });
+
+  it("extracts _key filters out of where into _key / _keyCount", () => {
+    const vars = buildListQueryVariables({
+      resource: "tag",
+      filters: [
+        { field: "_key", operator: "in", value: ["id-a", "id-b"] },
+        { field: "product_type", operator: "eq", value: "sellable" },
+      ],
+      pagination: { current: 1, pageSize: 2 },
+    });
+
+    expect(vars).toEqual({
+      _key: { in: ["id-a", "id-b"] },
+      _keyCount: { in: ["id-a", "id-b"] },
+      where: { product_type: { eq: "sellable" } },
+      whereCount: { product_type: { eq: "sellable" } },
+      page: 1,
+      limit: 2,
+    });
+  });
 });
 
 describe("tableSort helpers", () => {

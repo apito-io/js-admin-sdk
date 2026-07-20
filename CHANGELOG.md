@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.10.0] - 2026-07-13
+
+### Added
+
+- **`getTenant(projectId, tenantId, status?)`** — load one SaaS catalog tenant by exact id via system `searchTenants` (default `status`: `active`). Returns `null` when no exact id match.
+- **List `_key` filters** — `buildApitoFilterVariables` / `buildListQueryVariables` map Refine `{ field: "_key" }` to GraphQL `$_key` / `$_keyCount` (not `where`). `DocumentBuilder` list queries declare those args for Select defaultValue hydration.
+
+### Fixed
+
+- **`mergePermanentListFilters`** — permanent field/relation filter merge when list permanent filters change shape.
+
 ## [3.9.0] - 2026-07-13
 
 ### Changed

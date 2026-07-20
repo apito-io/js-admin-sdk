@@ -30,6 +30,14 @@ describe('operation doc contract', () => {
     expect(full).toContain(list.trim());
   });
 
+  it('list query declares _key / _keyCount for id hydration', () => {
+    const list = new DocumentBuilder('tag').buildListQuery(['identifier']);
+    expect(list).toContain('$_key: TAGLIST_KEY_CONDITION');
+    expect(list).toContain('$_keyCount: TAG_LIST_COUNT_KEY_CONDITION');
+    expect(list).toContain('_key: $_key');
+    expect(list).toContain('_key: $_keyCount');
+  });
+
   it('omits relation connect/disconnect when supportsConnection is false', () => {
     const doc = new DocumentBuilder('staff', { supportsConnection: false }).generateGraphqlFile([
       'name',

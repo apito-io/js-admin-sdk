@@ -2,6 +2,7 @@ import {
   buildListRelationFilter,
   isRelationCrudFilter,
   listRelationFilterKey,
+  mergePermanentListFilters,
   relationEqFilter,
   relationEqFilterFromConnection,
   transformRelationFilters,
@@ -9,6 +10,53 @@ import {
 import { buildListConnectionScope } from "../headless/listConnectionFilters";
 
 describe("list relation filters", () => {
+  it("mergePermanentListFilters replaces relation permanent without duplicating", () => {
+    const prev = [
+      relationEqFilter("ledgerAccount", "OLD"),
+      { field: "name", operator: "contains", value: "widget" },
+    ];
+    const next = mergePermanentListFilters(prev, [
+      relationEqFilter("ledgerAccount", "NEW"),
+    ]);
+    expect(next).toEqual([
+      relationEqFilter("ledgerAccount", "NEW"),
+      { field: "name", operator: "contains", value: "widget" },
+    ]);
+  });
+
+  it("mergePermanentListFilters drops stale field permanent when next is relation", () => {
+    const prev = [
+      { field: "system_ledgerAccount_id", operator: "eq", value: "OLD" },
+      { field: "name", operator: "contains", value: "widget" },
+    ];
+    const previousPermanent = [
+      { field: "system_ledgerAccount_id", operator: "eq", value: "OLD" },
+    ];
+    const next = mergePermanentListFilters(
+      prev,
+      [relationEqFilter("ledgerAccount", "NEW")],
+      previousPermanent,
+    );
+    expect(next).toEqual([
+      relationEqFilter("ledgerAccount", "NEW"),
+      { field: "name", operator: "contains", value: "widget" },
+    ]);
+  });
+
+  it("mergePermanentListFilters replaces field permanent and keeps relation search", () => {
+    const prev = [
+      { field: "system_ledgerAccount_id", operator: "eq", value: "OLD" },
+      relationEqFilter("category", "CAT1"),
+    ];
+    const next = mergePermanentListFilters(prev, [
+      { field: "system_ledgerAccount_id", operator: "eq", value: "NEW" },
+    ]);
+    expect(next).toEqual([
+      { field: "system_ledgerAccount_id", operator: "eq", value: "NEW" },
+      relationEqFilter("category", "CAT1"),
+    ]);
+  });
+
   it("relationEqFilter builds explicit relation crud filter", () => {
     expect(relationEqFilter("class", "01CLASS")).toEqual({
       relation: "class",

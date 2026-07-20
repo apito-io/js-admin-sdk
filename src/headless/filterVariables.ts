@@ -67,6 +67,7 @@ export {
   isRelationCrudFilter,
   listRelationFilterKey,
   mergeListRelationFilters,
+  mergePermanentListFilters,
   relationEqFilter,
   relationEqFilterFromConnection,
   transformRelationFilters,
@@ -78,7 +79,10 @@ export type ApitoFilterVariables = {
   where?: Record<string, unknown>;
   whereCount?: Record<string, unknown>;
   sort?: Record<string, unknown>;
+  /** List root `_key` (TAGLIST_KEY_CONDITION / …). */
   _key?: Record<string, unknown>;
+  /** ListCount root `_key` (TAG_LIST_COUNT_KEY_CONDITION / …) — mirrors whereCount. */
+  _keyCount?: Record<string, unknown>;
   limit?: number;
   page?: number;
   skip?: number;
@@ -132,6 +136,7 @@ export function buildListQueryVariables(
   const vars: Record<string, unknown> = {
     ...base,
     ...(countVars.where ? { whereCount: countVars.where } : {}),
+    ...(countVars._key ? { _keyCount: countVars._key } : {}),
   };
   if (supportsRelation !== false && relation) {
     vars.relation = relation;
@@ -161,6 +166,35 @@ function mapOperator(op: string): string {
     endswith: "endswith",
   };
   return map[op] ?? op;
+}
+
+/**
+ * Document `_key` is a list/count root argument — never a `where` field.
+ * Extract Refine-style `{ field: "_key", ... }` filters into a KEY_CONDITION object.
+ */
+function extractKeyCondition(filters: CrudFilter[]): {
+  keyCondition?: Record<string, unknown>;
+  remaining: CrudFilter[];
+} {
+  const remaining: CrudFilter[] = [];
+  let keyCondition: Record<string, unknown> | undefined;
+  for (const f of filters) {
+    if (isLogicalCrudFilter(f)) {
+      remaining.push(f);
+      continue;
+    }
+    if (!("field" in f) || !f.field) {
+      remaining.push(f);
+      continue;
+    }
+    if (f.field === "_key") {
+      const op = mapOperator(f.operator);
+      keyCondition = { ...(keyCondition ?? {}), [op]: f.value ?? null };
+      continue;
+    }
+    remaining.push(f);
+  }
+  return { keyCondition, remaining };
 }
 
 function buildWhereFromFilters(
@@ -197,7 +231,8 @@ export function buildApitoFilterVariables(
   options: BuildFilterVariablesOptions,
 ): ApitoFilterVariables {
   const { filters = [], sorters = [], pagination, forCount } = options;
-  const where = buildWhereFromFilters(filters);
+  const { keyCondition, remaining } = extractKeyCondition(filters);
+  const where = buildWhereFromFilters(remaining);
   const sort = buildSortFromSorters(sorters);
   const pageSize = pagination?.pageSize ?? 10;
   const current = pagination?.current ?? 1;
@@ -205,6 +240,7 @@ export function buildApitoFilterVariables(
   const vars: ApitoFilterVariables = {};
   if (where) vars.where = where;
   if (forCount && where) vars.whereCount = where;
+  if (keyCondition) vars._key = keyCondition;
   if (sort) vars.sort = sort;
   if (!forCount) {
     vars.limit = pageSize;

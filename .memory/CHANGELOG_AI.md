@@ -4,6 +4,16 @@ Not git history — the *reasoning* behind changes. Newest on top.
 Format per entry: date, **Changed**, **Why**, **Affected**.
 
 ---
+## 2026-07-19→20
+- **Changed:** Extract Refine `_key` filters to GraphQL list/count root args
+  (`_key` / `_keyCount`); DocumentBuilder emits `$_key` / `$_keyCount` on
+  Get*List queries; unit tests for both.
+- **Why:** `useSelect` defaultValue hydration (Suchok TagSelect) put `_key` in
+  `where` and generated docs omitted the real argument → Ant Select showed ULIDs.
+- **Affected:** `src/headless/filterVariables.ts`, `src/naming/documentBuilder.ts`,
+  `__tests__/buildListQueryVariables.test.ts`, `operation-contract.test.ts`;
+  consumers must regenerate list docs. Uncommitted — ask before publish.
+
 ## 2026-07-10
 - **Changed:** `searchTenants({ projectId, limit?, offset?, q? })` on admin client; types + CONTRACT + README; test stub in `client.test.ts`.
 - **Why:** Parity with engine system GraphQL for SaaS tenant catalog console; enables consumer migration off raw queries.
