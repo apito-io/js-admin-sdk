@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [3.11.0] - 2026-07-21
+
+### Added
+
+- **Project-scoped access-token requests** — `ClientConfig.projectId`, `executeGraphQL(..., { projectId })`, and request options send `X-Apito-Project-Id`. Methods with an explicit `projectId` use that same value for the request header.
+- **Headless fetcher scopes** — `createBearerApitoFetcher` sends `X-Use-Cookies: false` and accepts optional `projectId` / `tenantId` headers.
+
+### Changed
+
+- **Unified `apt_` access tokens (hard cut)** — `authHeaders()` sends `apt_` tokens as `Authorization: Bearer` + `X-Use-Cookies: false` only; dropped the compatibility `X-Apito-Key` dual header for `apt_` tokens. `ClientConfig.accessToken` is the preferred field (alias: `apiKey` set to an `apt_...` value). Legacy `cli-`/`sdk-`/`mcp-` prefixed keys now throw `TOKEN_FORMAT_RETIRED` from the constructor instead of being sent to the engine. Plain project API keys (no recognized prefix) are unaffected and still use `X-Apito-Key`.
+
 ## [3.10.0] - 2026-07-13
 
 ### Added

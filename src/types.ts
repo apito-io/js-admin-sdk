@@ -225,18 +225,25 @@ export interface ClientConfig {
   baseURL: string;
   /** REST base (e.g. http://host:5050/system); derived from baseURL when omitted */
   restBaseURL?: string;
-  /** System or sync API key (`X-Apito-Key` / `X-Apito-Sync-Key`). Omit when using `bearerToken`. */
+  /** System access token (`apt_…`) or project API key (`ak_…`). Prefer `accessToken` for automation. */
   apiKey?: string;
+  /** Alias for system automation token (`apt_…`) → `Authorization: Bearer`. */
+  accessToken?: string;
   /** Staff session token for `/secured/*` routes (`Authorization: Bearer`). */
   bearerToken?: string;
   timeout?: number;
   httpClient?: any;
+  /** Default project scope sent as `X-Apito-Project-Id`. */
+  projectId?: string;
   tenantId?: string;
 }
 
 export interface RequestOptions {
   headers?: Record<string, string>;
   timeout?: number;
+  /** Per-request project scope sent as `X-Apito-Project-Id`. */
+  projectId?: string;
+  tenantId?: string;
 }
 
 export interface SearchOptions {
@@ -258,7 +265,7 @@ export interface InjectedDBOperationInterface {
   executeGraphQL(
     query: string,
     variables?: Record<string, any>,
-    options?: { tenantId?: string }
+    options?: { projectId?: string; tenantId?: string }
   ): Promise<GraphQLResponse>;
   /** @param token Legacy; ignored. Auth uses client API key. */
   generateTenantToken(tenantId: string, duration?: string, role?: string): Promise<string>;

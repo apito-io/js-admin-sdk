@@ -565,6 +565,69 @@ describe('Error Handling', () => {
   });
 });
 
+describe('Unified access token auth headers', () => {
+  it('sends only Authorization: Bearer (no X-Apito-Key) for apt_ access tokens', () => {
+    const client = new ApitoClient({ baseURL: BaseURL, accessToken: 'apt_abc123', timeout: 30000 });
+    const headers = (client as any).authHeaders();
+    expect(headers.Authorization).toBe('Bearer apt_abc123');
+    expect(headers['X-Use-Cookies']).toBe('false');
+    expect(headers['X-Apito-Key']).toBeUndefined();
+  });
+
+  it('accepts apt_ via the legacy apiKey field too', () => {
+    const client = new ApitoClient({ baseURL: BaseURL, apiKey: 'apt_abc123', timeout: 30000 });
+    const headers = (client as any).authHeaders();
+    expect(headers.Authorization).toBe('Bearer apt_abc123');
+    expect(headers['X-Apito-Key']).toBeUndefined();
+  });
+
+  it('falls back to X-Apito-Key for legacy project API keys without a recognized prefix', () => {
+    const client = getTestClient();
+    const headers = (client as any).authHeaders();
+    expect(headers['X-Apito-Key']).toBe(APIKey);
+    expect(headers.Authorization).toBeUndefined();
+  });
+
+  it('rejects retired cli-/sdk-/mcp- token prefixes with TOKEN_FORMAT_RETIRED', () => {
+    for (const prefix of ['cli-', 'sdk-', 'mcp-']) {
+      expect(() => new ApitoClient({ baseURL: BaseURL, apiKey: `${prefix}legacy`, timeout: 30000 })).toThrow(
+        /TOKEN_FORMAT_RETIRED/
+      );
+    }
+  });
+
+  it('uses only the canonical project header for config and per-request overrides', () => {
+    const client = new ApitoClient({
+      baseURL: BaseURL,
+      accessToken: 'apt_abc123',
+      projectId: 'project-config',
+    });
+    const configured = (client as any).authHeaders({});
+    expect(configured.Authorization).toBe('Bearer apt_abc123');
+    expect(configured['X-Use-Cookies']).toBe('false');
+    expect(configured['X-Apito-Project-Id']).toBe('project-config');
+    expect(configured['X-Apito-Key']).toBeUndefined();
+
+    const overridden = (client as any).authHeaders({ projectId: 'project-request' });
+    expect(overridden['X-Apito-Project-Id']).toBe('project-request');
+  });
+
+  it('passes explicit project and tenant ids as matching request scopes', async () => {
+    const client = new ApitoClient({ baseURL: BaseURL, accessToken: 'apt_abc123' });
+    const execute = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
+      data: { searchUsers: { count: 0, users: [] } },
+    });
+
+    await client.searchUsers('project-method', 10, 0, 'tenant-method');
+
+    expect(execute).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({ project_id: 'project-method', tenant_id: 'tenant-method' }),
+      { projectId: 'project-method', tenantId: 'tenant-method' }
+    );
+  });
+});
+
 // Example usage for documentation
 describe('Example Usage', () => {
   it('should demonstrate basic CRUD operations', () => {

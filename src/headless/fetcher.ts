@@ -9,21 +9,44 @@ export type ApitoFetcher = (
   variables?: Record<string, unknown>,
 ) => Promise<GraphQLResponse>;
 
+/** Match ApitoClient.authHeaders: ak_ → X-Apito-Key; apt_/JWT → Bearer. */
+function buildHeadlessAuthHeaders(token: string): Record<string, string> {
+  const trimmed = token.trim();
+  if (trimmed.startsWith("ak_")) {
+    return { "X-Apito-Key": trimmed };
+  }
+  return {
+    Authorization: `Bearer ${trimmed}`,
+    "X-Use-Cookies": "false",
+  };
+}
+
 export function createBearerApitoFetcher(options: {
   graphqlUrl: string;
   token: string;
+  projectId?: string;
+  tenantId?: string;
   onTokenExpired?: () => void;
   onError?: (error: Error) => void;
 }): ApitoFetcher {
   return async (query, variables) => {
     let response: Response;
     try {
+      const headers: Record<string, string> = {
+        ...buildHeadlessAuthHeaders(options.token),
+        "Content-Type": "application/json",
+      };
+      const projectId = options.projectId?.trim();
+      if (projectId) {
+        headers["X-Apito-Project-Id"] = projectId;
+      }
+      const tenantId = options.tenantId?.trim();
+      if (tenantId) {
+        headers["X-Apito-Tenant-ID"] = tenantId;
+      }
       response = await fetch(options.graphqlUrl, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${options.token}`,
-          "Content-Type": "application/json",
-        },
+        headers,
         body: JSON.stringify({
           query: serializeGraphQLQuery(query),
           variables: variables ?? {},

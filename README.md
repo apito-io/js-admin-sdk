@@ -102,7 +102,9 @@ async function createTodo() {
 ```javascript
 const client = new ApitoClient({
   baseURL: 'https://api.apito.io/graphql',  // Your Apito GraphQL endpoint
-  apiKey: 'your-api-key-here',             // X-APITO-KEY header value
+  accessToken: 'apt_your-access-token',    // Unified access token → Authorization: Bearer
+  // apiKey: 'your-project-api-key',       // Legacy project key → X-Apito-Key (non-apt_ keys only)
+  projectId: 'your-project-id',            // Optional default → X-Apito-Project-Id
   timeout: 30000,                          // Request timeout in milliseconds
   tenantId: 'your-tenant-id',              // Optional tenant ID
   httpClient: {                            // Optional axios configuration
@@ -111,6 +113,12 @@ const client = new ApitoClient({
   },
 });
 ```
+
+`accessToken` (or `apiKey` set to an `apt_...` value) is the unified system access token, generated in Console → Access Token, and is always sent as `Authorization: Bearer` (no `X-Apito-Key`, no dual-header). Legacy `cli-`/`sdk-`/`mcp-` prefixed keys are retired — the client throws `TOKEN_FORMAT_RETIRED` immediately instead of sending the request. Plain project API keys (no recognized prefix) continue to use `X-Apito-Key`.
+
+For project-scoped system calls, set `projectId` on the client or pass
+`{ projectId, tenantId? }` as the third argument to `executeGraphQL`. An
+explicit method `projectId` always supplies the matching `X-Apito-Project-Id`.
 
 ### Core Methods
 

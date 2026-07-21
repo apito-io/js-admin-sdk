@@ -54,22 +54,30 @@ export class ApitoClient implements InjectedDBOperationInterface {
   private restBaseURL: string;
   private apiKey: string;
   private bearerToken?: string;
+  private projectId?: string;
   private tenantId?: string;
 
   constructor(config: ClientConfig) {
     this.baseURL = config.baseURL;
     this.restBaseURL = (config.restBaseURL ?? '').trim() || deriveRestBaseURL(config.baseURL);
-    this.apiKey = (config.apiKey ?? '').trim();
+    this.apiKey = (config.accessToken ?? config.apiKey ?? '').trim();
     this.bearerToken = config.bearerToken?.trim() || undefined;
-    this.tenantId = config.tenantId;
+    this.projectId = config.projectId?.trim() || undefined;
+    this.tenantId = config.tenantId?.trim() || undefined;
 
     if (!this.bearerToken && !this.apiKey) {
-      throw new Error('ClientConfig requires apiKey or bearerToken');
+      throw new Error('ClientConfig requires accessToken, apiKey, or bearerToken');
+    }
+    if (/^(cli-|sdk-|mcp-)/.test(this.apiKey)) {
+      throw new Error(
+        'TOKEN_FORMAT_RETIRED: cli-/sdk-/mcp- prefixed keys are no longer accepted. ' +
+          'Generate a unified apt_ access token in Console → Access Token and pass it as `accessToken`.'
+      );
     }
 
     const defaultHeaders: Record<string, string> = {
       'Content-Type': 'application/json',
-      ...this.authHeaders(),
+      ...this.authHeaders({}),
     };
 
     // Create axios instance with default configuration
@@ -87,7 +95,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
   async executeGraphQL(
     query: string,
     variables?: Record<string, any>,
-    options?: { tenantId?: string }
+    options?: { projectId?: string; tenantId?: string }
   ): Promise<GraphQLResponse> {
     try {
       const payload = {
@@ -97,7 +105,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
 
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
-        ...this.authHeaders(options?.tenantId),
+        ...this.authHeaders(options),
       };
 
       const response = await this.httpClient.post<GraphQLResponse>(
@@ -130,7 +138,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
 
   /**
    * Generate a tenant-scoped API key. Matches engine `generateTenantToken`: `tenant_id`, `duration`, optional `role`.
-   * Auth uses `X-Apito-Key` (client `apiKey`).
+   * Auth uses the client's `accessToken`/`apiKey` (unified `apt_` tokens send `Authorization: Bearer`; legacy project keys send `X-Apito-Key`).
    * Not available on Cloudflare Workers v1 (`tenant management is not available on Cloudflare Workers v1`).
    *
    * @param tenantId Catalog tenant id (`tenant_id` in the mutation).
@@ -169,16 +177,24 @@ export class ApitoClient implements InjectedDBOperationInterface {
     return data.token;
   }
 
-  private authHeaders(tenantId?: string): Record<string, string> {
+  private authHeaders(options?: { projectId?: string; tenantId?: string }): Record<string, string> {
     const headers: Record<string, string> = {};
     if (this.bearerToken) {
       headers.Authorization = `Bearer ${this.bearerToken}`;
-    } else if (this.apiKey.startsWith('cli-') || this.apiKey.startsWith('sdk-')) {
-      headers['X-Apito-Sync-Key'] = this.apiKey;
+    } else if (this.apiKey.startsWith('apt_')) {
+      // Unified access token: Authorization: Bearer only. X-Use-Cookies: false
+      // tells the engine this is a headless API call (no browser session
+      // cookies). Hard cut — no compatibility X-Apito-Key fallback.
+      headers.Authorization = `Bearer ${this.apiKey}`;
+      headers['X-Use-Cookies'] = 'false';
     } else {
       headers['X-Apito-Key'] = this.apiKey;
     }
-    const tid = tenantId ?? this.tenantId;
+    const pid = options?.projectId?.trim() || this.projectId;
+    if (pid) {
+      headers['X-Apito-Project-Id'] = pid;
+    }
+    const tid = options?.tenantId?.trim() || this.tenantId;
     if (tid) {
       headers['X-Apito-Tenant-ID'] = tid;
     }
@@ -193,6 +209,8 @@ export class ApitoClient implements InjectedDBOperationInterface {
       jsonBody?: Record<string, unknown>;
       formData?: FormData;
       allowFailure?: boolean;
+      projectId?: string;
+      tenantId?: string;
     }
   ): Promise<T> {
     const url = new URL(`${this.restBaseURL.replace(/\/$/, '')}${path}`);
@@ -203,7 +221,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
         }
       }
     }
-    const headers: Record<string, string | boolean> = { ...this.authHeaders() };
+    const headers: Record<string, string | boolean> = { ...this.authHeaders(options) };
     let data: FormData | Record<string, unknown> | undefined;
     if (options?.formData) {
       data = options.formData;
@@ -304,7 +322,10 @@ export class ApitoClient implements InjectedDBOperationInterface {
         }
       }
     `;
-    const response = await this.executeGraphQL(query, variables);
+    const response = await this.executeGraphQL(query, variables, {
+      projectId: params.projectId,
+      tenantId,
+    });
     const raw = response.data?.loginUser;
     if (!raw?.token) {
       throw new ValidationError('Invalid response format for loginUser');
@@ -327,7 +348,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
       }
     `;
     const variables = { project_id: projectId };
-    const response = await this.executeGraphQL(query, variables);
+    const response = await this.executeGraphQL(query, variables, { projectId });
     const raw = response.data?.googleOAuthState;
     const state = typeof raw?.state === 'string' ? raw.state.trim() : '';
     if (!state) {
@@ -372,7 +393,10 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (tid) variables.tenant_id = tid;
     const needle = (q ?? '').trim();
     if (needle) variables.q = needle;
-    const response = await this.executeGraphQL(query, variables);
+    const response = await this.executeGraphQL(query, variables, {
+      projectId,
+      tenantId: tid,
+    });
     const raw = response.data?.searchUsers;
     if (!raw) {
       throw new ValidationError('Invalid response format for searchUsers');
@@ -406,7 +430,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
       project_id: projectId,
       domain,
     };
-    const response = await this.executeGraphQL(query, variables);
+    const response = await this.executeGraphQL(query, variables, { projectId });
     const raw = response.data?.searchTenantsByDomain;
     if (!raw) {
       throw new ValidationError('Invalid response format for searchTenantsByDomain');
@@ -449,7 +473,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (needle) variables.q = needle;
     const statusFilter = (status ?? '').trim();
     if (statusFilter) variables.status = statusFilter;
-    const response = await this.executeGraphQL(query, variables);
+    const response = await this.executeGraphQL(query, variables, { projectId });
     const raw = response.data?.searchTenants;
     if (!raw) {
       throw new ValidationError('Invalid response format for searchTenants');
@@ -626,7 +650,10 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (phone) variables.phone = phone;
     const tenantId = (params.tenantId ?? '').trim();
     if (tenantId) variables.tenant_id = tenantId;
-    const response = await this.executeGraphQL(query, variables);
+    const response = await this.executeGraphQL(query, variables, {
+      projectId,
+      tenantId,
+    });
     const u = response.data?.createUser;
     if (!u?.id) {
       throw new ValidationError('Invalid response format for createUser');
