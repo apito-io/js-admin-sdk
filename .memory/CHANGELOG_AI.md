@@ -4,6 +4,13 @@ Not git history — the *reasoning* behind changes. Newest on top.
 Format per entry: date, **Changed**, **Why**, **Affected**.
 
 ---
+## 2026-07-21
+- **Changed:** Added canonical `X-Apito-Project-Id` support to client config,
+  GraphQL request options, project-aware methods, and bearer fetcher scopes.
+- **Why:** `apt_` grants require the selected project in the request header, not
+  only in GraphQL variables.
+- **Affected:** client/types/headless fetcher, focused tests, README/changelog.
+
 ## 2026-07-19→20
 - **Changed:** Extract Refine `_key` filters to GraphQL list/count root args
   (`_key` / `_keyCount`); DocumentBuilder emits `$_key` / `$_keyCount` on
@@ -29,4 +36,4 @@ Format per entry: date, **Changed**, **Why**, **Affected**.
 - **Why:** Cross-LLM durable knowledge + working memory.
 - **Affected:** this repo only.
 
-Last Updated: 2026-07-06
+Last Updated: 2026-07-21

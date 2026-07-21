@@ -6,6 +6,8 @@
 
 ## Done
 
+- **2026-07-21:** Canonical access-token project headers across client config,
+  per-request overrides, project-aware methods, and headless fetcher; tests/build.
 - **2026-07-19→20:** List `_key` filter support end-to-end for Select/defaultValue
   hydration (was silently putting `_key` into `where`).
 - **2026-07-10:** `searchTenants()`; **1.0.4** logical OR/AND filters.
@@ -22,4 +24,4 @@
 
 ## Last Updated
 
-2026-07-20
+2026-07-21

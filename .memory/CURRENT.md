@@ -2,6 +2,9 @@
 
 ## Working on
 
+- **2026-07-21 access-token project scope (uncommitted):**
+  `ClientConfig` / `executeGraphQL` project overrides, explicit project-method
+  headers, and scoped headless fetcher all use `X-Apito-Project-Id`.
 - **2026-07-19→20 `_key` list hydration (uncommitted):**
   - `buildApitoFilterVariables` extracts `{ field: "_key" }` → `vars._key`
     (and `buildListQueryVariables` sets `_keyCount`).
@@ -17,4 +20,4 @@
 
 ## Last Updated
 
-2026-07-20
+2026-07-21
