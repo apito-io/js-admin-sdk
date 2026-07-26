@@ -300,42 +300,53 @@ export function useFormPage(options: UseFormPageOptions) {
     [options.id, options.resource],
   );
 
+  /** Sync lock — blocks double-submit before React re-renders isSaving. */
+  const saveInFlightRef = useRef(false);
+
   const save = useCallback(
     async (values: Record<string, unknown>) => {
-      const { payload, connect, disconnect } = normalizeApitoFormSaveInput(values);
-      if (isEdit) {
-        if (options.updateDocument) {
-          const result = await updateMutation.mutateAsync({
-            payload,
-            connect,
-            disconnect,
-          });
-          return notifySaved(result, "update");
-        }
-        if (legacyUpdateMutation) {
-          const result = await legacyUpdateMutation.mutateAsync({
-            id: options.id,
-            deltaUpdate: options.deltaUpdate ?? true,
-            payload,
-            ...(connect ? { connect } : {}),
-            ...(disconnect ? { disconnect } : {}),
-          });
-          return notifySaved(result, "update");
-        }
-      } else {
-        if (options.createDocument) {
-          const result = await createMutation.mutateAsync({ payload, connect });
-          return notifySaved(result, "create");
-        }
-        if (legacyCreateMutation) {
-          const result = await legacyCreateMutation.mutateAsync({
-            payload,
-            ...(connect ? { connect } : {}),
-          });
-          return notifySaved(result, "create");
-        }
+      if (saveInFlightRef.current) {
+        return undefined;
       }
-      throw new Error("No mutation configured for useFormPage");
+      saveInFlightRef.current = true;
+      try {
+        const { payload, connect, disconnect } = normalizeApitoFormSaveInput(values);
+        if (isEdit) {
+          if (options.updateDocument) {
+            const result = await updateMutation.mutateAsync({
+              payload,
+              connect,
+              disconnect,
+            });
+            return notifySaved(result, "update");
+          }
+          if (legacyUpdateMutation) {
+            const result = await legacyUpdateMutation.mutateAsync({
+              id: options.id,
+              deltaUpdate: options.deltaUpdate ?? true,
+              payload,
+              ...(connect ? { connect } : {}),
+              ...(disconnect ? { disconnect } : {}),
+            });
+            return notifySaved(result, "update");
+          }
+        } else {
+          if (options.createDocument) {
+            const result = await createMutation.mutateAsync({ payload, connect });
+            return notifySaved(result, "create");
+          }
+          if (legacyCreateMutation) {
+            const result = await legacyCreateMutation.mutateAsync({
+              payload,
+              ...(connect ? { connect } : {}),
+            });
+            return notifySaved(result, "create");
+          }
+        }
+        throw new Error("No mutation configured for useFormPage");
+      } finally {
+        saveInFlightRef.current = false;
+      }
     },
     [
       isEdit,

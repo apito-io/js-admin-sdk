@@ -80,6 +80,13 @@ export type ApitoImportMutationInput = {
   connect?: Record<string, string>;
 };
 
+export type ApitoImportVerticalGroups = {
+  /** Parent identity columns — editable only on the first row of a group */
+  anchorColumns: string[];
+  /** Mid-level columns (e.g. division) — editable on parent or mid-start rows */
+  midLevelColumns?: string[];
+};
+
 export type ApitoImportConfig<TRow extends Record<string, unknown> = Record<string, unknown>> = {
   resource: string;
   columns: ApitoImportColumn[];
@@ -95,10 +102,15 @@ export type ApitoImportConfig<TRow extends Record<string, unknown> = Record<stri
   ) => "create" | "update" | "skip";
   /** Map validated row to Apito mutation input */
   mapRowToMutation?: (row: ApitoValidatedImportRow) => ApitoImportMutationInput;
-  /** Cross-row validation after per-row checks (e.g. carry-forward rules) */
+  /** Cross-row validation after per-row checks (e.g. vertical anchor/continuation rules) */
   validateAllRows?: (
     rows: ApitoValidatedImportRow[],
   ) => ApitoValidatedImportRow[];
+  /**
+   * When set, import preview disables blanked identity/mid cells on
+   * continuation rows (must stay empty per vertical CSV layout).
+   */
+  verticalGroups?: ApitoImportVerticalGroups;
 };
 
 export type ApitoExportConfig<TRow extends Record<string, unknown> = Record<string, unknown>> = {

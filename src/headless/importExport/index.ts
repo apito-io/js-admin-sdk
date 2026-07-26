@@ -11,6 +11,7 @@ export type {
   ApitoImportSchema,
   ApitoImportSchemaIssue,
   ApitoImportValidationResult,
+  ApitoImportVerticalGroups,
   ApitoParsedImportFile,
   ApitoValidatedImportRow,
 } from "./types";
@@ -21,6 +22,15 @@ export {
   mapParsedRows,
   validateImportRows,
 } from "./validation";
+
+export {
+  blankVerticalAnchorFields,
+  groupVerticalImportRows,
+  isVerticalAnchorRow,
+  isVerticalImportCellEditable,
+  validateVerticalContinuationRows,
+  type VerticalGroupOptions,
+} from "./verticalGroups";
 
 export {
   buildExportRows,

@@ -1,6 +1,6 @@
 {
   "name": "@apito-io/js-admin-sdk",
-  "version": "3.11.0",
+  "version": "3.11.5",
   "description": "Admin JavaScript SDK for Apito GraphQL API — core, react headless, ui contracts",
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
@@ -53,12 +53,26 @@
     "react-dom": ">=18.0.0"
   },
   "peerDependenciesMeta": {
-    "@tanstack/react-query": { "optional": true },
-    "react": { "optional": true },
-    "react-dom": { "optional": true },
-    "graphql": { "optional": true }
+    "@tanstack/react-query": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "graphql": {
+      "optional": true
+    }
   },
-  "keywords": ["apito", "sdk", "graphql", "admin", "typescript"],
+  "keywords": [
+    "apito",
+    "sdk",
+    "graphql",
+    "admin",
+    "typescript"
+  ],
   "author": "Apito Team",
   "license": "MIT",
   "dependencies": {

@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.11.5] - 2026-07-26
+
+### Fixed
+
+- **`useFormPage` save reentrancy** — sync in-flight lock ignores overlapping `save()` calls so rapid double-clicks cannot create duplicate records before `isSaving` re-renders.
+
+## [3.11.4] - 2026-07-23
+
+### Changed
+
+- Patch release aligning package version with vertical-import mid-level column work (see 3.11.2).
+
+## [3.11.2] - 2026-07-23
+
+### Added
+
+- **Vertical mid-level columns** — `validateVerticalContinuationRows` accepts `midLevelColumns` / `requiredOnMid` (e.g. division fields within a class group).
+
+## [3.11.1] - 2026-07-23
+
+### Added
+
+- **Vertical import groups** — `validateVerticalContinuationRows`, `groupVerticalImportRows`, `blankVerticalAnchorFields`, `isVerticalAnchorRow` for anchor + continuation CSV layouts (parent fields on first row only; continuation rows must leave identity columns blank).
+
 ## [3.11.0] - 2026-07-21
 
 ### Added

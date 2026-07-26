@@ -148,16 +148,21 @@ export {
 
 export {
   autoMapColumns,
+  blankVerticalAnchorFields,
   buildDefaultMutation,
   buildExportRows,
   deriveExportConnectionFieldsFromColumns,
   downloadTextFile,
   fetchAllListPages,
   getExportHeaders,
+  groupVerticalImportRows,
+  isVerticalAnchorRow,
+  isVerticalImportCellEditable,
   mapRecordToExportRowDefault,
   mapParsedRows,
   rowsToCsvContent,
   validateImportRows,
+  validateVerticalContinuationRows,
   type ApitoExportConfig,
   type ApitoImportColumn,
   type ApitoImportColumnMapping,
@@ -169,8 +174,10 @@ export {
   type ApitoImportSchema,
   type ApitoImportSchemaIssue,
   type ApitoImportValidationResult,
+  type ApitoImportVerticalGroups,
   type ApitoParsedImportFile,
   type ApitoValidatedImportRow,
+  type VerticalGroupOptions,
 } from "../headless/importExport";
 
 export { ensureImageFileName } from "../headless/mediaUpload";
