@@ -4,6 +4,14 @@ Not git history — the *reasoning* behind changes. Newest on top.
 Format per entry: date, **Changed**, **Why**, **Affected**.
 
 ---
+## 2026-07-27 — v3.11.6 naming + partial GraphQL data
+
+- **Changed:** canonicalizeModelName canonical-id early return; fetcher keeps data when errors present.
+- **Why:** open-core 1.8.5 parity; edit forms hydrate despite nested resolver errors.
+- **Affected:** `src/naming/apitoGraphqlNames.ts`, `src/headless/fetcher.ts`. Tag/version **3.11.6**.
+
+---
+
 ## 2026-07-21
 - **Changed:** Added canonical `X-Apito-Project-Id` support to client config,
   GraphQL request options, project-aware methods, and bearer fetcher scopes.

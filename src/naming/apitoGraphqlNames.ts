@@ -64,6 +64,15 @@ function singularizeSegment(seg: string): string {
 export function canonicalizeModelName(raw: string): string {
   const t = raw.trim();
   if (!t) throw new Error('model name is required');
+  // Already-canonical ids skip run-on rejection (long singles like "indication").
+  if (canonicalIDRe.test(t)) {
+    const parts = t.split('_').filter(Boolean);
+    parts[parts.length - 1] = singularizeSegment(parts[parts.length - 1]!);
+    const out = parts.join('_');
+    if (!canonicalIDRe.test(out)) throw new Error('invalid model name');
+    reservedCheck(out);
+    return out;
+  }
   rejectRunOnLowercaseConcat(t);
   const segments = splitIntoWordSegments(t);
   if (segments.length === 0) throw new Error('invalid model name');

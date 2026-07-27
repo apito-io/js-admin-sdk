@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.11.6] - 2026-07-27
+
+### Fixed
+
+- **`canonicalizeModelName`** — already-canonical snake_case ids skip run-on rejection (parity with open-core 1.8.5; long singles like `indication`).
+- **`createBearerApitoFetcher`** — when GraphQL returns `errors` with non-null `data`, prefer the payload so edit forms can hydrate partial results.
+
 ## [3.11.5] - 2026-07-26
 
 ### Fixed

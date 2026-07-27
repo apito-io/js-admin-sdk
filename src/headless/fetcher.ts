@@ -65,10 +65,14 @@ export function createBearerApitoFetcher(options: {
 
     const json = (await response.json()) as GraphQLResponse;
     if (json.errors?.length) {
-      const message = json.errors.map((e) => e.message).join(", ");
-      const err = new Error(message);
-      options.onError?.(err);
-      throw err;
+      // GraphQL may return partial `data` when nested resolvers fail (e.g. missing
+      // SQLite FK columns). Prefer payload when present so edit forms can hydrate.
+      if (json.data == null) {
+        const message = json.errors.map((e) => e.message).join(", ");
+        const err = new Error(message);
+        options.onError?.(err);
+        throw err;
+      }
     }
     return json;
   };
