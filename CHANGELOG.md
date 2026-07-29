@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.11.7] - 2026-07-29
+
+### Fixed
+
+- **`useListPage` permanent filter sync** — effect depends on filter *content*
+  (`JSON.stringify` key) only, not the array reference. Stops Maximum update
+  depth loops when Select search / option refresh passes a new filters array
+  with the same contents (e.g. Suchok TagSelect).
+
+- **`createBearerApitoFetcher` / `apitoGraphQLRequest`** — HTTP 200 responses with
+  `errors` and only-null top-level `data` (e.g. `{ createImport: null }`) now throw
+  `GraphQLError` instead of looking like success. Partial query roots with nested
+  field errors still return so edit forms can hydrate.
+
+### Changed
+
+- **Nested GraphQL relation keys are snake_case** — `apitoRelationFilterGraphQLKey`,
+  `apitoGraphqlConnectionFieldFromMetaKey`, and `formatApitoConnectionSubselections`
+  emit `food_category` / `food_category_list` (not camel nested fields). Root ops stay
+  lowerCamel (`foodCategoryList`). Apps should pass snake `connectionFields` keys and
+  must not use `aliasFields` to remmap camel response keys.
+
 ## [3.11.6] - 2026-07-27
 
 ### Fixed
