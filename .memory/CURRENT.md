@@ -2,22 +2,18 @@
 
 ## Working on
 
-- **2026-07-21 access-token project scope (uncommitted):**
-  `ClientConfig` / `executeGraphQL` project overrides, explicit project-method
-  headers, and scoped headless fetcher all use `X-Apito-Project-Id`.
-- **2026-07-19→20 `_key` list hydration (uncommitted):**
-  - `buildApitoFilterVariables` extracts `{ field: "_key" }` → `vars._key`
-    (and `buildListQueryVariables` sets `_keyCount`).
-  - `DocumentBuilder` list/count queries declare `$_key` / `$_keyCount`.
-  - Tests in `buildListQueryVariables.test.ts` + `operation-contract.test.ts`.
-  - Built `dist/`; suchok-astro consumes via pnpm link.
+- **2026-07-29 released 3.11.7:** GraphQLError when HTTP 200 + `errors` +
+  all-null data; `useListPage` permanent-filter content-key sync; snake
+  nested connection helpers. Consumed by Rosna Astro parity pass.
+
+- **2026-07-21 access-token project scope (may still be uncommitted):**
+  `X-Apito-Project-Id` overrides on client/fetcher.
 
 ## Next
 
-- Ask before commit/version bump; consumers must regenerate list docs (or patch
-  like suchok) so `Get*ListDocument` includes `_key`.
-- Go/Flutter parity for `searchTenants` (JS shipped 2026-07-10) still optional.
+- Confirm any remaining uncommitted SDK work vs already-pushed 3.11.7.
+- Consumers: rebuild linked `dist` via app `ensure-linked-sdk` / install.
 
 ## Last Updated
 
-2026-07-21
+2026-07-29

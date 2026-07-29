@@ -4,6 +4,31 @@ Not git history — the *reasoning* behind changes. Newest on top.
 Format per entry: date, **Changed**, **Why**, **Affected**.
 
 ---
+
+## 2026-07-28/29 — GraphQLError on null roots + useListPage filter key
+
+- **Changed:** `hasUsableGraphQLData` — throw when GraphQL `errors` exist
+  and every top-level data field is null (e.g. `{ createImport: null }`).
+  Same check in bearer fetcher + `apitoGraphQLRequest`. `useListPage`
+  permanent-filter `useEffect` depends on content JSON key +
+  `hasPermanentFilters`, not array identity. Tests + dist rebuild.
+- **Why:** HTTP 200 with mutation-null + errors looked like success in
+  Suchok import; permanentFilters new array each Select option refresh
+  re-fired setState → max update depth on TagSelect search.
+- **Affected:** `src/headless/fetcher.ts`, `graphqlFetcher.ts`,
+  `hooks.ts`, `__tests__/fetcher.test.ts`, package CHANGELOG Unreleased.
+  Ask before commit/publish bump.
+
+---
+
+## 2026-07-28 — nested GraphQL snake (no mapping)
+
+- **Changed:** Adopt snake nested relation keys; drop camel↔snake alias/connect maps; Refine resources use stored model ids where applicable.
+- **Why:** Engine nested GraphQL is snake; only roots stay camel.
+- **Affected:** connectionFields, connect forms, resource config, SDK naming helpers.
+
+---
+
 ## 2026-07-27 — v3.11.6 naming + partial GraphQL data
 
 - **Changed:** canonicalizeModelName canonical-id early return; fetcher keeps data when errors present.
