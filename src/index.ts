@@ -33,7 +33,10 @@ export {
   normalizeApitoRelationConnectMap,
   normalizeApitoRelationConnectValue,
 } from "./headless/mutationConnect";
-export { createBearerApitoFetcher } from './headless/fetcher';
+export {
+  createBearerApitoFetcher,
+  hasUsableGraphQLData,
+} from './headless/fetcher';
 export * from './headless/serializeGraphQLQuery';
 
 // Re-export commonly used types for convenience

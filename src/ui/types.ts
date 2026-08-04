@@ -38,6 +38,11 @@ export type ApitoEditButtonProps = ApitoButtonBaseProps & {
   recordItemId?: string;
   to?: string;
   editRoute?: string;
+  /**
+   * When true (default), append the current page's query string to the edit
+   * URL so list filters survive edit → save → list redirects.
+   */
+  preserveSearch?: boolean;
 };
 
 export type ApitoShowButtonProps = ApitoButtonBaseProps & {

@@ -88,7 +88,7 @@ describe("list relation filters", () => {
         to_model: "food_category",
         relation_type: "has_one",
       }),
-    ).toBe("foodCategory");
+    ).toBe("food_category");
   });
 
   it("relationEqFilterFromConnection builds owner-scoped filter for user_profile", () => {

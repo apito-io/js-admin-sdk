@@ -26,19 +26,31 @@ describe('buildConnectionMetaTypes', () => {
 });
 
 describe('formatApitoConnectionSubselections (foodOrder fixture)', () => {
-  it('renders has_many and has_one relation blocks for list/one documents', () => {
+  it('renders snake nested keys when meta uses snake ids', () => {
     const block = formatApitoConnectionSubselections({
-      foodList: 'id data { name price sizes { size price } }',
+      food_list: 'id data { name price sizes { size price } }',
       customer: 'id data { name phone age gender }',
       chef: 'id data { full_name degrees }',
       waiter: 'id data { full_name }',
       location: 'id data { name type }',
     });
 
-    expect(block).toContain('foodList { id data { name price sizes { size price } } }');
+    expect(block).toContain('food_list { id data { name price sizes { size price } } }');
     expect(block).toContain('customer { id data { name phone age gender } }');
     expect(block).toContain('chef { id data { full_name degrees } }');
     expect(block).toContain('waiter { id data { full_name } }');
     expect(block).toContain('location { id data { name type } }');
+  });
+
+  it('passes through live/legacy camel nested keys unchanged', () => {
+    const block = formatApitoConnectionSubselections({
+      labTestList: 'id data { name }',
+      bankAccount: 'id data { name }',
+      patient: 'id data { name phone }',
+    });
+
+    expect(block).toContain('labTestList { id data { name } }');
+    expect(block).toContain('bankAccount { id data { name } }');
+    expect(block).toContain('patient { id data { name phone } }');
   });
 });

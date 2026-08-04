@@ -211,7 +211,7 @@ ${connectionMeta.metaExports}
 "use client";
 
 import { useListPage, useFormPage, useShowPage, useDeleteRecord } from "@apito-io/js-admin-sdk/react";
-import type { CrudFilter } from "@apito-io/js-admin-sdk/react";
+import type { CrudFilter, CrudSort } from "@apito-io/js-admin-sdk/react";
 import {
   useGet${pascal}ListQuery,
   useGet${pascal}Query,
@@ -233,6 +233,7 @@ export function use${pascal}List(options?: {
   enabled?: boolean;
   initialFilters?: CrudFilter[];
   permanentFilters?: CrudFilter[];
+  initialSorters?: CrudSort[];
   initialPagination?: { current: number; pageSize: number };
 }) {
   return useListPage<${pascal}>({
@@ -243,6 +244,7 @@ export function use${pascal}List(options?: {
     enabled: options?.enabled,
     initialFilters: options?.initialFilters,
     permanentFilters: options?.permanentFilters,
+    initialSorters: options?.initialSorters,
     initialPagination: options?.initialPagination,
     useListQuery: (_fetcher, variables, opts) =>
       useGet${pascal}ListQuery(variables, opts),

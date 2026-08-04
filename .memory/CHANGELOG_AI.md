@@ -4,6 +4,18 @@ Not git history — the *reasoning* behind changes. Newest on top.
 Format per entry: date, **Changed**, **Why**, **Affected**.
 
 ---
+## 2026-08-05 — v3.11.9 nested snake relation keys + GraphQLError on failed mutations
+
+- **Changed:** Nested connection/relation filter keys use canonical snake
+  (`food_category`, `food_category_list`); `apitoRelationFilterGraphQLKey`;
+  `hasUsableGraphQLData` + throw `GraphQLError` when mutation data null;
+  menuTree helpers; codegen connection meta tests.
+- **Why:** Match open-core nested GraphQL snake; failed creates must not look
+  like success; Studio/apps on link need built dist.
+- **Affected:** naming, listRelationFilters, fetcher, hooks, menuTree, tests.
+  Prior **v3.11.8** SORT_ENUM ASC/DESC. Tag **v3.11.9**.
+
+---
 ## 2026-08-05 — v3.11.8 SORT_ENUM ASC/DESC
 
 - **Changed:** `buildSortFromSorters` emits uppercase ASC/DESC.

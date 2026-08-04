@@ -1,3 +1,10 @@
+## 3.11.9 — 2026-08-05
+
+- Nested relation GraphQL keys: snake_case (`food_category` / `food_category_list`); `apitoRelationFilterGraphQLKey`.
+- Fetcher: throw on unusable mutation data (`createX: null` + errors) via `GraphQLError` / `hasUsableGraphQLData`.
+- Includes 3.11.8: list sort emits `ASC`/`DESC` for `SORT_ENUM`.
+
+
 # Changelog
 
 All notable changes to this project will be documented in this file.

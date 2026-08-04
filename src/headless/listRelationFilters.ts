@@ -1,4 +1,4 @@
-import { apitoConnectionFieldNameForRelation } from "../naming/apitoGraphqlNames";
+import { apitoRelationFilterGraphQLKey } from "../naming/apitoGraphqlNames";
 import type {
   ApitoListConnection,
   ApitoRelationCrudFilter,
@@ -28,11 +28,9 @@ export function isRelationCrudFilter(
  * GraphQL key for `*List(relation: …)` — must match the **output relation field** on each row,
  * not the mutation `connect` key (`{stored_model}_id`).
  *
- * Engine (open-core) builds `*_Where_Relation_Filter_Condition` with the same names as list/getOne
- * relation fields: `known_as` when set (`owner`, `chef`, …), otherwise the public target model name
- * (`foodCategory`, `users`, …). Before that fix the explorer could show `users` while the row field
- * was `owner`; runtime SQL accepted both, but schema and clients should use the output field name.
- * Use this helper when you have connection meta so apps do not guess the target model name.
+ * Engine builds `*_Where_Relation_Filter_Condition` with the same names as list/getOne
+ * has_one relation fields: `known_as` when set (`owner`, `chef`, …), otherwise the canonical
+ * stored model id (`food_category`, `users`, …). Root operations stay lowerCamel (`foodCategoryList`).
  */
 export function listRelationFilterKey(
   connection: ListRelationFilterKeyConnection,
@@ -47,10 +45,7 @@ export function listRelationFilterKey(
     );
   }
 
-  return apitoConnectionFieldNameForRelation(
-    targetModel,
-    connection.relation_type === "has_many" ? "has_many" : "has_one",
-  );
+  return apitoRelationFilterGraphQLKey(targetModel);
 }
 
 /** List filter: scope rows by related document id. */

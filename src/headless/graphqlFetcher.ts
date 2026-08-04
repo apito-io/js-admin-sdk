@@ -2,8 +2,11 @@
 
 import { useCallback, useContext, useMemo } from "react";
 
+import {
+  GraphQLError as ApitoGraphQLError,
+} from "../types";
 import { ApitoContext } from "./context";
-import type { ApitoFetcher } from "./fetcher";
+import { hasUsableGraphQLData, type ApitoFetcher } from "./fetcher";
 import {
   serializeGraphQLQuery,
   type GraphQLQueryInput,
@@ -22,6 +25,14 @@ export async function apitoGraphQLRequest<
     serializeGraphQLQuery(document),
     variables as Record<string, unknown> | undefined,
   );
+  // Defense in depth if a custom fetcher returns errors without throwing.
+  if (res.errors?.length && !hasUsableGraphQLData(res.data)) {
+    throw new ApitoGraphQLError(
+      res.errors.map((e) => e.message).join(", "),
+      res.errors,
+      res,
+    );
+  }
   return res.data as TData;
 }
 
@@ -49,6 +60,13 @@ export function useApitoGraphQLFetcher<
       serialized,
       variables as Record<string, unknown> | undefined,
     );
+    if (res.errors?.length && !hasUsableGraphQLData(res.data)) {
+      throw new ApitoGraphQLError(
+        res.errors.map((e) => e.message).join(", "),
+        res.errors,
+        res,
+      );
+    }
     return res.data as TData;
   }, [ctx.fetcher, serialized, variables]);
 }

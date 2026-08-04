@@ -186,36 +186,59 @@ export function apitoMultipleResourceName(name: string): string {
 
 /**
  * Public GraphQL field name for a **relation** on list/getOne rows (matches engine `attachConnectionFields`):
- * - **has_many** → `{singular}List` (e.g. model `food` → `foodList`), **not** `food`.
- * - **has_one** → lowerCamel singular (e.g. `customer`, `foodCategory`).
+ * - **has_many** → `{canonical_model_id}_list` (e.g. `food_category_list`, `food_list`).
+ * - **has_one** → canonical snake model id (e.g. `customer`, `food_category`).
  *
+ * Root list/mutation operations stay lowerCamel (`foodCategoryList`) via {@link apitoMultipleResourceName}.
  * Use this for `meta.connectionFields` **keys** so the generated selection matches the schema.
  */
 export function apitoConnectionFieldNameForRelation(
   relatedModelRef: string,
   relation: 'has_one' | 'has_many'
 ): string {
+  const key = apitoStoredSnakeModelId(relatedModelRef);
   if (relation === 'has_many') {
-    return apitoMultipleResourceName(relatedModelRef);
+    return `${key}_list`;
   }
-  return apitoSingularResourceName(relatedModelRef);
+  return key;
+}
+
+/**
+ * GraphQL `relation: { … }` filter key — same as has_one nested field / engine `RelationFilterGraphQLKey`.
+ * Always singular (never `*List`), even when the underlying edge is has_many.
+ */
+export function apitoRelationFilterGraphQLKey(
+  relatedModelRef: string,
+  knownAs?: string | null
+): string {
+  const alias = knownAs?.trim();
+  if (alias) return alias;
+  return apitoStoredSnakeModelId(relatedModelRef);
 }
 
 /**
  * Maps `meta.connectionFields` / `aliasFields` keys and targets to engine GraphQL field names.
  * Unlike {@link apitoSingularResourceName} alone, this does **not** strip a trailing `List` from
- * connection field ids such as **`foodList`** (that strip is for list *operation* names like `foodOrderList` → `foodOrder`).
+ * root operation names — that strip is only for list *operations* like `foodOrderList` → `foodOrder`.
+ *
+ * Nested relation fields are normally full snake_case (`food_category`, `food_category_list`).
+ * Keys that already contain an uppercase letter are treated as legacy/live camel nested names
+ * (`labTestList`, `bankAccount`) and passed through unchanged — some production engines still
+ * emit camel nested fields while root ops stay lowerCamel.
  */
 export function apitoGraphqlConnectionFieldFromMetaKey(key: string): string {
   const k = key.trim();
   if (!k) return k;
-  if (k.includes('_')) {
-    return apitoSingularResourceName(k);
+  // Live/legacy camel nested relation fields (has_one bankAccount, has_many labTestList).
+  if (/[A-Z]/.test(k)) {
+    return k;
   }
-  if (/List$/i.test(k) && !/ListCount$/i.test(k)) {
-    return k.charAt(0).toLowerCase() + k.slice(1);
+  // Nested has_many: food_category_list
+  if (/_list$/i.test(k)) {
+    const base = k.replace(/_list$/i, '');
+    return `${apitoStoredSnakeModelId(base)}_list`;
   }
-  return apitoSingularResourceName(k);
+  return apitoStoredSnakeModelId(k);
 }
 
 export function apitoGraphQLTypeNameForFilterArg(modelId: string): string {
@@ -300,15 +323,14 @@ export function apitoListCountSortInputType(resource: string): string {
 
 /**
  * Builds nested relation field lines for list/getOne GraphQL selection sets.
- * Normalizes stored snake_case ids and legacy names to the same lowerCamel field names as the Apito engine
- * (`apitoSingularResourceName`), so `aliasFields: { foodCategory: "food_category" }` still resolves to `foodCategory`.
+ * Normalizes stored snake_case ids and legacy camel names to engine nested relation field names
+ * (`food_category`, `food_category_list`). Root list operations stay lowerCamel (`foodCategoryList`).
  *
  * - `connectionFields` keys are the **client/response key** when `aliasFields` is set; otherwise the key is
  *   normalized to the schema field name.
- * - `aliasFields[key]` when present is the **schema field name** (may be legacy `food_category`); it is normalized.
- * - **has_many** relations use **`{model}List`** on the parent type (e.g. `foodList`), not the singular `food`.
- *   Use {@link apitoConnectionFieldNameForRelation}(..., `'has_many'`) or {@link apitoMultipleResourceName} for keys.
- *   Keys like `foodList` are preserved (see {@link apitoGraphqlConnectionFieldFromMetaKey}).
+ * - `aliasFields[key]` when present is the **schema field name** (may be legacy camel); it is normalized.
+ * - **has_many** relations use **`{model_id}_list`** on the parent type (e.g. `food_list`, `food_category_list`).
+ *   Use {@link apitoConnectionFieldNameForRelation}(..., `'has_many'`) for keys.
  */
 export function formatApitoConnectionSubselections(
   connectionFields: Record<string, string>,

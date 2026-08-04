@@ -44,6 +44,7 @@ export {
 
 export {
   createBearerApitoFetcher,
+  hasUsableGraphQLData,
   type ApitoFetcher,
 } from "../headless/fetcher";
 
@@ -142,6 +143,8 @@ export {
 
 export {
   buildResourceMenuTree,
+  collectMenuAncestorKeys,
+  collectResourceParentKeys,
   type ApitoMenuResource,
   type ApitoMenuTreeItem,
 } from "../headless/menuTree";

@@ -96,11 +96,12 @@ export function useListPage<TRecord extends ApitoRecord = ApitoRecord>(
   options: UseListPageOptions<TRecord>,
 ): UseListPageResult<TRecord> {
   const fetcher = useApitoFetcher();
-  const permanentFilters = options.permanentFilters ?? [];
-  const permanentKey = useMemo(
-    () => JSON.stringify(permanentFilters),
-    [permanentFilters],
-  );
+  const hasPermanentFilters = options.permanentFilters !== undefined;
+  // Content key only — never put the filters array ref in effect deps (Select
+  // callers often pass a fresh array with identical contents each render).
+  const permanentKey = hasPermanentFilters
+    ? JSON.stringify(options.permanentFilters)
+    : "";
   const [filters, setFilters] = useState<CrudFilter[]>(
     options.permanentFilters ?? options.initialFilters ?? [],
   );
@@ -109,7 +110,7 @@ export function useListPage<TRecord extends ApitoRecord = ApitoRecord>(
   const previousPermanentKeyRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    if (options.permanentFilters === undefined) {
+    if (!hasPermanentFilters) {
       return;
     }
     const nextPermanent = JSON.parse(permanentKey) as CrudFilter[];
@@ -129,7 +130,7 @@ export function useListPage<TRecord extends ApitoRecord = ApitoRecord>(
       }
       return next;
     });
-  }, [permanentKey, options.permanentFilters]);
+  }, [permanentKey, hasPermanentFilters]);
   const [sorters, setSorters] = useState<CrudSort[]>(
     options.initialSorters ?? [],
   );

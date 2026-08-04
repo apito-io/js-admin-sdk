@@ -1,4 +1,7 @@
-import type { GraphQLResponse } from "../types";
+import {
+  GraphQLError as ApitoGraphQLError,
+  type GraphQLResponse,
+} from "../types";
 import {
   serializeGraphQLQuery,
   type GraphQLQueryInput,
@@ -8,6 +11,18 @@ export type ApitoFetcher = (
   query: GraphQLQueryInput,
   variables?: Record<string, unknown>,
 ) => Promise<GraphQLResponse>;
+
+/**
+ * True when at least one top-level `data` field is non-null.
+ * Mutations often return HTTP 200 with `{ createX: null }` + `errors` — that is
+ * not usable. Queries may return a non-null root with nested field errors.
+ */
+export function hasUsableGraphQLData(data: unknown): boolean {
+  if (data == null || typeof data !== "object" || Array.isArray(data)) {
+    return false;
+  }
+  return Object.values(data as Record<string, unknown>).some((v) => v != null);
+}
 
 /** Match ApitoClient.authHeaders: ak_ → X-Apito-Key; apt_/JWT → Bearer. */
 function buildHeadlessAuthHeaders(token: string): Record<string, string> {
@@ -64,15 +79,13 @@ export function createBearerApitoFetcher(options: {
     }
 
     const json = (await response.json()) as GraphQLResponse;
-    if (json.errors?.length) {
-      // GraphQL may return partial `data` when nested resolvers fail (e.g. missing
-      // SQLite FK columns). Prefer payload when present so edit forms can hydrate.
-      if (json.data == null) {
-        const message = json.errors.map((e) => e.message).join(", ");
-        const err = new Error(message);
-        options.onError?.(err);
-        throw err;
-      }
+    if (json.errors?.length && !hasUsableGraphQLData(json.data)) {
+      // Failed mutation (`{ createX: null }` + errors) or null data — throw.
+      // Partial query roots with nested errors still return so forms can hydrate.
+      const message = json.errors.map((e) => e.message).join(", ");
+      const err = new ApitoGraphQLError(message, json.errors, json);
+      options.onError?.(err);
+      throw err;
     }
     return json;
   };
