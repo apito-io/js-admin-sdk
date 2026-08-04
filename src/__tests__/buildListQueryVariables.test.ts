@@ -24,7 +24,7 @@ describe("buildListQueryVariables", () => {
       relation: { class: { _id: { eq: "01CLASS" } } },
       where: { section_code: { eq: "A" } },
       whereCount: { section_code: { eq: "A" } },
-      sort: { roll_no: "asc" },
+      sort: { roll_no: "ASC" },
       page: 2,
       limit: 25,
     });

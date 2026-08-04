@@ -221,7 +221,8 @@ function buildSortFromSorters(
   if (!sorters.length) return undefined;
   const sort: Record<string, unknown> = {};
   for (const s of sorters) {
-    sort[s.field] = s.order === "desc" ? "desc" : "asc";
+    // Public GraphQL SORT_ENUM is ASC | DESC (uppercase).
+    sort[s.field] = s.order === "desc" ? "DESC" : "ASC";
   }
   return sort;
 }
