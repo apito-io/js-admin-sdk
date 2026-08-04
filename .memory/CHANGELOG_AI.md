@@ -4,6 +4,13 @@ Not git history — the *reasoning* behind changes. Newest on top.
 Format per entry: date, **Changed**, **Why**, **Affected**.
 
 ---
+## 2026-08-05 — v3.11.8 SORT_ENUM ASC/DESC
+
+- **Changed:** `buildSortFromSorters` emits uppercase ASC/DESC.
+- **Why:** Engine SORT_ENUM rejected lowercase asc/desc.
+- **Affected:** filterVariables.ts. Tag **v3.11.8**.
+
+---
 
 ## 2026-07-28/29 — GraphQLError on null roots + useListPage filter key
 
