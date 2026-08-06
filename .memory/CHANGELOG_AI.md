@@ -4,6 +4,13 @@ Not git history — the *reasoning* behind changes. Newest on top.
 Format per entry: date, **Changed**, **Why**, **Affected**.
 
 ---
+## 2026-08-06 — v3.11.10 oauthState + multi-provider loginUser
+
+- **Changed:** `oauthState(projectId, provider)`; loginUser accepts
+  facebook/github/x/linkedin code+state.
+- **Why:** Match engine multi-provider app-user OAuth.
+- **Affected:** `src/client.ts`, `src/types.ts`, package **3.11.10**.
+
 ## 2026-08-05 — v3.11.9 nested snake relation keys + GraphQLError on failed mutations
 
 - **Changed:** Nested connection/relation filter keys use canonical snake
