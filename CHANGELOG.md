@@ -1,3 +1,7 @@
+## 3.11.10 — 2026-08-05
+
+- `oauthState(projectId, provider)` + `loginUser` auth methods `facebook`/`github`/`x`/`linkedin`.
+
 ## 3.11.9 — 2026-08-05
 
 - Nested relation GraphQL keys: snake_case (`food_category` / `food_category_list`); `apitoRelationFilterGraphQLKey`.

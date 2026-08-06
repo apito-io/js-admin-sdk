@@ -99,7 +99,7 @@ export interface User {
   updated_at?: string;
 }
 
-/** Login via system GraphQL `loginUser`. Password path: use `email` or `phone` per project settings. Google OAuth code path: `authMethod: 'google'`, `code`, `state` from redirect (get `state` first via `googleOAuthState`). Native mobile: `authMethod: 'google_id_token'`, `idToken` from `google_sign_in`. SaaS per-tenant separate DB: pass `tenantId` (required by engine). Google paths: engine may auto-link a verified email to an existing user (no duplicate signup); errors include `google email not verified`, `google account already linked to another user`, `multiple users matched this email`. On Cloudflare Workers v1, Google paths are unavailable (`google login is not available on Cloudflare Workers v1`); password login is supported. */
+/** Login via system GraphQL `loginUser`. Password path: use `email` or `phone` per project settings. OAuth code path: `authMethod` `google`|`facebook`|`github`|`x`|`linkedin` with `code`+`state` (get `state` via `oauthState` / `googleOAuthState`). Native mobile Google: `authMethod: 'google_id_token'`, `idToken`. SaaS per-tenant separate DB: pass `tenantId`. */
 export interface LoginUserParams {
   projectId: string;
   tenantId?: string;
@@ -270,7 +270,8 @@ export interface InjectedDBOperationInterface {
   /** @param token Legacy; ignored. Auth uses client API key. */
   generateTenantToken(tenantId: string, duration?: string, role?: string): Promise<string>;
   loginUser(params: LoginUserParams): Promise<LoginUserResponse>;
-  googleOAuthState(projectId: string): Promise<GoogleOAuthStateResponse>;
+	googleOAuthState(projectId: string): Promise<GoogleOAuthStateResponse>;
+  oauthState(projectId: string, provider: string): Promise<GoogleOAuthStateResponse>;
   searchUsers(
     projectId: string,
     limit?: number,

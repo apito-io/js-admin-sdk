@@ -282,6 +282,20 @@ export class ApitoClient implements InjectedDBOperationInterface {
       }
       variables.code = code;
       variables.state = state;
+    } else if (
+      authMethod === 'facebook' ||
+      authMethod === 'github' ||
+      authMethod === 'x' ||
+      authMethod === 'linkedin'
+    ) {
+      variables.auth_method = authMethod;
+      const code = (params.code ?? '').trim();
+      const state = (params.state ?? '').trim();
+      if (!code || !state) {
+        throw new ValidationError(`code and state are required for ${authMethod} login`);
+      }
+      variables.code = code;
+      variables.state = state;
     } else if (authMethod === 'google_id_token') {
       variables.auth_method = 'google_id_token';
       const idToken = (params.idToken ?? '').trim();
@@ -334,6 +348,28 @@ export class ApitoClient implements InjectedDBOperationInterface {
       token: raw.token as string,
       user: raw.user as User | undefined,
     };
+  }
+
+  /**
+   * Signed OAuth state for provider login (system query `oauthState`).
+   * Prefer this for facebook/github/x/linkedin; `googleOAuthState` remains a Google-only alias.
+   */
+  async oauthState(projectId: string, provider: string): Promise<GoogleOAuthStateResponse> {
+    const query = `
+      query OAuthState($project_id: String!, $provider: String!) {
+        oauthState(project_id: $project_id, provider: $provider) {
+          state
+        }
+      }
+    `;
+    const variables = { project_id: projectId, provider };
+    const response = await this.executeGraphQL(query, variables, { projectId });
+    const raw = response.data?.oauthState;
+    const state = typeof raw?.state === 'string' ? raw.state.trim() : '';
+    if (!state) {
+      throw new ValidationError('Invalid response format for oauthState');
+    }
+    return { state };
   }
 
   /**
