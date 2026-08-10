@@ -10,7 +10,7 @@ const shared = {
   minify: true,
   dts: true,
   clean: true,
-  external: ['react', 'react-dom', '@tanstack/react-query', 'graphql'],
+  external: ['react', 'react-dom', '@tanstack/react-query', 'graphql', 'casbin'],
   banner,
 } as const;
 
@@ -18,6 +18,7 @@ export default defineConfig([
   {
     entry: {
       index: 'src/index.ts',
+      access: 'src/access/index.ts',
       react: 'src/react/index.ts',
       ui: 'src/ui/index.ts',
     },
@@ -32,6 +33,7 @@ export default defineConfig([
   {
     entry: {
       index: 'src/index.ts',
+      access: 'src/access/index.ts',
       react: 'src/react/index.ts',
       ui: 'src/ui/index.ts',
     },
@@ -39,7 +41,7 @@ export default defineConfig([
     platform: 'node',
     target: 'es2020',
     outDir: 'dist',
-    external: ['axios', 'react', 'react-dom', '@tanstack/react-query', 'graphql'],
+    external: ['axios', 'react', 'react-dom', '@tanstack/react-query', 'graphql', 'casbin'],
     ...shared,
     dts: false,
   },

@@ -1,3 +1,10 @@
+## 3.12.0 — 2026-08-10
+
+- **`@apito-io/js-admin-sdk/access`** — plan tiers, `EffectivePermissionsSnapshot`,
+  `canFromSnapshot`, Casbin policy builder (`extraListResources`),
+  `createApitoCasbinEnforcer`, `annotateMenuItemsByPlan`, quota/grace helpers.
+- **`client.myEffectivePermissions()`** + React `CasbinProvider` / `useCan` / `PlanGate`.
+
 ## 3.11.10 — 2026-08-05
 
 - `oauthState(projectId, provider)` + `loginUser` auth methods `facebook`/`github`/`x`/`linkedin`.

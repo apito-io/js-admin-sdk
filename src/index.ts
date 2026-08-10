@@ -15,6 +15,38 @@ export {
   FILES_UPLOAD_PATH,
 } from './filesPaths';
 export * from './types';
+// Plan / permissions helpers only — do NOT re-export casbin-enforcer here.
+// Casbin pulls Node-ish deps that break Cloudflare Workers SSR (API routes
+// then fall through to [...slug] HTML). Use `@apito-io/js-admin-sdk/access`
+// for the Casbin factory.
+export {
+  PLAN_TIERS,
+  parsePlanTier,
+  planRank,
+  atLeast,
+  type PlanTier,
+} from './access/plan';
+export type {
+  EffectiveModelPermission,
+  EffectivePermissionsSnapshot,
+} from './access/permissions.types';
+export { MY_EFFECTIVE_PERMISSIONS_QUERY } from './access/permissions.types';
+export {
+  scopeAllows,
+  scopeForAction,
+  canFromSnapshot,
+  graceModelsFromSnapshot,
+  buildCasbinPolicyFromSnapshot,
+  type BuildCasbinPolicyOptions,
+} from './access/permissions';
+export { isPlanQuotaError } from './access/quota';
+export {
+  resourceMinPlan,
+  annotateMenuItemsByPlan,
+  type PlanMenuResource,
+  type PlanMenuTreeItem,
+  type PlanAnnotatedMenuItem,
+} from './access/menu-plan';
 export * from './naming/apitoGraphqlNames';
 export { DocumentBuilder } from './naming/documentBuilder';
 export { parseIntrospection, introspectionToSdl } from './naming/schemaReader';

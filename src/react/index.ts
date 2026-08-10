@@ -200,3 +200,14 @@ export {
   type ApitoMediaFileKind,
   type ApitoMediaUploadFileType,
 } from "../headless/mediaUpload";
+
+export {
+  CasbinProvider,
+  useApitoCasbinEnforcer,
+  useCan,
+  useMenuAccessMap,
+  CanAccess,
+  PlanGate,
+  useResetCasbinFromSnapshot,
+} from "./access";
+export type { CasbinProviderProps } from "./access";

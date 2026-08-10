@@ -1,7 +1,10 @@
-# js-admin-sdk — Handoff
+# Handoff — js-admin-sdk 2026-08-09
 
-- `master` — **v3.11.10** ready; tag after user confirm.
-- Pair with engine **v2.4.27** multi-provider OAuth.
+## Done (uncommitted)
 
-## Last Updated
-2026-08-06
+- `plan_tier` on tenant create/update/list selections
+- `myTenant()` helper for secured/public GraphQL
+
+## Next
+
+- Bump + publish with engine release; ask before commit/tag

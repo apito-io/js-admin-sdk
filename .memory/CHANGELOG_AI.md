@@ -4,6 +4,14 @@ Not git history — the *reasoning* behind changes. Newest on top.
 Format per entry: date, **Changed**, **Why**, **Affected**.
 
 ---
+## 2026-08-09 — Tenant plan_tier + myTenant
+
+- **Changed:** `plan_tier` / `planTier` on tenant catalog GraphQL;
+  `myTenant()` for app-user token.
+- **Why:** Protiva plan gating; clients read control-plane tier without
+  embedding system keys.
+- **Affected:** client/types tenant APIs. Ask before bump/commit.
+
 ## 2026-08-06 — v3.11.10 oauthState + multi-provider loginUser
 
 - **Changed:** `oauthState(projectId, provider)`; loginUser accepts

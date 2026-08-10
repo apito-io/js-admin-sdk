@@ -182,6 +182,8 @@ export interface TenantCatalogSearchRow {
   name: string;
   status?: string;
   domain?: string;
+  /** Control-plane plan: free | paid | paid_plus | ultra */
+  plan_tier?: string;
   icon?: string;
   data?: string;
   created_at?: string;
@@ -201,6 +203,7 @@ export interface TenantCatalogListItem {
   id: string;
   name: string;
   domain?: string;
+  plan_tier?: string;
   icon?: string;
   data?: string;
 }
@@ -213,12 +216,24 @@ export interface CreateTenantParams {
   name: string;
   data?: string;
   domain?: string;
+  /** free | paid | paid_plus | ultra (default free on engine). */
+  planTier?: string;
 }
 
 export interface UpdateTenantParams {
   name?: string;
   data?: string;
   domain?: string;
+  planTier?: string;
+}
+
+/** Public GraphQL `myTenant` for the authenticated app-user token. */
+export interface MyTenant {
+  id: string;
+  name?: string;
+  domain?: string;
+  status?: string;
+  plan_tier?: string;
 }
 
 export interface ClientConfig {
@@ -296,6 +311,10 @@ export interface InjectedDBOperationInterface {
   createTenant(params: CreateTenantParams): Promise<TenantCatalogSearchRow>;
   updateTenant(tenantId: string, params: UpdateTenantParams): Promise<TenantCatalogSearchRow>;
   deleteTenant(tenantId: string): Promise<boolean>;
+  /** Public GraphQL: requires app-user JWT against secured/public endpoint. */
+  myTenant(): Promise<MyTenant>;
+  /** Public GraphQL: role ∩ plan ceiling for app-user JWT. */
+  myEffectivePermissions(): Promise<import('./access/permissions.types').EffectivePermissionsSnapshot>;
   createUser(projectId: string, params: CreateUserParams): Promise<User>;
   updateUser(userId: string, params: UpdateUserParams): Promise<User>;
   resetUserPassword(userId: string, password: string): Promise<boolean>;

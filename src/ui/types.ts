@@ -171,6 +171,8 @@ export type ApitoImportButtonProps = {
   children?: ReactNode;
   loading?: boolean;
   disabled?: boolean;
+  /** Allowed upload formats. Default both CSV and XLSX. */
+  formats?: Array<"csv" | "xlsx">;
 };
 
 export type ApitoExportButtonProps = {
@@ -180,6 +182,8 @@ export type ApitoExportButtonProps = {
   children?: ReactNode;
   loading?: boolean;
   disabled?: boolean;
+  /** Allowed export formats. Default both CSV and XLSX. */
+  formats?: Array<"csv" | "xlsx">;
 };
 
 export type ApitoImportModalProps = {
@@ -195,6 +199,8 @@ export type ApitoImportModalProps = {
     rows: ApitoValidatedImportRow[],
     context: ApitoImportRowsContext,
   ) => Promise<void>;
+  /** Allowed upload formats. Default both CSV and XLSX. */
+  formats?: Array<"csv" | "xlsx">;
 };
 
 export type ApitoMediaUploadResult = {

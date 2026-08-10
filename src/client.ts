@@ -21,6 +21,7 @@ import {
   SearchTenantsResponse,
   CreateTenantParams,
   UpdateTenantParams,
+  MyTenant,
   LoginUserParams,
   CreateUserParams,
   UpdateUserParams,
@@ -31,6 +32,8 @@ import {
   DeleteFilesResponse,
 } from './types';
 import { FILES_DELETE_PATH, FILES_LIST_PATH, FILES_UPLOAD_PATH } from './filesPaths';
+import { MY_EFFECTIVE_PERMISSIONS_QUERY } from './access/permissions.types';
+import type { EffectivePermissionsSnapshot } from './access/permissions.types';
 
 function deriveRestBaseURL(graphqlURL: string): string {
   const u = graphqlURL.trim().replace(/\/$/, '');
@@ -457,6 +460,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
             name
             status
             domain
+            plan_tier
             data
           }
         }
@@ -495,6 +499,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
             name
             status
             domain
+            plan_tier
             icon
             data
             created_at
@@ -555,6 +560,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
             id
             name
             domain
+            plan_tier
             icon
             data
           }
@@ -577,12 +583,13 @@ export class ApitoClient implements InjectedDBOperationInterface {
       throw new ValidationError('name is required');
     }
     const query = `
-      mutation CreateTenant($name: String!, $data: String, $domain: String) {
-        createTenant(name: $name, data: $data, domain: $domain) {
+      mutation CreateTenant($name: String!, $data: String, $domain: String, $plan_tier: String) {
+        createTenant(name: $name, data: $data, domain: $domain, plan_tier: $plan_tier) {
           id
           name
           status
           domain
+          plan_tier
           data
         }
       }
@@ -592,6 +599,8 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (data) variables.data = data;
     const domain = (params.domain ?? '').trim();
     if (domain) variables.domain = domain;
+    const planTier = (params.planTier ?? '').trim();
+    if (planTier) variables.plan_tier = planTier;
     const response = await this.executeGraphQL(query, variables);
     const row = response.data?.createTenant as TenantCatalogSearchRow | undefined;
     if (!row?.id) {
@@ -600,22 +609,28 @@ export class ApitoClient implements InjectedDBOperationInterface {
     return row;
   }
 
-  /** Update catalog tenant name/data/domain. */
+  /** Update catalog tenant name/data/domain/plan_tier. */
   async updateTenant(tenantId: string, params: UpdateTenantParams): Promise<TenantCatalogSearchRow> {
     const tid = (tenantId ?? '').trim();
     if (!tid) {
       throw new ValidationError('tenantId is required');
     }
-    if (params.name === undefined && params.data === undefined && params.domain === undefined) {
+    if (
+      params.name === undefined &&
+      params.data === undefined &&
+      params.domain === undefined &&
+      params.planTier === undefined
+    ) {
       throw new ValidationError('at least one field must be provided');
     }
     const query = `
-      mutation UpdateTenant($tenant_id: String!, $name: String, $data: String, $domain: String) {
-        updateTenant(tenant_id: $tenant_id, name: $name, data: $data, domain: $domain) {
+      mutation UpdateTenant($tenant_id: String!, $name: String, $data: String, $domain: String, $plan_tier: String) {
+        updateTenant(tenant_id: $tenant_id, name: $name, data: $data, domain: $domain, plan_tier: $plan_tier) {
           id
           name
           status
           domain
+          plan_tier
           data
         }
       }
@@ -624,12 +639,55 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (params.name !== undefined) variables.name = params.name;
     if (params.data !== undefined) variables.data = params.data;
     if (params.domain !== undefined) variables.domain = params.domain;
+    if (params.planTier !== undefined) variables.plan_tier = params.planTier;
     const response = await this.executeGraphQL(query, variables);
     const row = response.data?.updateTenant as TenantCatalogSearchRow | undefined;
     if (!row?.id) {
       throw new ValidationError('Invalid response format for updateTenant');
     }
     return row;
+  }
+
+  /**
+   * Public GraphQL `myTenant` for the authenticated app-user token (includes plan_tier).
+   * Use against `/secured/graphql` (or public) with the JWT from `loginUser`.
+   */
+  async myTenant(): Promise<MyTenant> {
+    const query = `
+      query MyTenant {
+        myTenant {
+          id
+          name
+          domain
+          status
+          plan_tier
+        }
+      }
+    `;
+    const response = await this.executeGraphQL(query, {});
+    const raw = response.data?.myTenant as MyTenant | undefined;
+    if (!raw?.id?.trim()) {
+      throw new ValidationError('Invalid response format for myTenant');
+    }
+    return raw;
+  }
+
+  /**
+   * Public GraphQL `myEffectivePermissions` for the authenticated app-user token
+   * (role ∩ tenant plan ceiling, quotas, grace). Use against `/secured/graphql`.
+   */
+  async myEffectivePermissions(): Promise<EffectivePermissionsSnapshot> {
+    const response = await this.executeGraphQL(MY_EFFECTIVE_PERMISSIONS_QUERY, {});
+    const raw = response.data?.myEffectivePermissions as
+      | EffectivePermissionsSnapshot
+      | null
+      | undefined;
+    if (!raw || typeof raw !== 'object') {
+      throw new ValidationError(
+        'Invalid response format for myEffectivePermissions',
+      );
+    }
+    return raw;
   }
 
   /** Soft-delete a catalog tenant row (status=deleted). Content and mirror remain until Console hard delete. */
