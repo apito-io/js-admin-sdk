@@ -1,10 +1,10 @@
-# Handoff — js-admin-sdk 2026-08-09
+# Handoff — js-admin-sdk 2026-08-12
 
 ## Done (uncommitted)
 
-- `plan_tier` on tenant create/update/list selections
-- `myTenant()` helper for secured/public GraphQL
+- Project-payment REST + `ProjectTenantSubscription` types
+- Package **3.12.1**; CONTRACT; unit test for `deriveSystemAPIBaseURL`
 
 ## Next
 
-- Bump + publish with engine release; ask before commit/tag
+- Ask before commit/publish

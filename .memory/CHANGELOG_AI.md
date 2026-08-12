@@ -4,6 +4,15 @@ Not git history — the *reasoning* behind changes. Newest on top.
 Format per entry: date, **Changed**, **Why**, **Affected**.
 
 ---
+## 2026-08-12 — v3.12.1 ApitoProjectPayment REST
+
+- **Changed:** `verifyProjectPayment` / `getTenantSubscription` /
+  `cancelTenantSubscription`; `deriveSystemAPIBaseURL`; types; CONTRACT;
+  package **3.12.1**.
+- **Why:** Parity with Flutter/Go for engine-owned Play cancel/verify.
+- **Affected:** `src/client.ts`, `src/types.ts`, tests, CONTRACT/CHANGELOG.
+  Ask before commit.
+
 ## 2026-08-09 — Tenant plan_tier + myTenant
 
 - **Changed:** `plan_tier` / `planTier` on tenant catalog GraphQL;
