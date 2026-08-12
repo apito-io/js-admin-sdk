@@ -185,6 +185,8 @@ export type ApitoExportButtonProps = {
   children?: ReactNode;
   loading?: boolean;
   disabled?: boolean;
+  /** Override the default Download icon. */
+  icon?: ReactNode;
   /** Allowed export formats. Default both CSV and XLSX. */
   formats?: Array<"csv" | "xlsx">;
 };
