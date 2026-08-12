@@ -172,6 +172,8 @@ export type ApitoImportButtonProps = {
   children?: ReactNode;
   loading?: boolean;
   disabled?: boolean;
+  /** Override the default Upload icon. */
+  icon?: ReactNode;
   /** Allowed upload formats. Default both CSV and XLSX. */
   formats?: Array<"csv" | "xlsx">;
   /** Override file parsing (e.g. multi-sheet mark-input workbooks). */
