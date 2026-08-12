@@ -4,6 +4,7 @@ import {
   TypedDocumentStructure,
   TypedSearchResult,
   CreateAndUpdateRequest,
+  ValidationError,
 } from '../types';
 
 // Test constants matching Go SDK
@@ -223,6 +224,18 @@ describe('ApitoClient', () => {
         console.log('DeleteResource failed (may be expected):', error);
       }
     }, 30000);
+  });
+
+  describe('updateTenant planTier', () => {
+    it('rejects planTier client-side', async () => {
+      const client = new ApitoClient({
+        endpoint: 'http://localhost/system/graphql',
+        apiKey: 'test',
+      } as any);
+      await expect(
+        client.updateTenant('tid', { planTier: 'paid' } as any),
+      ).rejects.toBeInstanceOf(ValidationError);
+    });
   });
 
   describe('GenerateTenantToken', () => {

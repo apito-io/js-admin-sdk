@@ -224,6 +224,10 @@ export interface UpdateTenantParams {
   name?: string;
   data?: string;
   domain?: string;
+  /**
+   * @deprecated Engine rejects `plan_tier` on `updateTenant` (ledger-driven entitlement).
+   * Passing this throws client-side; use createTenantSubscription / cancel / Play verify.
+   */
   planTier?: string;
 }
 
@@ -234,6 +238,45 @@ export interface MyTenant {
   domain?: string;
   status?: string;
   plan_tier?: string;
+}
+
+/** ApitoProjectPayment ledger row (REST). */
+export interface ProjectTenantSubscription {
+  id?: string;
+  project_id?: string;
+  tenant_id?: string;
+  plan_tier?: string;
+  provider?: string;
+  status?: string;
+  billing_contact_user_id?: string;
+  external_subscription_id?: string;
+  product_id?: string;
+  current_period_start?: string;
+  current_period_end?: string;
+  cancel_at?: string;
+  created_by?: string;
+  notes?: string;
+  manage_url?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface VerifyProjectPaymentParams {
+  projectId: string;
+  tenantId: string;
+  productId: string;
+  purchaseToken: string;
+  packageName: string;
+  provider?: string;
+  billingContactUserId?: string;
+}
+
+export interface CancelTenantSubscriptionParams {
+  projectId: string;
+  tenantId: string;
+  mode?: 'cancel' | 'revoke' | string;
+  subscriptionId?: string;
+  forceLedgerOnly?: boolean;
 }
 
 export interface ClientConfig {

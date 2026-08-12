@@ -47,6 +47,11 @@ All SDKs expose:
 - **GraphQL CRUD** (system GraphQL via `ApitoClient`; optional generated `getSdk` + TanStack hooks in JS)
 - **REST storage**: `uploadFile`, `listFiles`, `deleteFiles` at `/secured/files/upload|list|delete` (paths relative to `restBaseURL`, default `/secured`)
 - **Auth/admin**: `generateTenantToken`, `getTenants`, `searchTenants`, `createTenant`, `updateTenant`, `deleteTenant`, `loginUser` (password, Google OAuth code, **`google_id_token`**), `googleOAuthState`, `searchUsers`, `searchTenantsByDomain`, `createUser`, `updateUser`, `resetUserPassword`, `deleteUser`
+- **ApitoProjectPayment** (engine origin REST, app-user Bearer — not `/secured` files):
+  - `verifyProjectPayment` → `POST /system/v1/project-payment/projects/:projectId/providers/:provider/verify`
+  - `getTenantSubscription` → `GET .../tenants/:tenantId/subscription`
+  - `cancelTenantSubscription` → `POST .../subscriptions/cancel` (`mode`: `cancel` | `revoke`)
+  - Type: `ProjectTenantSubscription` (`plan_tier`, `status`, `current_period_end`, `cancel_at`, `manage_url`, …)
 
 Pro SaaS user ops accept optional **`tenantId`** / GraphQL `tenant_id` on `searchUsers`, `createUser`, and `updateUser` (in addition to `loginUser`). Omit on general projects. `searchUsers` also accepts optional **`q`** (email, username, phone, id contains).
 

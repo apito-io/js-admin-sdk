@@ -6,7 +6,7 @@
  */
 
 // Export main client and types
-export { ApitoClient, createClient } from './client';
+export { ApitoClient, createClient, deriveSystemAPIBaseURL } from './client';
 export { TypedOperations } from './typed-operations';
 export { Version, getVersion } from './version';
 export {

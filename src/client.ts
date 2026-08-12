@@ -30,6 +30,9 @@ import {
   FilesListResponse,
   UploadFileParams,
   DeleteFilesResponse,
+  ProjectTenantSubscription,
+  VerifyProjectPaymentParams,
+  CancelTenantSubscriptionParams,
 } from './types';
 import { FILES_DELETE_PATH, FILES_LIST_PATH, FILES_UPLOAD_PATH } from './filesPaths';
 import { MY_EFFECTIVE_PERMISSIONS_QUERY } from './access/permissions.types';
@@ -46,6 +49,13 @@ function deriveRestBaseURL(graphqlURL: string): string {
     return base;
   }
   return u;
+}
+
+/** Engine origin without `/system/graphql` or `/secured/graphql` (project-payment REST). */
+export function deriveSystemAPIBaseURL(graphqlURL: string): string {
+  let u = graphqlURL.trim().replace(/\/$/, '');
+  u = u.replace(/\/system\/graphql$/, '').replace(/\/secured\/graphql$/, '');
+  return u.replace(/\/$/, '');
 }
 
 /**
@@ -609,23 +619,23 @@ export class ApitoClient implements InjectedDBOperationInterface {
     return row;
   }
 
-  /** Update catalog tenant name/data/domain/plan_tier. */
+  /** Update catalog tenant name/data/domain (not plan_tier — ledger-driven). */
   async updateTenant(tenantId: string, params: UpdateTenantParams): Promise<TenantCatalogSearchRow> {
     const tid = (tenantId ?? '').trim();
     if (!tid) {
       throw new ValidationError('tenantId is required');
     }
-    if (
-      params.name === undefined &&
-      params.data === undefined &&
-      params.domain === undefined &&
-      params.planTier === undefined
-    ) {
+    if (params.planTier !== undefined) {
+      throw new ValidationError(
+        'planTier cannot be set via updateTenant; use createTenantSubscription / cancelTenantSubscription or Play verify',
+      );
+    }
+    if (params.name === undefined && params.data === undefined && params.domain === undefined) {
       throw new ValidationError('at least one field must be provided');
     }
     const query = `
-      mutation UpdateTenant($tenant_id: String!, $name: String, $data: String, $domain: String, $plan_tier: String) {
-        updateTenant(tenant_id: $tenant_id, name: $name, data: $data, domain: $domain, plan_tier: $plan_tier) {
+      mutation UpdateTenant($tenant_id: String!, $name: String, $data: String, $domain: String) {
+        updateTenant(tenant_id: $tenant_id, name: $name, data: $data, domain: $domain) {
           id
           name
           status
@@ -639,7 +649,6 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (params.name !== undefined) variables.name = params.name;
     if (params.data !== undefined) variables.data = params.data;
     if (params.domain !== undefined) variables.domain = params.domain;
-    if (params.planTier !== undefined) variables.plan_tier = params.planTier;
     const response = await this.executeGraphQL(query, variables);
     const row = response.data?.updateTenant as TenantCatalogSearchRow | undefined;
     if (!row?.id) {
@@ -1251,6 +1260,102 @@ export class ApitoClient implements InjectedDBOperationInterface {
     const response = await this.executeGraphQL(query, variables);
 
     return response.data?.debug;
+  }
+
+  private async executeProjectPayment<T>(
+    method: 'GET' | 'POST',
+    path: string,
+    options?: {
+      jsonBody?: Record<string, unknown>;
+      projectId?: string;
+      tenantId?: string;
+    }
+  ): Promise<T> {
+    const base = deriveSystemAPIBaseURL(this.baseURL);
+    const url = `${base.replace(/\/$/, '')}${path.startsWith('/') ? path : `/${path}`}`;
+    const headers: Record<string, string> = {
+      ...this.authHeaders(options),
+      'Content-Type': 'application/json',
+    };
+    try {
+      const response = await this.httpClient.request({
+        method,
+        url,
+        headers,
+        data: options?.jsonBody,
+      });
+      return response.data as T;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const data = error.response?.data as { message?: unknown; error?: unknown };
+        const msg =
+          typeof data?.message === 'string'
+            ? data.message
+            : typeof data?.error === 'string'
+              ? data.error
+              : error.message;
+        throw new ApitoError(msg, 'HTTP_ERROR', error.response?.status, error.response?.data);
+      }
+      throw error;
+    }
+  }
+
+  /** Verify a store purchase and upsert the tenant subscription ledger row. */
+  async verifyProjectPayment(
+    params: VerifyProjectPaymentParams
+  ): Promise<ProjectTenantSubscription> {
+    const provider = (params.provider ?? 'google_play').trim() || 'google_play';
+    const projectId = params.projectId.trim();
+    const path = `/system/v1/project-payment/projects/${projectId}/providers/${provider}/verify`;
+    const body: Record<string, unknown> = {
+      tenant_id: params.tenantId,
+      product_id: params.productId,
+      purchase_token: params.purchaseToken,
+      package_name: params.packageName,
+    };
+    const bc = params.billingContactUserId?.trim();
+    if (bc) body.billing_contact_user_id = bc;
+    return this.executeProjectPayment<ProjectTenantSubscription>('POST', path, {
+      jsonBody: body,
+      projectId,
+      tenantId: params.tenantId,
+    });
+  }
+
+  /** Latest subscription for a tenant (includes manage_url when Play). */
+  async getTenantSubscription(
+    projectId: string,
+    tenantId: string
+  ): Promise<ProjectTenantSubscription> {
+    const pid = projectId.trim();
+    const tid = tenantId.trim();
+    const path = `/system/v1/project-payment/projects/${pid}/tenants/${tid}/subscription`;
+    return this.executeProjectPayment<ProjectTenantSubscription>('GET', path, {
+      projectId: pid,
+      tenantId: tid,
+    });
+  }
+
+  /** Cancel via provider (Play API first for google_play), then finalize ledger. */
+  async cancelTenantSubscription(
+    params: CancelTenantSubscriptionParams
+  ): Promise<ProjectTenantSubscription> {
+    const projectId = params.projectId.trim();
+    const tenantId = params.tenantId.trim();
+    const mode = (params.mode ?? 'cancel').trim() || 'cancel';
+    const path = `/system/v1/project-payment/projects/${projectId}/subscriptions/cancel`;
+    const body: Record<string, unknown> = {
+      tenant_id: tenantId,
+      mode,
+    };
+    const sid = params.subscriptionId?.trim();
+    if (sid) body.subscription_id = sid;
+    if (params.forceLedgerOnly) body.force_ledger_only = true;
+    return this.executeProjectPayment<ProjectTenantSubscription>('POST', path, {
+      jsonBody: body,
+      projectId,
+      tenantId,
+    });
   }
 }
 

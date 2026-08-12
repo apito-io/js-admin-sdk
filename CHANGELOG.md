@@ -1,3 +1,11 @@
+## 3.12.1 — 2026-08-11 (Unreleased)
+
+- **ApitoProjectPayment REST** — `verifyProjectPayment`, `getTenantSubscription`,
+  `cancelTenantSubscription` + `ProjectTenantSubscription` / `deriveSystemAPIBaseURL`.
+  Engine origin paths under `/system/v1/project-payment/...` (not `/secured` files).
+- **`updateTenant`** — rejects `planTier` client-side (engine ledger-driven plan changes). Mutation no longer sends `plan_tier`. Name/data/domain unchanged.
+- **Docs** — `searchTenants(status: 'idle')` and `last_login_at` are engine additive; optional adopt when apps need Idle UI (Console already uses system GraphQL).
+
 ## 3.12.0 — 2026-08-10
 
 - **`@apito-io/js-admin-sdk/access`** — plan tiers, `EffectivePermissionsSnapshot`,
