@@ -4,6 +4,7 @@ import type {
   ApitoExportConfig,
   ApitoImportConfig,
   ApitoImportRowsContext,
+  ApitoParsedImportFile,
   ApitoValidatedImportRow,
 } from "../headless/importExport";
 import type { ApitoFetcher } from "../headless/fetcher";
@@ -173,6 +174,8 @@ export type ApitoImportButtonProps = {
   disabled?: boolean;
   /** Allowed upload formats. Default both CSV and XLSX. */
   formats?: Array<"csv" | "xlsx">;
+  /** Override file parsing (e.g. multi-sheet mark-input workbooks). */
+  parseFile?: (file: File) => Promise<ApitoParsedImportFile>;
 };
 
 export type ApitoExportButtonProps = {
@@ -201,6 +204,8 @@ export type ApitoImportModalProps = {
   ) => Promise<void>;
   /** Allowed upload formats. Default both CSV and XLSX. */
   formats?: Array<"csv" | "xlsx">;
+  /** Override file parsing (e.g. multi-sheet mark-input workbooks). */
+  parseFile?: (file: File) => Promise<ApitoParsedImportFile>;
 };
 
 export type ApitoMediaUploadResult = {
