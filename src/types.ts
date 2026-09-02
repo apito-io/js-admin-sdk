@@ -91,6 +91,7 @@ export interface User {
   id: string;
   email?: string;
   phone?: string;
+  username?: string;
   role: string;
   tenant_id?: string;
   provider?: string;
@@ -184,6 +185,11 @@ export interface TenantCatalogSearchRow {
   domain?: string;
   /** Control-plane plan: free | paid | paid_plus | ultra */
   plan_tier?: string;
+  /**
+   * Workspace partner id (Direct when empty). Console / Udbhabon Admin select this.
+   * Client apps (Astro, Flutter) never request it — omit `includePartner`.
+   */
+  partner_id?: string;
   icon?: string;
   data?: string;
   created_at?: string;
@@ -204,8 +210,15 @@ export interface TenantCatalogListItem {
   name: string;
   domain?: string;
   plan_tier?: string;
+  /** Console / Udbhabon Admin only. Client apps omit `includePartner`. */
+  partner_id?: string;
   icon?: string;
   data?: string;
+}
+
+/** Opt-in for catalog `partner_id`. Required for Console / Udbhabon Admin; unused by client apps. */
+export interface TenantCatalogPartnerOptions {
+  includePartner?: boolean;
 }
 
 export interface GetTenantsResponse {
@@ -218,12 +231,16 @@ export interface CreateTenantParams {
   domain?: string;
   /** free | paid | paid_plus | ultra (default free on engine). */
   planTier?: string;
+  /** Workspace partner id. Empty defaults to Direct. Console / Udbhabon Admin only. */
+  partnerId?: string;
 }
 
 export interface UpdateTenantParams {
   name?: string;
   data?: string;
   domain?: string;
+  /** Workspace partner id. Empty defaults to Direct. Console / Udbhabon Admin only. */
+  partnerId?: string;
   /**
    * @deprecated Engine rejects `plan_tier` on `updateTenant` (ledger-driven entitlement).
    * Passing this throws client-side; use createTenantSubscription / cancel / Play verify.
@@ -256,6 +273,7 @@ export interface ProjectTenantSubscription {
   cancel_at?: string;
   created_by?: string;
   notes?: string;
+  partner_id?: string;
   manage_url?: string;
   created_at?: string;
   updated_at?: string;
@@ -277,6 +295,120 @@ export interface CancelTenantSubscriptionParams {
   mode?: 'cancel' | 'revoke' | string;
   subscriptionId?: string;
   forceLedgerOnly?: boolean;
+}
+
+/** System GraphQL `cancelTenantSubscription` (manual / ledger). REST cancel still uses `CancelTenantSubscriptionParams`. */
+export interface CancelTenantSubscriptionGraphQLParams {
+  subscriptionId: string;
+  mode?: 'cancel' | 'revoke' | string;
+  forceLedgerOnly?: boolean;
+}
+
+/** System GraphQL `ProjectTenantInvoice`. */
+export interface ProjectTenantInvoice {
+  id?: string;
+  subscription_id?: string;
+  project_id?: string;
+  tenant_id?: string;
+  amount?: number;
+  currency?: string;
+  status?: string;
+  provider?: string;
+  billing_purpose?: string;
+  notes?: string;
+  issued_at?: string;
+  paid_at?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface ProjectPaymentProviders {
+  project_id?: string;
+  google_play?: Record<string, unknown> | null;
+  paddle?: Record<string, unknown> | null;
+  webhook_urls?: Record<string, string> | null;
+  updated_at?: string;
+}
+
+export interface ListTenantSubscribersResponse {
+  total: number;
+  subscriptions: ProjectTenantSubscription[];
+}
+
+export interface ListTenantInvoicesResponse {
+  total: number;
+  invoices: ProjectTenantInvoice[];
+}
+
+export interface CreateTenantSubscriptionParams {
+  tenantId: string;
+  planTier: string;
+  billingContactUserId?: string;
+  notes?: string;
+  issueInvoice?: boolean;
+  amount?: number;
+  currency?: string;
+  billingPurpose?: string;
+  /** Workspace partner id. Empty uses tenant.partner_id or Direct. */
+  partnerId?: string;
+}
+
+export interface UpdateTenantSubscriptionParams {
+  subscriptionId: string;
+  planTier?: string;
+  status?: string;
+  billingContactUserId?: string;
+  notes?: string;
+  /** Workspace partner id. Empty resolves to Direct on the engine. */
+  partnerId?: string;
+  /** RFC3339 UTC. Empty string clears the period end. */
+  currentPeriodEnd?: string;
+}
+
+export interface CreateTenantInvoiceParams {
+  subscriptionId: string;
+  amount: number;
+  currency?: string;
+  status?: string;
+  provider?: string;
+  notes?: string;
+  billingPurpose?: string;
+}
+
+/** Workspace-global sales partner (not per-project). */
+export interface ProPartner {
+  id?: string;
+  organization_id?: string;
+  name?: string;
+  email?: string;
+  status?: string;
+  is_default?: boolean;
+  /** Partner share of tenant subscription revenue (0–100). Direct is always 0. */
+  commission_percent?: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface SearchPartnersResponse {
+  results: ProPartner[];
+  total: number;
+}
+
+export interface CreatePartnerParams {
+  /** Required. Channel partners are keyed by this Google/contact email. */
+  email: string;
+  /** Optional. Defaults to email when Google (or the caller) omits a name. */
+  name?: string;
+  status?: string;
+  /** Optional partner share 0–100. Defaults to 0. */
+  commissionPercent?: number;
+}
+
+export interface UpdatePartnerParams {
+  name?: string;
+  email?: string;
+  status?: string;
+  commissionPercent?: number;
 }
 
 export interface ClientConfig {
@@ -337,20 +469,26 @@ export interface InjectedDBOperationInterface {
     tenantId?: string,
     q?: string
   ): Promise<UsersResponse>;
-  searchTenantsByDomain(projectId: string, domain: string): Promise<TenantByDomainResponse>;
+  searchTenantsByDomain(
+    projectId: string,
+    domain: string,
+    options?: TenantCatalogPartnerOptions
+  ): Promise<TenantByDomainResponse>;
   searchTenants(
     projectId: string,
     limit?: number,
     offset?: number,
     q?: string,
-    status?: string
+    status?: string,
+    options?: TenantCatalogPartnerOptions
   ): Promise<SearchTenantsResponse>;
   getTenant(
     projectId: string,
     tenantId: string,
-    status?: string
+    status?: string,
+    options?: TenantCatalogPartnerOptions
   ): Promise<TenantCatalogSearchRow | null>;
-  getTenants(): Promise<GetTenantsResponse>;
+  getTenants(options?: TenantCatalogPartnerOptions): Promise<GetTenantsResponse>;
   createTenant(params: CreateTenantParams): Promise<TenantCatalogSearchRow>;
   updateTenant(tenantId: string, params: UpdateTenantParams): Promise<TenantCatalogSearchRow>;
   deleteTenant(tenantId: string): Promise<boolean>;
@@ -358,6 +496,23 @@ export interface InjectedDBOperationInterface {
   myTenant(): Promise<MyTenant>;
   /** Public GraphQL: role ∩ plan ceiling for app-user JWT. */
   myEffectivePermissions(): Promise<import('./access/permissions.types').EffectivePermissionsSnapshot>;
+  createTenantSubscription(params: CreateTenantSubscriptionParams): Promise<ProjectTenantSubscription>;
+  updateTenantSubscription(params: UpdateTenantSubscriptionParams): Promise<ProjectTenantSubscription>;
+  createTenantInvoice(params: CreateTenantInvoiceParams): Promise<ProjectTenantInvoice>;
+  listTenantSubscribers(params?: {
+    payingOnly?: boolean;
+    limit?: number;
+    offset?: number;
+  }): Promise<ListTenantSubscribersResponse>;
+  listTenantInvoices(params?: {
+    subscriptionId?: string;
+    limit?: number;
+    offset?: number;
+  }): Promise<ListTenantInvoicesResponse>;
+  getProjectPaymentProviders(): Promise<ProjectPaymentProviders>;
+  searchPartners(params?: { q?: string; limit?: number; offset?: number }): Promise<SearchPartnersResponse>;
+  createPartner(params: CreatePartnerParams): Promise<ProPartner>;
+  updatePartner(id: string, params: UpdatePartnerParams): Promise<ProPartner>;
   createUser(projectId: string, params: CreateUserParams): Promise<User>;
   updateUser(userId: string, params: UpdateUserParams): Promise<User>;
   resetUserPassword(userId: string, password: string): Promise<boolean>;

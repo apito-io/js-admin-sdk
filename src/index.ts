@@ -92,6 +92,15 @@ export type {
   UploadFileParams,
   FilesListResponse,
   DeleteFilesResponse,
+  ProjectTenantSubscription,
+  ProjectTenantInvoice,
+  ProjectPaymentProviders,
+  CreateTenantSubscriptionParams,
+  UpdateTenantSubscriptionParams,
+  CreateTenantInvoiceParams,
+  CancelTenantSubscriptionGraphQLParams,
+  ListTenantSubscribersResponse,
+  ListTenantInvoicesResponse,
 } from './types';
 
 // Default export for convenience

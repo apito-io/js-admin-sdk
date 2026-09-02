@@ -226,16 +226,19 @@ export function useFormPage(options: UseFormPageOptions) {
   const fetcher = useApitoFetcher();
   const queryClient = useQueryClient();
   const isEdit = Boolean(options.id);
+  // Always call optional hooks when the option exists. Gating on `isEdit`
+  // changes hook order when the same component gains an id (e.g. exam
+  // results navigating from /results to /results/$id).
   const oneQuery =
-    isEdit && options.useOneQuery && options.oneKey
-      ? options.useOneQuery(fetcher, { id: options.id! })
+    options.useOneQuery && options.oneKey
+      ? options.useOneQuery(
+          fetcher,
+          { id: options.id ?? "" },
+          { enabled: isEdit },
+        )
       : null;
-  const legacyCreateMutation = !isEdit
-    ? options.useCreateMutation?.(fetcher)
-    : null;
-  const legacyUpdateMutation = isEdit
-    ? options.useUpdateMutation?.(fetcher)
-    : null;
+  const legacyCreateMutation = options.useCreateMutation?.(fetcher) ?? null;
+  const legacyUpdateMutation = options.useUpdateMutation?.(fetcher) ?? null;
 
   const createMutation = useMutation({
     mutationKey: ["apito-form-create", options.resource],

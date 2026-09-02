@@ -1,14 +1,10 @@
 # js-admin-sdk — Current
 
-- **Done (2026-08-12, uncommitted):** **3.12.1** ApitoProjectPayment REST —
-  `verifyProjectPayment` / `getTenantSubscription` / `cancelTenantSubscription`
-  + types + `deriveSystemAPIBaseURL`.
-- Prior: access helpers 3.12.0; plan_tier / myTenant; oauthState.
-
-## Next
-
-- Confirm commit + publish with engine Play cancel release
+- **3.14.1 tagged 2026-09-02:** `updateTenantSubscription` optional
+  `partnerId` + `currentPeriodEnd`. `partner_id` is Console / Udbhabon
+  Admin only; catalog reads skip it unless `{ includePartner: true }`.
+- Prior: 3.13.0 ApitoProjectPayment GraphQL; 3.12.1 REST Play/Paddle.
 
 ## Last Updated
 
-2026-08-12
+2026-09-02

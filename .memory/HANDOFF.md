@@ -1,10 +1,19 @@
-# Handoff — js-admin-sdk 2026-08-12
+# Handoff — js-admin-sdk 2026-09-02
 
-## Done (uncommitted)
+## Released
 
-- Project-payment REST + `ProjectTenantSubscription` types
-- Package **3.12.1**; CONTRACT; unit test for `deriveSystemAPIBaseURL`
+- Tag **v3.14.1** on `master`. Engine **v2.4.48**.
+
+## Done
+
+- `updateTenantSubscription` `partnerId` / `currentPeriodEnd`.
+- App vs admin split: do not request `partner_id` on Astro/Flutter
+  tenant lookups.
 
 ## Next
 
-- Ask before commit/publish
+- Optional npm publish (four Udbhabon apps `link:` this package).
+
+## Last Updated
+
+2026-09-02

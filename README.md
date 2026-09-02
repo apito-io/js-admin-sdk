@@ -199,6 +199,12 @@ These calls use the admin client and system GraphQL endpoint. They mirror the Go
 | `searchTenantsByDomain(projectId, domain)` | Exact domain lookup in project scope; returns `{ tenant }` (null if no match). |
 | `searchTenants(projectId, limit?, offset?, q?, status?)` | Paginated catalog search; returns `{ tenants, count }`. Optional `q` filters name, id, domain, and data. Optional `status`: `active` (default), `deleted`, or `all`. |
 | `createUser(projectId, params)` | Create a local-password user; `params`: `{ password, role?, email?, phone?, tenantId? }`. Pro SaaS: pass **`tenantId`** so the user is created under the correct catalog tenant (omit → engine may default to first active tenant). |
+| `searchPartners({ q?, limit?, offset? })` | Workspace-global sales partners (includes default Direct). **Enterprise / super admin.** |
+| `createPartner({ email, name?, status?, commissionPercent? })` | Channel partner row. **email** required. **name** defaults to email. Optional `commissionPercent` 0–100. Engine rejects the reserved name `Direct`. |
+| `updatePartner(id, { name?, status?, email?, commissionPercent? })` | Cannot rename the default Direct partner. `commissionPercent` alone is allowed. |
+| `createTenantSubscription(params)` | Manual/cash entitlement: `{ tenantId, planTier, partnerId?, issueInvoice?, amount?, currency?, … }`. Empty `partnerId` uses tenant partner or Direct. Engine sets catalog `plan_tier`. |
+| `listTenantInvoices({ subscriptionId?, limit?, offset? })` | Project-scoped invoice history (same rows Console monetization shows). |
+| `cancelTenantSubscription({ subscriptionId })` | GraphQL cancel (manual). Pass `{ projectId, tenantId }` for REST Play/Paddle cancel. |
 | `loginUser(params)` | General: `{ projectId, password, email? or phone? }`. SaaS per-tenant DB: **`tenantId` required**. Google OAuth: **`googleOAuthState(projectId)`** then **`loginUser({ projectId, authMethod: 'google', code, state })`**. Native mobile: **`loginUser({ projectId, authMethod: 'google_id_token', idToken })`**. Google login may link a verified email to an existing user instead of creating a duplicate. |
 | `googleOAuthState(projectId)` | Returns **`{ state }`** for the Google authorize URL. |
 | `updateUser(userId, params)` | Mutate `email`, `phone`, `role`, and/or **`tenantId`** (pro SaaS scope). Engine rejects duplicate email/phone project-wide when applicable. |

@@ -50,8 +50,17 @@ All SDKs expose:
 - **ApitoProjectPayment** (engine origin REST, app-user Bearer — not `/secured` files):
   - `verifyProjectPayment` → `POST /system/v1/project-payment/projects/:projectId/providers/:provider/verify`
   - `getTenantSubscription` → `GET .../tenants/:tenantId/subscription`
-  - `cancelTenantSubscription` → `POST .../subscriptions/cancel` (`mode`: `cancel` | `revoke`)
-  - Type: `ProjectTenantSubscription` (`plan_tier`, `status`, `current_period_end`, `cancel_at`, `manage_url`, …)
+  - `cancelTenantSubscription({ projectId, tenantId, ... })` → REST `POST .../subscriptions/cancel` (`mode`: `cancel` | `revoke`)
+- **ApitoProjectPayment GraphQL** (system GraphQL, same client as tenants/users):
+  - `createTenantSubscription` / `updateTenantSubscription` / `createTenantInvoice`
+  - `listTenantSubscribers` / `listTenantInvoices` / `getProjectPaymentProviders`
+  - `cancelTenantSubscription({ subscriptionId })` → GraphQL (manual/cash). REST when `projectId` is set.
+  - Types: `ProjectTenantSubscription`, `ProjectTenantInvoice`
+- **Workspace partners** (system GraphQL, workspace-scoped — not per-project):
+  - `searchPartners` / `createPartner` / `updatePartner` — **Enterprise / super admin**
+  - Optional `commissionPercent` (0–100). Direct is always 0.
+  - Optional `partnerId` on `createTenant`, `updateTenant`, `createTenantSubscription` (every plan; empty → Direct)
+  - Types: `ProPartner`, `SearchPartnersResponse`
 
 Pro SaaS user ops accept optional **`tenantId`** / GraphQL `tenant_id` on `searchUsers`, `createUser`, and `updateUser` (in addition to `loginUser`). Omit on general projects. `searchUsers` also accepts optional **`q`** (email, username, phone, id contains).
 

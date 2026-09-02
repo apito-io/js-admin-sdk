@@ -1,3 +1,26 @@
+## 3.14.1 — 2026-09-02
+
+- **`updateTenantSubscription`** accepts optional `partnerId` and `currentPeriodEnd` (empty string clears period end).
+- **`partner_id` is Console / Udbhabon Admin only.** Client apps (Astro, Flutter) omit it.
+- Catalog reads (`searchTenantsByDomain` / `searchTenants` / `getTenants`) skip `partner_id` unless `{ includePartner: true }`.
+- `createTenant` / `updateTenant` put `partner_id` in the GraphQL document only when `partnerId` is passed.
+
+## 3.14.0 — 2026-09-01
+
+- **Workspace partners** — `searchPartners` / `createPartner` / `updatePartner` (system GraphQL, no `project_id`). Channel partners require **email**; **name** defaults to email when omitted (Google OIDC).
+- **`commission_percent`** — optional partner share 0–100 (`createPartner` / `updatePartner`). Direct is always 0. Catalog APIs require **Enterprise** or **super admin**; `createTenantSubscription` still defaults to Direct for every plan.
+- **`partner_id`** on tenant catalog rows and `createTenant` / `updateTenant` / `createTenantSubscription`. Empty partner defaults to engine **Direct**.
+- `updateTenant` may send `partnerId` alone.
+
+## 3.13.0 — 2026-09-01
+
+- **ApitoProjectPayment GraphQL** — `createTenantSubscription`, `updateTenantSubscription`,
+  `createTenantInvoice`, `listTenantSubscribers`, `listTenantInvoices`,
+  `getProjectPaymentProviders` (parity with Console monetization).
+- **`cancelTenantSubscription`** — GraphQL when only `subscriptionId` is passed (manual/cash
+  ledger); REST Play/Paddle path unchanged when `projectId` + `tenantId` are set.
+- **`searchUsers`** — selection includes `username`.
+
 ## 3.12.1 — 2026-08-11 (Unreleased)
 
 - **ApitoProjectPayment REST** — `verifyProjectPayment`, `getTenantSubscription`,

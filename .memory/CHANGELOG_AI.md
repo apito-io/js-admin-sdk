@@ -4,6 +4,25 @@ Not git history — the *reasoning* behind changes. Newest on top.
 Format per entry: date, **Changed**, **Why**, **Affected**.
 
 ---
+## 2026-09-02 — updateTenantSubscription partner + period end
+
+- **Changed:** `UpdateTenantSubscriptionParams.partnerId` /
+  `currentPeriodEnd` on the GraphQL mutation. Empty period end clears.
+- **Why:** Console Subscribers Edit and dealers need ledger partner
+  reassignment without create+invoice.
+- **Affected:** `src/client.ts`, `src/types.ts`, `src/__tests__/client.test.ts`,
+  package CHANGELOG **3.14.1**. Tagged **v3.14.1**.
+
+## 2026-09-01 — v3.13.0 ApitoProjectPayment GraphQL
+
+- **Changed:** GraphQL `createTenantSubscription`, `updateTenantSubscription`,
+  `createTenantInvoice`, `listTenantSubscribers`, `listTenantInvoices`,
+  `getProjectPaymentProviders`; GraphQL cancel when only `subscriptionId`.
+- **Why:** udbahabon-admin (and Console) cash/manual billing. REST cancel is
+  Play/Paddle; dealers need the ledger mutations the engine already has.
+- **Affected:** `src/client.ts`, `src/types.ts`, tests, CONTRACT/CHANGELOG.
+  Ask before commit.
+
 ## 2026-08-12 — v3.12.1 ApitoProjectPayment REST
 
 - **Changed:** `verifyProjectPayment` / `getTenantSubscription` /

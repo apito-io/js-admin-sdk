@@ -229,12 +229,239 @@ describe('ApitoClient', () => {
   describe('updateTenant planTier', () => {
     it('rejects planTier client-side', async () => {
       const client = new ApitoClient({
-        endpoint: 'http://localhost/system/graphql',
+        baseURL: 'http://localhost/system/graphql',
         apiKey: 'test',
-      } as any);
+      });
       await expect(
         client.updateTenant('tid', { planTier: 'paid' } as any),
       ).rejects.toBeInstanceOf(ValidationError);
+    });
+  });
+
+  describe('workspace partners', () => {
+    it('createPartner requires email and defaults name from email', async () => {
+      const client = new ApitoClient({
+        baseURL: BaseURL,
+        apiKey: 'test',
+      });
+      await expect(client.createPartner({ email: '', name: 'Acme' })).rejects.toBeInstanceOf(
+        ValidationError,
+      );
+      const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
+        data: { createPartner: { id: 'p1', name: 'fahim@gmail.com', email: 'fahim@gmail.com' } },
+      } as any);
+      const row = await client.createPartner({ email: 'fahim@gmail.com' });
+      expect(row.name).toBe('fahim@gmail.com');
+      expect(spy.mock.calls[0][1]).toMatchObject({
+        email: 'fahim@gmail.com',
+        name: 'fahim@gmail.com',
+      });
+      spy.mockRestore();
+    });
+
+    it('updatePartner can send commission_percent alone', async () => {
+      const client = new ApitoClient({
+        baseURL: BaseURL,
+        apiKey: 'test',
+      });
+      const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
+        data: { updatePartner: { id: 'p1', commission_percent: 20 } },
+      } as any);
+      const row = await client.updatePartner('p1', { commissionPercent: 20 });
+      expect(row.commission_percent).toBe(20);
+      expect(spy.mock.calls[0][1]).toMatchObject({
+        id: 'p1',
+        commission_percent: 20,
+      });
+      spy.mockRestore();
+    });
+
+    it('searchPartners maps GraphQL payload', async () => {
+      const client = new ApitoClient({
+        baseURL: BaseURL,
+        apiKey: 'test',
+      });
+      const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
+        data: {
+          searchPartners: {
+            total: 1,
+            results: [{ id: 'direct-workspace', name: 'Direct', is_default: true }],
+          },
+        },
+      } as any);
+      const row = await client.searchPartners({ limit: 50 });
+      expect(row.total).toBe(1);
+      expect(row.results[0].id).toBe('direct-workspace');
+      expect(spy.mock.calls[0][1]).toMatchObject({ limit: 50 });
+      spy.mockRestore();
+    });
+
+    it('createTenantSubscription passes partner_id', async () => {
+      const client = new ApitoClient({
+        baseURL: BaseURL,
+        apiKey: 'test',
+      });
+      const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
+        data: { createTenantSubscription: { id: 'sub_1', partner_id: 'p1' } },
+      } as any);
+      const row = await client.createTenantSubscription({
+        tenantId: 't1',
+        planTier: 'paid',
+        partnerId: 'p1',
+      });
+      expect(row.partner_id).toBe('p1');
+      expect(spy.mock.calls[0][1]).toMatchObject({ partner_id: 'p1' });
+      spy.mockRestore();
+    });
+
+    it('updateTenantSubscription passes partner_id and current_period_end', async () => {
+      const client = new ApitoClient({
+        baseURL: BaseURL,
+        apiKey: 'test',
+      });
+      const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
+        data: {
+          updateTenantSubscription: {
+            id: 'sub_1',
+            partner_id: 'p1',
+            current_period_end: '2026-10-01T00:00:00Z',
+          },
+        },
+      } as any);
+      const row = await client.updateTenantSubscription({
+        subscriptionId: 'sub_1',
+        partnerId: 'p1',
+        currentPeriodEnd: '2026-10-01T00:00:00Z',
+      });
+      expect(row.partner_id).toBe('p1');
+      expect(spy.mock.calls[0][1]).toMatchObject({
+        subscription_id: 'sub_1',
+        partner_id: 'p1',
+        current_period_end: '2026-10-01T00:00:00Z',
+      });
+      expect(String(spy.mock.calls[0][0])).toContain('current_period_end');
+      spy.mockRestore();
+    });
+
+    it('updateTenant allows partnerId alone', async () => {
+      const client = new ApitoClient({
+        baseURL: BaseURL,
+        apiKey: 'test',
+      });
+      const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
+        data: { updateTenant: { id: 't1', partner_id: 'p1' } },
+      } as any);
+      const row = await client.updateTenant('t1', { partnerId: 'p1' });
+      expect(row.partner_id).toBe('p1');
+      expect(spy.mock.calls[0][1]).toMatchObject({ tenant_id: 't1', partner_id: 'p1' });
+      expect(String(spy.mock.calls[0][0])).toContain('partner_id');
+      spy.mockRestore();
+    });
+
+    it('client app tenant lookup omits partner_id unless includePartner', async () => {
+      const client = new ApitoClient({
+        baseURL: BaseURL,
+        apiKey: 'test',
+      });
+      const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
+        data: { searchTenantsByDomain: { tenant: { id: 't1', name: 'HGT', domain: 'hgt' } } },
+      } as any);
+      await client.searchTenantsByDomain('proj', 'hgt');
+      expect(String(spy.mock.calls[0][0])).not.toContain('partner_id');
+      await client.searchTenantsByDomain('proj', 'hgt', { includePartner: true });
+      expect(String(spy.mock.calls[1][0])).toContain('partner_id');
+      spy.mockRestore();
+    });
+
+    it('updateTenant without partnerId omits partner_id from the document', async () => {
+      const client = new ApitoClient({
+        baseURL: BaseURL,
+        apiKey: 'test',
+      });
+      const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
+        data: { updateTenant: { id: 't1', name: 'HGT' } },
+      } as any);
+      await client.updateTenant('t1', { data: '{}' });
+      expect(String(spy.mock.calls[0][0])).not.toContain('partner_id');
+      expect(spy.mock.calls[0][1]).not.toHaveProperty('partner_id');
+      spy.mockRestore();
+    });
+  });
+
+  describe('ApitoProjectPayment GraphQL', () => {
+    it('createTenantSubscription requires tenantId and planTier', async () => {
+      const client = new ApitoClient({
+        baseURL: BaseURL,
+        apiKey: 'test',
+      });
+      await expect(client.createTenantSubscription({ tenantId: '', planTier: 'paid' })).rejects.toBeInstanceOf(
+        ValidationError,
+      );
+      await expect(client.createTenantSubscription({ tenantId: 't1', planTier: '' })).rejects.toBeInstanceOf(
+        ValidationError,
+      );
+    });
+
+    it('createTenantSubscription maps GraphQL payload', async () => {
+      const client = new ApitoClient({
+        baseURL: BaseURL,
+        apiKey: 'test',
+      });
+      const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
+        data: { createTenantSubscription: { id: 'sub_1', plan_tier: 'paid', tenant_id: 't1' } },
+      } as any);
+      const row = await client.createTenantSubscription({
+        tenantId: 't1',
+        planTier: 'paid',
+        issueInvoice: true,
+        amount: 799,
+        currency: 'BDT',
+      });
+      expect(row.id).toBe('sub_1');
+      expect(spy.mock.calls[0][1]).toMatchObject({
+        tenant_id: 't1',
+        plan_tier: 'paid',
+        issue_invoice: true,
+        amount: 799,
+        currency: 'BDT',
+      });
+      spy.mockRestore();
+    });
+
+    it('cancelTenantSubscription without projectId uses GraphQL', async () => {
+      const client = new ApitoClient({
+        baseURL: BaseURL,
+        apiKey: 'test',
+      });
+      const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
+        data: { cancelTenantSubscription: { id: 'sub_1', status: 'canceled' } },
+      } as any);
+      const row = await client.cancelTenantSubscription({ subscriptionId: 'sub_1', mode: 'cancel' });
+      expect(row.id).toBe('sub_1');
+      expect(spy.mock.calls[0][1]).toMatchObject({
+        subscription_id: 'sub_1',
+        mode: 'cancel',
+      });
+      spy.mockRestore();
+    });
+
+    it('listTenantInvoices maps list payload', async () => {
+      const client = new ApitoClient({
+        baseURL: BaseURL,
+        apiKey: 'test',
+      });
+      const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
+        data: {
+          listTenantInvoices: {
+            total: 1,
+            invoices: [{ id: 'inv_1', amount: 799, currency: 'BDT' }],
+          },
+        },
+      } as any);
+      const out = await client.listTenantInvoices({ subscriptionId: 'sub_1' });
+      expect(out.total).toBe(1);
+      expect(out.invoices[0].id).toBe('inv_1');
+      spy.mockRestore();
     });
   });
 

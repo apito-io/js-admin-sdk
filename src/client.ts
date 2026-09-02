@@ -17,6 +17,7 @@ import {
   TenantByDomainResponse,
   TenantCatalogSearchRow,
   TenantCatalogListItem,
+  TenantCatalogPartnerOptions,
   GetTenantsResponse,
   SearchTenantsResponse,
   CreateTenantParams,
@@ -31,8 +32,20 @@ import {
   UploadFileParams,
   DeleteFilesResponse,
   ProjectTenantSubscription,
+  ProjectTenantInvoice,
+  ProjectPaymentProviders,
+  ListTenantSubscribersResponse,
+  ListTenantInvoicesResponse,
+  CreateTenantSubscriptionParams,
+  UpdateTenantSubscriptionParams,
+  CreateTenantInvoiceParams,
   VerifyProjectPaymentParams,
   CancelTenantSubscriptionParams,
+  CancelTenantSubscriptionGraphQLParams,
+  ProPartner,
+  SearchPartnersResponse,
+  CreatePartnerParams,
+  UpdatePartnerParams,
 } from './types';
 import { FILES_DELETE_PATH, FILES_LIST_PATH, FILES_UPLOAD_PATH } from './filesPaths';
 import { MY_EFFECTIVE_PERMISSIONS_QUERY } from './access/permissions.types';
@@ -425,6 +438,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
             id
             email
             phone
+            username
             role
             provider
             tenant_id
@@ -460,8 +474,14 @@ export class ApitoClient implements InjectedDBOperationInterface {
 
   /**
    * Resolve the single SaaS catalog tenant for an exact domain match in the project (`tenant` null if none).
+   * Client apps omit `includePartner`. Console / Udbhabon Admin pass `{ includePartner: true }`.
    */
-  async searchTenantsByDomain(projectId: string, domain: string): Promise<TenantByDomainResponse> {
+  async searchTenantsByDomain(
+    projectId: string,
+    domain: string,
+    options?: TenantCatalogPartnerOptions
+  ): Promise<TenantByDomainResponse> {
+    const includePartner = Boolean(options?.includePartner);
     const query = `
       query SearchTenantsByDomain($project_id: String!, $domain: String!) {
         searchTenantsByDomain(project_id: $project_id, domain: $domain) {
@@ -471,6 +491,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
             status
             domain
             plan_tier
+            ${includePartner ? 'partner_id' : ''}
             data
           }
         }
@@ -492,14 +513,17 @@ export class ApitoClient implements InjectedDBOperationInterface {
   /**
    * Search SaaS catalog tenants with optional text filter, status filter, and pagination (system GraphQL only).
    * status: active (default), deleted, or all.
+   * Client apps omit `includePartner`. Console / Udbhabon Admin pass `{ includePartner: true }`.
    */
   async searchTenants(
     projectId: string,
     limit?: number,
     offset?: number,
     q?: string,
-    status?: string
+    status?: string,
+    options?: TenantCatalogPartnerOptions
   ): Promise<SearchTenantsResponse> {
+    const includePartner = Boolean(options?.includePartner);
     const query = `
       query SearchTenants($project_id: String!, $limit: Int, $offset: Int, $q: String, $status: String) {
         searchTenants(project_id: $project_id, limit: $limit, offset: $offset, q: $q, status: $status) {
@@ -510,6 +534,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
             status
             domain
             plan_tier
+            ${includePartner ? 'partner_id' : ''}
             icon
             data
             created_at
@@ -544,7 +569,8 @@ export class ApitoClient implements InjectedDBOperationInterface {
   async getTenant(
     projectId: string,
     tenantId: string,
-    status?: string
+    status?: string,
+    options?: TenantCatalogPartnerOptions
   ): Promise<TenantCatalogSearchRow | null> {
     const pid = (projectId ?? '').trim();
     const tid = (tenantId ?? '').trim();
@@ -554,7 +580,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (!tid) {
       throw new ValidationError('tenantId is required');
     }
-    const { tenants } = await this.searchTenants(pid, 5, 0, tid, status ?? 'active');
+    const { tenants } = await this.searchTenants(pid, 5, 0, tid, status ?? 'active', options);
     if (!Array.isArray(tenants)) {
       return null;
     }
@@ -562,7 +588,8 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /** List SaaS catalog tenants for the authenticated project (system GraphQL only). */
-  async getTenants(): Promise<GetTenantsResponse> {
+  async getTenants(options?: TenantCatalogPartnerOptions): Promise<GetTenantsResponse> {
+    const includePartner = Boolean(options?.includePartner);
     const query = `
       query GetTenants {
         getTenants {
@@ -571,6 +598,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
             name
             domain
             plan_tier
+            ${includePartner ? 'partner_id' : ''}
             icon
             data
           }
@@ -592,7 +620,23 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (!name) {
       throw new ValidationError('name is required');
     }
-    const query = `
+    const partnerId = (params.partnerId ?? '').trim();
+    const includePartner = Boolean(partnerId);
+    const query = includePartner
+      ? `
+      mutation CreateTenant($name: String!, $data: String, $domain: String, $plan_tier: String, $partner_id: String) {
+        createTenant(name: $name, data: $data, domain: $domain, plan_tier: $plan_tier, partner_id: $partner_id) {
+          id
+          name
+          status
+          domain
+          plan_tier
+          partner_id
+          data
+        }
+      }
+    `
+      : `
       mutation CreateTenant($name: String!, $data: String, $domain: String, $plan_tier: String) {
         createTenant(name: $name, data: $data, domain: $domain, plan_tier: $plan_tier) {
           id
@@ -611,6 +655,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (domain) variables.domain = domain;
     const planTier = (params.planTier ?? '').trim();
     if (planTier) variables.plan_tier = planTier;
+    if (includePartner) variables.partner_id = partnerId;
     const response = await this.executeGraphQL(query, variables);
     const row = response.data?.createTenant as TenantCatalogSearchRow | undefined;
     if (!row?.id) {
@@ -630,10 +675,25 @@ export class ApitoClient implements InjectedDBOperationInterface {
         'planTier cannot be set via updateTenant; use createTenantSubscription / cancelTenantSubscription or Play verify',
       );
     }
-    if (params.name === undefined && params.data === undefined && params.domain === undefined) {
+    if (params.name === undefined && params.data === undefined && params.domain === undefined && params.partnerId === undefined) {
       throw new ValidationError('at least one field must be provided');
     }
-    const query = `
+    const includePartner = params.partnerId !== undefined;
+    const query = includePartner
+      ? `
+      mutation UpdateTenant($tenant_id: String!, $name: String, $data: String, $domain: String, $partner_id: String) {
+        updateTenant(tenant_id: $tenant_id, name: $name, data: $data, domain: $domain, partner_id: $partner_id) {
+          id
+          name
+          status
+          domain
+          plan_tier
+          partner_id
+          data
+        }
+      }
+    `
+      : `
       mutation UpdateTenant($tenant_id: String!, $name: String, $data: String, $domain: String) {
         updateTenant(tenant_id: $tenant_id, name: $name, data: $data, domain: $domain) {
           id
@@ -649,6 +709,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
     if (params.name !== undefined) variables.name = params.name;
     if (params.data !== undefined) variables.data = params.data;
     if (params.domain !== undefined) variables.domain = params.domain;
+    if (includePartner) variables.partner_id = params.partnerId;
     const response = await this.executeGraphQL(query, variables);
     const row = response.data?.updateTenant as TenantCatalogSearchRow | undefined;
     if (!row?.id) {
@@ -1300,6 +1361,410 @@ export class ApitoClient implements InjectedDBOperationInterface {
     }
   }
 
+  private static readonly TENANT_SUBSCRIPTION_FIELDS = `
+    id project_id tenant_id plan_tier provider status
+    billing_contact_user_id external_subscription_id product_id
+    current_period_start current_period_end cancel_at
+    created_by notes partner_id manage_url created_at updated_at
+  `;
+
+  private static readonly TENANT_INVOICE_FIELDS = `
+    id subscription_id project_id tenant_id amount currency status
+    provider billing_purpose notes issued_at paid_at created_at
+  `;
+
+  /** Manual / cash tenant subscription (system GraphQL). Sets `plan_tier` on the catalog tenant. */
+  async createTenantSubscription(
+    params: CreateTenantSubscriptionParams
+  ): Promise<ProjectTenantSubscription> {
+    const tenantId = (params.tenantId ?? '').trim();
+    const planTier = (params.planTier ?? '').trim();
+    if (!tenantId) {
+      throw new ValidationError('tenantId is required');
+    }
+    if (!planTier) {
+      throw new ValidationError('planTier is required');
+    }
+    const query = `
+      mutation CreateTenantSubscription(
+        $tenant_id: String!
+        $plan_tier: String!
+        $billing_contact_user_id: String
+        $notes: String
+        $issue_invoice: Boolean
+        $amount: Float
+        $currency: String
+        $billing_purpose: String
+        $partner_id: String
+      ) {
+        createTenantSubscription(
+          tenant_id: $tenant_id
+          plan_tier: $plan_tier
+          billing_contact_user_id: $billing_contact_user_id
+          notes: $notes
+          issue_invoice: $issue_invoice
+          amount: $amount
+          currency: $currency
+          billing_purpose: $billing_purpose
+          partner_id: $partner_id
+        ) {
+          ${ApitoClient.TENANT_SUBSCRIPTION_FIELDS}
+        }
+      }
+    `;
+    const variables: Record<string, unknown> = {
+      tenant_id: tenantId,
+      plan_tier: planTier,
+    };
+    const bc = (params.billingContactUserId ?? '').trim();
+    if (bc) variables.billing_contact_user_id = bc;
+    const notes = (params.notes ?? '').trim();
+    if (notes) variables.notes = notes;
+    if (params.issueInvoice !== undefined) variables.issue_invoice = params.issueInvoice;
+    if (params.amount !== undefined) variables.amount = params.amount;
+    const currency = (params.currency ?? '').trim();
+    if (currency) variables.currency = currency;
+    const purpose = (params.billingPurpose ?? '').trim();
+    if (purpose) variables.billing_purpose = purpose;
+    const partnerId = (params.partnerId ?? '').trim();
+    if (partnerId) variables.partner_id = partnerId;
+    const response = await this.executeGraphQL(query, variables, { tenantId });
+    const row = response.data?.createTenantSubscription as ProjectTenantSubscription | undefined;
+    if (!row?.id) {
+      throw new ValidationError('Invalid response format for createTenantSubscription');
+    }
+    return row;
+  }
+
+  async updateTenantSubscription(
+    params: UpdateTenantSubscriptionParams
+  ): Promise<ProjectTenantSubscription> {
+    const subscriptionId = (params.subscriptionId ?? '').trim();
+    if (!subscriptionId) {
+      throw new ValidationError('subscriptionId is required');
+    }
+    const query = `
+      mutation UpdateTenantSubscription(
+        $subscription_id: String!
+        $plan_tier: String
+        $status: String
+        $billing_contact_user_id: String
+        $notes: String
+        $partner_id: String
+        $current_period_end: String
+      ) {
+        updateTenantSubscription(
+          subscription_id: $subscription_id
+          plan_tier: $plan_tier
+          status: $status
+          billing_contact_user_id: $billing_contact_user_id
+          notes: $notes
+          partner_id: $partner_id
+          current_period_end: $current_period_end
+        ) {
+          ${ApitoClient.TENANT_SUBSCRIPTION_FIELDS}
+        }
+      }
+    `;
+    const variables: Record<string, unknown> = { subscription_id: subscriptionId };
+    const planTier = (params.planTier ?? '').trim();
+    if (planTier) variables.plan_tier = planTier;
+    const status = (params.status ?? '').trim();
+    if (status) variables.status = status;
+    const bc = (params.billingContactUserId ?? '').trim();
+    if (bc) variables.billing_contact_user_id = bc;
+    if (params.notes !== undefined) variables.notes = params.notes;
+    if (params.partnerId !== undefined) {
+      variables.partner_id = params.partnerId.trim();
+    }
+    if (params.currentPeriodEnd !== undefined) {
+      variables.current_period_end = params.currentPeriodEnd.trim();
+    }
+    const response = await this.executeGraphQL(query, variables);
+    const row = response.data?.updateTenantSubscription as ProjectTenantSubscription | undefined;
+    if (!row?.id) {
+      throw new ValidationError('Invalid response format for updateTenantSubscription');
+    }
+    return row;
+  }
+
+  /**
+   * Cancel a tenant SaaS subscription.
+   * - REST (Play/Paddle): pass `projectId` + `tenantId`.
+   * - GraphQL (manual/cash ledger): pass only `subscriptionId`.
+   */
+  async cancelTenantSubscription(
+    params: CancelTenantSubscriptionParams | CancelTenantSubscriptionGraphQLParams
+  ): Promise<ProjectTenantSubscription> {
+    if ('projectId' in params && (params.projectId ?? '').trim()) {
+      return this.cancelTenantSubscriptionRest(params);
+    }
+    const gql = params as CancelTenantSubscriptionGraphQLParams;
+    const subscriptionId = (gql.subscriptionId ?? '').trim();
+    if (!subscriptionId) {
+      throw new ValidationError('subscriptionId is required');
+    }
+    const query = `
+      mutation CancelTenantSubscription(
+        $subscription_id: String!
+        $mode: String
+        $force_ledger_only: Boolean
+      ) {
+        cancelTenantSubscription(
+          subscription_id: $subscription_id
+          mode: $mode
+          force_ledger_only: $force_ledger_only
+        ) {
+          ${ApitoClient.TENANT_SUBSCRIPTION_FIELDS}
+        }
+      }
+    `;
+    const variables: Record<string, unknown> = { subscription_id: subscriptionId };
+    const mode = (gql.mode ?? '').trim();
+    if (mode) variables.mode = mode;
+    if (gql.forceLedgerOnly !== undefined) variables.force_ledger_only = gql.forceLedgerOnly;
+    const response = await this.executeGraphQL(query, variables);
+    const row = response.data?.cancelTenantSubscription as ProjectTenantSubscription | undefined;
+    if (!row?.id) {
+      throw new ValidationError('Invalid response format for cancelTenantSubscription');
+    }
+    return row;
+  }
+
+  async createTenantInvoice(params: CreateTenantInvoiceParams): Promise<ProjectTenantInvoice> {
+    const subscriptionId = (params.subscriptionId ?? '').trim();
+    if (!subscriptionId) {
+      throw new ValidationError('subscriptionId is required');
+    }
+    if (params.amount == null || Number.isNaN(params.amount)) {
+      throw new ValidationError('amount is required');
+    }
+    const query = `
+      mutation CreateTenantInvoice(
+        $subscription_id: String!
+        $amount: Float!
+        $currency: String
+        $status: String
+        $provider: String
+        $notes: String
+        $billing_purpose: String
+      ) {
+        createTenantInvoice(
+          subscription_id: $subscription_id
+          amount: $amount
+          currency: $currency
+          status: $status
+          provider: $provider
+          notes: $notes
+          billing_purpose: $billing_purpose
+        ) {
+          ${ApitoClient.TENANT_INVOICE_FIELDS}
+        }
+      }
+    `;
+    const variables: Record<string, unknown> = {
+      subscription_id: subscriptionId,
+      amount: params.amount,
+    };
+    const currency = (params.currency ?? '').trim();
+    if (currency) variables.currency = currency;
+    const status = (params.status ?? '').trim();
+    if (status) variables.status = status;
+    const provider = (params.provider ?? '').trim();
+    if (provider) variables.provider = provider;
+    const notes = (params.notes ?? '').trim();
+    if (notes) variables.notes = notes;
+    const purpose = (params.billingPurpose ?? '').trim();
+    if (purpose) variables.billing_purpose = purpose;
+    const response = await this.executeGraphQL(query, variables);
+    const row = response.data?.createTenantInvoice as ProjectTenantInvoice | undefined;
+    if (!row?.id) {
+      throw new ValidationError('Invalid response format for createTenantInvoice');
+    }
+    return row;
+  }
+
+  async listTenantSubscribers(params?: {
+    payingOnly?: boolean;
+    limit?: number;
+    offset?: number;
+  }): Promise<ListTenantSubscribersResponse> {
+    const query = `
+      query ListTenantSubscribers($paying_only: Boolean, $limit: Int, $offset: Int) {
+        listTenantSubscribers(paying_only: $paying_only, limit: $limit, offset: $offset) {
+          total
+          subscriptions {
+            ${ApitoClient.TENANT_SUBSCRIPTION_FIELDS}
+          }
+        }
+      }
+    `;
+    const variables: Record<string, unknown> = {};
+    if (params?.payingOnly !== undefined) variables.paying_only = params.payingOnly;
+    if (params?.limit !== undefined) variables.limit = params.limit;
+    if (params?.offset !== undefined) variables.offset = params.offset;
+    const response = await this.executeGraphQL(query, variables);
+    const raw = response.data?.listTenantSubscribers as
+      | { total?: number; subscriptions?: ProjectTenantSubscription[] }
+      | undefined;
+    if (!raw) {
+      throw new ValidationError('Invalid response format for listTenantSubscribers');
+    }
+    return {
+      total: typeof raw.total === 'number' ? raw.total : 0,
+      subscriptions: raw.subscriptions ?? [],
+    };
+  }
+
+  async listTenantInvoices(params?: {
+    subscriptionId?: string;
+    limit?: number;
+    offset?: number;
+  }): Promise<ListTenantInvoicesResponse> {
+    const query = `
+      query ListTenantInvoices($subscription_id: String, $limit: Int, $offset: Int) {
+        listTenantInvoices(subscription_id: $subscription_id, limit: $limit, offset: $offset) {
+          total
+          invoices {
+            ${ApitoClient.TENANT_INVOICE_FIELDS}
+          }
+        }
+      }
+    `;
+    const variables: Record<string, unknown> = {};
+    const sid = (params?.subscriptionId ?? '').trim();
+    if (sid) variables.subscription_id = sid;
+    if (params?.limit !== undefined) variables.limit = params.limit;
+    if (params?.offset !== undefined) variables.offset = params.offset;
+    const response = await this.executeGraphQL(query, variables);
+    const raw = response.data?.listTenantInvoices as
+      | { total?: number; invoices?: ProjectTenantInvoice[] }
+      | undefined;
+    if (!raw) {
+      throw new ValidationError('Invalid response format for listTenantInvoices');
+    }
+    return {
+      total: typeof raw.total === 'number' ? raw.total : 0,
+      invoices: raw.invoices ?? [],
+    };
+  }
+
+  async getProjectPaymentProviders(): Promise<ProjectPaymentProviders> {
+    const query = `
+      query GetProjectPaymentProviders {
+        getProjectPaymentProviders {
+          project_id
+          google_play
+          paddle
+          webhook_urls
+          updated_at
+        }
+      }
+    `;
+    const response = await this.executeGraphQL(query, {});
+    const raw = response.data?.getProjectPaymentProviders as ProjectPaymentProviders | undefined;
+    if (!raw) {
+      throw new ValidationError('Invalid response format for getProjectPaymentProviders');
+    }
+    return raw;
+  }
+
+  private static readonly PARTNER_FIELDS = `
+    id organization_id name email status is_default commission_percent created_at updated_at
+  `;
+
+  /** Workspace-global partner catalog (not per-project). */
+  async searchPartners(params?: {
+    q?: string;
+    limit?: number;
+    offset?: number;
+  }): Promise<SearchPartnersResponse> {
+    const query = `
+      query SearchPartners($q: String, $limit: Int, $offset: Int) {
+        searchPartners(q: $q, limit: $limit, offset: $offset) {
+          total
+          results { ${ApitoClient.PARTNER_FIELDS} }
+        }
+      }
+    `;
+    const variables: Record<string, unknown> = {};
+    const q = (params?.q ?? '').trim();
+    if (q) variables.q = q;
+    if (params?.limit !== undefined) variables.limit = params.limit;
+    if (params?.offset !== undefined) variables.offset = params.offset;
+    const response = await this.executeGraphQL(query, variables);
+    const raw = response.data?.searchPartners as SearchPartnersResponse | undefined;
+    if (!raw) {
+      throw new ValidationError('Invalid response format for searchPartners');
+    }
+    return {
+      results: (raw.results ?? []) as ProPartner[],
+      total: typeof raw.total === 'number' ? raw.total : 0,
+    };
+  }
+
+  async createPartner(params: CreatePartnerParams): Promise<ProPartner> {
+    const email = (params.email ?? '').trim().toLowerCase();
+    if (!email) {
+      throw new ValidationError('email is required');
+    }
+    const name = (params.name ?? '').trim() || email;
+    const query = `
+      mutation CreatePartner($name: String, $email: String!, $status: String, $commission_percent: Int) {
+        createPartner(name: $name, email: $email, status: $status, commission_percent: $commission_percent) {
+          ${ApitoClient.PARTNER_FIELDS}
+        }
+      }
+    `;
+    const variables: Record<string, unknown> = { name, email };
+    const status = (params.status ?? '').trim();
+    if (status) variables.status = status;
+    if (params.commissionPercent !== undefined) {
+      variables.commission_percent = params.commissionPercent;
+    }
+    const response = await this.executeGraphQL(query, variables);
+    const row = response.data?.createPartner as ProPartner | undefined;
+    if (!row?.id) {
+      throw new ValidationError('Invalid response format for createPartner');
+    }
+    return row;
+  }
+
+  async updatePartner(id: string, params: UpdatePartnerParams): Promise<ProPartner> {
+    const pid = (id ?? '').trim();
+    if (!pid) {
+      throw new ValidationError('id is required');
+    }
+    if (
+      params.name === undefined &&
+      params.email === undefined &&
+      params.status === undefined &&
+      params.commissionPercent === undefined
+    ) {
+      throw new ValidationError('at least one field must be provided');
+    }
+    const query = `
+      mutation UpdatePartner($id: String!, $name: String, $email: String, $status: String, $commission_percent: Int) {
+        updatePartner(id: $id, name: $name, email: $email, status: $status, commission_percent: $commission_percent) {
+          ${ApitoClient.PARTNER_FIELDS}
+        }
+      }
+    `;
+    const variables: Record<string, unknown> = { id: pid };
+    if (params.name !== undefined) variables.name = params.name;
+    if (params.email !== undefined) variables.email = params.email;
+    if (params.status !== undefined) variables.status = params.status;
+    if (params.commissionPercent !== undefined) {
+      variables.commission_percent = params.commissionPercent;
+    }
+    const response = await this.executeGraphQL(query, variables);
+    const row = response.data?.updatePartner as ProPartner | undefined;
+    if (!row?.id) {
+      throw new ValidationError('Invalid response format for updatePartner');
+    }
+    return row;
+  }
+
   /** Verify a store purchase and upsert the tenant subscription ledger row. */
   async verifyProjectPayment(
     params: VerifyProjectPaymentParams
@@ -1337,7 +1802,7 @@ export class ApitoClient implements InjectedDBOperationInterface {
   }
 
   /** Cancel via provider (Play API first for google_play), then finalize ledger. */
-  async cancelTenantSubscription(
+  private async cancelTenantSubscriptionRest(
     params: CancelTenantSubscriptionParams
   ): Promise<ProjectTenantSubscription> {
     const projectId = params.projectId.trim();
