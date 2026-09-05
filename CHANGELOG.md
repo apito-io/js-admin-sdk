@@ -1,3 +1,8 @@
+## 3.14.2 — 2026-09-06
+
+- **`allFieldRoles`** on `buildCasbinPolicyFromSnapshot` / `createApitoCasbinEnforcer`. Emits `p, role, */*, field` so Refine field gates work when the engine snapshot has no field policies. Udbhabon shops pass `["manager"]`.
+- **Import/export extra columns** — `getExportHeaders` appends keys present on rows but missing from `config.columns`; `mapParsedRows` / `validateImportRows` keep unmapped raw headers (Suchok variant extra fields).
+
 ## 3.14.1 — 2026-09-02
 
 - **`updateTenantSubscription`** accepts optional `partnerId` and `currentPeriodEnd` (empty string clears period end).

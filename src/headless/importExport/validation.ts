@@ -128,6 +128,11 @@ export function mapParsedRows(
   mapping: ApitoImportColumnMapping,
   columns: ApitoImportColumn[],
 ): Array<Record<string, string>> {
+  const mappedHeaders = new Set(
+    columns
+      .map((column) => mapping[column.id])
+      .filter((header): header is string => Boolean(header)),
+  );
   return parsed.rows.map((row) => {
     const mapped: Record<string, string> = {};
     for (const column of columns) {
@@ -135,8 +140,31 @@ export function mapParsedRows(
       mapped[column.id] =
         header && row[header] !== undefined ? String(row[header]).trim() : "";
     }
+    for (const [header, value] of Object.entries(row)) {
+      if (mappedHeaders.has(header) || header in mapped) continue;
+      mapped[header] = String(value ?? "").trim();
+    }
     return mapped;
   });
+}
+
+const IMPORT_ROW_META_KEYS = new Set([
+  "_rowIndex",
+  "_errors",
+  "_isValid",
+  "_operation",
+]);
+
+function assignExtraRawFields(
+  row: ApitoValidatedImportRow,
+  raw: Record<string, string>,
+  columnIds: string[],
+): void {
+  const declared = new Set(columnIds);
+  for (const [key, value] of Object.entries(raw)) {
+    if (IMPORT_ROW_META_KEYS.has(key) || declared.has(key)) continue;
+    row[key] = value;
+  }
 }
 
 export function validateImportRows(
@@ -156,6 +184,7 @@ export function validateImportRows(
       const value = raw[column.id] ?? "";
       row[column.id] = coerceValue(value, column.type);
     }
+    assignExtraRawFields(row, raw, columnIds);
 
     if (isRowEmpty(row, columnIds)) {
       row._isValid = true;

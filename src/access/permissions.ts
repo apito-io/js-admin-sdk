@@ -68,6 +68,11 @@ export type BuildCasbinPolicyOptions = {
   extraListResources?: string[];
   /** Resolve stored role when snapshot.role_id empty (e.g. localStorage). */
   getStoredRole?: () => string;
+  /**
+   * Roles that get a Casbin field wildcard (`p, role, * / *, field` without spaces).
+   * Udbhabon shop staff: pass `["manager"]` — highest role, no tenant admin.
+   */
+  allFieldRoles?: string[];
 };
 
 /** Build Casbin CSV from myEffectivePermissions snapshot. */
@@ -111,6 +116,13 @@ export function buildCasbinPolicyFromSnapshot(
 
   for (const group of options.extraListResources || []) {
     if (group) lines.push(`p, ${role}, ${group}, list`);
+  }
+
+  const allFieldRoles = (options.allFieldRoles || [])
+    .map((r) => r.trim().toLowerCase())
+    .filter(Boolean);
+  if (allFieldRoles.includes(role)) {
+    lines.push(`p, ${role}, */*, field`);
   }
 
   return `${lines.join("\n")}\n`;

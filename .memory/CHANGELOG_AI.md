@@ -4,6 +4,17 @@ Not git history — the *reasoning* behind changes. Newest on top.
 Format per entry: date, **Changed**, **Why**, **Affected**.
 
 ---
+## 2026-09-06 — 3.14.2 allFieldRoles + extra import columns
+
+- **Changed:** `BuildCasbinPolicyOptions.allFieldRoles` emits
+  `p, role, */*, field`. Export headers/import validate keep extra
+  keys not in column config.
+- **Why:** Engine snapshot CSV has no Refine field policies; Udbhabon
+  highest shop role is `manager` not `admin`. Suchok variant export
+  carries extra columns.
+- **Affected:** `src/access/permissions.ts`, importExport exporter +
+  validation. Package **3.14.2**. Dist gitignored — `pnpm build`.
+
 ## 2026-09-02 — updateTenantSubscription partner + period end
 
 - **Changed:** `UpdateTenantSubscriptionParams.partnerId` /

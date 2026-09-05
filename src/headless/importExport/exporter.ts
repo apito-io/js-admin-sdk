@@ -180,8 +180,23 @@ export function buildExportRows(
   );
 }
 
-export function getExportHeaders(config: ApitoExportConfig): string[] {
-  return config.columns.map((column) => column.id);
+export function getExportHeaders(
+  config: ApitoExportConfig,
+  rows?: Array<Record<string, string>>,
+): string[] {
+  const headers = config.columns.map((column) => column.id);
+  if (!rows?.length) return headers;
+  const seen = new Set(headers);
+  const extra: string[] = [];
+  for (const row of rows) {
+    for (const key of Object.keys(row)) {
+      if (seen.has(key)) continue;
+      seen.add(key);
+      extra.push(key);
+    }
+  }
+  extra.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  return [...headers, ...extra];
 }
 
 export async function fetchAllListPages<T>(options: {

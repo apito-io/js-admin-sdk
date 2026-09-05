@@ -39,6 +39,22 @@ describe("access permissions", () => {
     expect(csv).toContain("p, manager, student, list");
     expect(csv).toContain("p, manager, students_menu, list");
     expect(csv).not.toContain("p, manager, staff, create");
+    expect(csv).not.toContain("p, manager, */*, field");
+  });
+
+  it("grants all field gates to allFieldRoles", () => {
+    const csv = buildCasbinPolicyFromSnapshot(snap, {
+      allFieldRoles: ["manager"],
+    });
+    expect(csv).toContain("p, manager, */*, field");
+  });
+
+  it("does not grant field wildcard to other roles", () => {
+    const csv = buildCasbinPolicyFromSnapshot(
+      { ...snap, role_id: "employee" },
+      { allFieldRoles: ["manager"] },
+    );
+    expect(csv).not.toContain("p, employee, */*, field");
   });
 
   it("graceModelsFromSnapshot", () => {

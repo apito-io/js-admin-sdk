@@ -3,7 +3,7 @@ import {
   formatMediaUrlForExport,
   isHttpMediaUrl,
 } from "../headless/mediaUpload/formatMediaUrlForExport";
-import { buildExportRows, mapRecordToExportRowDefault } from "../headless/importExport/exporter";
+import { buildExportRows, getExportHeaders, mapRecordToExportRowDefault } from "../headless/importExport/exporter";
 import type { ApitoImportColumn } from "../headless/importExport/types";
 
 describe("formatMediaUrlForExport", () => {
@@ -94,5 +94,34 @@ describe("mapRecordToExportRowDefault media columns", () => {
     );
 
     expect(rows[0]?.image_url).toBe("");
+  });
+});
+
+describe("getExportHeaders", () => {
+  it("appends extra row keys after declared columns", () => {
+    const headers = getExportHeaders(
+      {
+        resource: "lab_test",
+        columns: [
+          { id: "_id", label: "ID", isId: true },
+          { id: "name", label: "Name" },
+        ],
+      },
+      [
+        { _id: "t1", name: "CBC", group_wise_labels_1_group_name: "g1" },
+        {
+          _id: "t2",
+          name: "ESR",
+          group_wise_labels_1_group_name: "a",
+          group_wise_labels_2_group_name: "b",
+        },
+      ],
+    );
+    expect(headers).toEqual([
+      "_id",
+      "name",
+      "group_wise_labels_1_group_name",
+      "group_wise_labels_2_group_name",
+    ]);
   });
 });
