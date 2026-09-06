@@ -1,3 +1,11 @@
+## 3.14.4 — 2026-09-07
+
+- **Dates:** `serializeApitoDateValue` keeps offset ISO (`+06:00`) instead of rewriting to UTC `Z`, so SQLite lexicographic `date between` matches Dhaka calendar-day filters (Rosna food orders / Prottoy lab orders).
+
+## 3.14.3 — 2026-09-07
+
+- **Vertical import:** `validateImportRows` no longer treats blank identity cells as required on flattened continuation rows (`verticalGroups`). Those cells stay empty and disabled; required still applies on the group header row.
+
 ## 3.14.2 — 2026-09-06
 
 - **`allFieldRoles`** on `buildCasbinPolicyFromSnapshot` / `createApitoCasbinEnforcer`. Emits `p, role, */*, field` so Refine field gates work when the engine snapshot has no field policies. Udbhabon shops pass `["manager"]`.

@@ -49,6 +49,11 @@ export function serializeApitoDateValue(value: unknown): string | undefined {
   if (typeof value === "string") {
     const trimmed = value.trim();
     if (!trimmed) return undefined;
+    // Keep offset ISO (`+06:00`) so SQLite lexicographic `between` matches
+    // Dhaka calendar-day list filters. Converting to Z hid overnight orders.
+    if (ISO_DATE_TIME.test(trimmed) && /[+-]\d{2}:\d{2}$/.test(trimmed)) {
+      return trimmed;
+    }
     if (ISO_DATE_TIME.test(trimmed)) {
       const parsed = new Date(trimmed);
       return Number.isNaN(parsed.getTime()) ? undefined : parsed.toISOString();

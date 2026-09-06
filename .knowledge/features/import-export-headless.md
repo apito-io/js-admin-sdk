@@ -36,6 +36,7 @@ Framework-agnostic import/export pipeline: parse files, validate rows against sc
 
 ## Invariants
 
+- Vertical CSV: `column.required` applies on group header rows only. Continuation identity cells are blank + disabled (`verticalGroups`).
 - Import never skips validation — invalid rows surface in `ApitoImportRowError[]`.
 - Export uses same list filters as UI table (permanent + current filters).
 - Relation columns require explicit mapping; auto-map only matches exact header names.
@@ -49,6 +50,7 @@ Framework-agnostic import/export pipeline: parse files, validate rows against sc
 ## Tests
 
 - `src/__tests__/formatMediaUrlForExport.test.ts`
+- `src/__tests__/validateImportRows-vertical.test.ts`
 - Manual: `js-admin-ui-antd` import modal with sample CSV
 
 ## Related

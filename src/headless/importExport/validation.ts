@@ -7,6 +7,7 @@ import type {
   ApitoParsedImportFile,
   ApitoValidatedImportRow,
 } from "./types";
+import { isVerticalImportCellEditable } from "./verticalGroups";
 
 function getStr(value: unknown): string {
   if (value === undefined || value === null) return "";
@@ -38,6 +39,7 @@ function coerceValue(
 function defaultValidateRow(
   row: ApitoValidatedImportRow,
   columns: ApitoImportColumn[],
+  verticalGroups?: ApitoImportConfig["verticalGroups"],
 ): ApitoImportRowError[] {
   const errors: ApitoImportRowError[] = [];
   const columnIds = columns.map((c) => c.id);
@@ -49,6 +51,13 @@ function defaultValidateRow(
   for (const column of columns) {
     const raw = getStr(row[column.id]);
     if (column.required && raw === "") {
+      // Flattened continuation rows leave identity cols blank and disabled.
+      if (
+        verticalGroups &&
+        !isVerticalImportCellEditable(row, column.id, verticalGroups)
+      ) {
+        continue;
+      }
       errors.push({
         rowIndex: row._rowIndex,
         field: column.id,
@@ -192,7 +201,9 @@ export function validateImportRows(
       return row;
     }
 
-    row._errors.push(...defaultValidateRow(row, config.columns));
+    row._errors.push(
+      ...defaultValidateRow(row, config.columns, config.verticalGroups),
+    );
 
     if (config.schema) {
       const parsed = config.schema.safeParse(row);
