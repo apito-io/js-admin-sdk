@@ -1,3 +1,11 @@
+## 3.14.5 — 2026-09-08
+
+- **`mergePermanentListFilters`** drops previous permanent logical `or`/`and`
+  groups (Select search stuffed into `permanentFilters`). Clearing or retyping
+  no longer AND-stacks the first query.
+
+---
+
 ## 3.14.4 — 2026-09-07
 
 - **Dates:** `serializeApitoDateValue` keeps offset ISO (`+06:00`) instead of rewriting to UTC `Z`, so SQLite lexicographic `date between` matches Dhaka calendar-day filters (Rosna food orders / Prottoy lab orders).

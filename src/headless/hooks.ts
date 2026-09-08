@@ -92,6 +92,8 @@ export type UseListPageResult<TRecord extends ApitoRecord = ApitoRecord> = {
   refetch: () => void;
 };
 
+const EMPTY_LIST: ApitoRecord[] = [];
+
 export function useListPage<TRecord extends ApitoRecord = ApitoRecord>(
   options: UseListPageOptions<TRecord>,
 ): UseListPageResult<TRecord> {
@@ -160,7 +162,9 @@ export function useListPage<TRecord extends ApitoRecord = ApitoRecord>(
     enabled: options.enabled !== false,
   });
 
-  const list = (query.data?.[options.listKey] as TRecord[] | undefined) ?? [];
+  const list =
+    (query.data?.[options.listKey] as TRecord[] | undefined) ??
+    (EMPTY_LIST as TRecord[]);
   const countRaw = query.data?.[options.countKey];
   const total =
     typeof countRaw === "number"

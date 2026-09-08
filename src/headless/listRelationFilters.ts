@@ -108,7 +108,16 @@ export function mergePermanentListFilters(
       .filter(isRelationCrudFilter)
       .map((f) => f.relation.trim()),
   );
+  const previousPermanentKeys = new Set(
+    previousPermanent.map((f) => JSON.stringify(f)),
+  );
   const rest = prev.filter((f) => {
+    // Logical or/and groups have no `field`/`relation`. If they were stuffed
+    // into permanentFilters (Select onSearch), they must drop when the
+    // permanent set changes — otherwise the first search sticks forever.
+    if (previousPermanentKeys.has(JSON.stringify(f))) {
+      return false;
+    }
     if (isRelationCrudFilter(f)) {
       return !permanentRelations.has(f.relation.trim());
     }

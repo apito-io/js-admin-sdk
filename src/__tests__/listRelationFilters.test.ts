@@ -43,6 +43,44 @@ describe("list relation filters", () => {
     ]);
   });
 
+  it("mergePermanentListFilters drops a previous permanent OR group on clear", () => {
+    const orSearch = {
+      operator: "or" as const,
+      value: [
+        { field: "identifier", operator: "contains", value: "তেতুল" },
+        { field: "short_code", operator: "contains", value: "তেতুল" },
+      ],
+    };
+    const ledger = relationEqFilter("ledger_account", "ACC1");
+    const prev = [ledger, orSearch];
+    const next = mergePermanentListFilters(prev, [ledger], [ledger, orSearch]);
+    expect(next).toEqual([ledger]);
+  });
+
+  it("mergePermanentListFilters replaces a previous permanent OR group on re-search", () => {
+    const ledger = relationEqFilter("ledger_account", "ACC1");
+    const first = {
+      operator: "or" as const,
+      value: [
+        { field: "identifier", operator: "contains", value: "তেতুল" },
+        { field: "short_code", operator: "contains", value: "তেতুল" },
+      ],
+    };
+    const second = {
+      operator: "or" as const,
+      value: [
+        { field: "identifier", operator: "contains", value: "SC-9" },
+        { field: "short_code", operator: "contains", value: "SC-9" },
+      ],
+    };
+    const next = mergePermanentListFilters(
+      [ledger, first],
+      [ledger, second],
+      [ledger, first],
+    );
+    expect(next).toEqual([ledger, second]);
+  });
+
   it("mergePermanentListFilters replaces field permanent and keeps relation search", () => {
     const prev = [
       { field: "system_ledgerAccount_id", operator: "eq", value: "OLD" },
