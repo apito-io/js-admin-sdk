@@ -206,7 +206,10 @@ export class ApitoClient implements InjectedDBOperationInterface {
   private authHeaders(options?: { projectId?: string; tenantId?: string }): Record<string, string> {
     const headers: Record<string, string> = {};
     if (this.bearerToken) {
+      // App-user JWT on /system/graphql: without X-Use-Cookies: false the
+      // engine takes the console cookie path → "invalid Cookie header. Reload the page".
       headers.Authorization = `Bearer ${this.bearerToken}`;
+      headers['X-Use-Cookies'] = 'false';
     } else if (this.apiKey.startsWith('apt_')) {
       // Unified access token: Authorization: Bearer only. X-Use-Cookies: false
       // tells the engine this is a headless API call (no browser session
