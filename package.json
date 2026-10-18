@@ -59,16 +59,22 @@
   },
   "keywords": [
     "apito",
-    "sdk",
     "graphql",
-    "api",
-    "javascript",
-    "typescript",
+    "graphql-client",
+    "rest-client",
+    "rest-api",
+    "backend-as-a-service",
+    "baas",
     "headless-cms",
-    "backend"
+    "saas",
+    "multi-tenant",
+    "typescript",
+    "nodejs",
+    "react",
+    "nextjs"
   ],
-  "author": "Apito Team",
-  "license": "MIT",
+  "author": "Apito LLC",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/apito-io/js-admin-sdk.git"
@@ -76,7 +82,7 @@
   "bugs": {
     "url": "https://github.com/apito-io/js-admin-sdk/issues"
   },
-  "homepage": "https://docs.apito.io",
+  "homepage": "https://apito.io",
   "dependencies": {
     "axios": "^1.14.0"
   },

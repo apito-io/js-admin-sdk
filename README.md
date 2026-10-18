@@ -1,9 +1,9 @@
 # Apito Admin JavaScript SDK
 
 [![npm version](https://badge.fury.io/js/%40apito-io%2Fjs-admin-sdk.svg)](https://badge.fury.io/js/%40apito-io%2Fjs-admin-sdk)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-A comprehensive JavaScript SDK for communicating with Apito GraphQL API endpoints. This SDK provides both type-safe and flexible interfaces for interacting with Apito's backend services.
+REST and GraphQL client for Apito backends. See [examples/](examples/).
 
 ## 🚀 Features
 
@@ -14,7 +14,7 @@ A comprehensive JavaScript SDK for communicating with Apito GraphQL API endpoint
 - ✅ **Promise-Based**: Modern async/await support
 - ✅ **Comprehensive Error Handling**: Detailed error responses and GraphQL error support
 - ✅ **Plugin-Ready**: Perfect for Node.js applications and microservices
-- ✅ **Production Ready**: Battle-tested patterns and error handling
+- **Error handling**: Detailed error responses and GraphQL error support
 
 ## 📦 Installation
 
@@ -455,7 +455,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 Links
 
-- [Apito Documentation](https://docs.apito.io)
+- [Apito Documentation](https://apito.io/docs)
 - [npm Package](https://www.npmjs.com/package/@apito-io/js-admin-sdk)
 - [GitHub Repository](https://github.com/apito-io/js-admin-sdk)
 - [Issues](https://github.com/apito-io/js-admin-sdk/issues)
@@ -463,6 +463,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🆘 Support
 
 - 📧 Email: support@apito.io
-- 💬 Discord: [Join our community](https://discord.gg/apito)
-- 📖 Documentation: [docs.apito.io](https://docs.apito.io)
+- 💬 Discord: [Join our community](https://discord.gg/Xb7p2ddC6E)
+- 📖 Documentation: [apito.io/docs](https://apito.io/docs)
 - 🐛 Bug Reports: [GitHub Issues](https://github.com/apito-io/js-admin-sdk/issues)

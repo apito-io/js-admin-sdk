@@ -281,8 +281,8 @@ js-internal-sdk/
 ## 🆘 Getting Help
 
 - **Issues**: [GitHub Issues](https://github.com/apito-io/js-admin-sdk/issues)
-- **Documentation**: [docs.apito.io](https://docs.apito.io)
-- **Discord**: [Join our community](https://discord.gg/apito)
+- **Documentation**: [apito.io/docs](https://apito.io/docs)
+- **Discord**: [Join our community](https://discord.gg/Xb7p2ddC6E)
 - **Email**: support@apito.io
 
 ## 📄 License
