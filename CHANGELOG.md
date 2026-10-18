@@ -1,3 +1,9 @@
+# Changelog
+
+## Unreleased
+
+- **License:** the published npm identifier changes from MIT to Apache-2.0. The terms stay permissive and add the Apache patent grant. The `LICENSE` file was already the Apache-2.0 text.
+
 ## 3.14.5 — 2026-09-08
 
 - **`mergePermanentListFilters`** drops previous permanent logical `or`/`and`

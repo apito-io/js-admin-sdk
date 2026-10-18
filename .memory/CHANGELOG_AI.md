@@ -4,6 +4,12 @@ Not git history — the *reasoning* behind changes. Newest on top.
 Format per entry: date, **Changed**, **Why**, **Affected**.
 
 ---
+## 2026-10-18 — npm license identifier
+
+- **Changed:** `package.json` license is Apache-2.0. CHANGELOG records the move from MIT. README and CONTRIBUTING links point at apito.io/docs and the current Discord invite.
+- **Why:** The LICENSE file was already Apache text while npm still said MIT.
+- **Affected:** `package.json`, `CHANGELOG.md`, `README.md`, `CONTRIBUTING.md`. No publish. Leave `.memory` out of the public diff.
+
 ## 2026-10-16 — Facebook token login parity
 
 - **Changed:** Added native Facebook `accessToken` support and the optional `access_token` argument to the canonical `loginUser` document.

@@ -1,4 +1,10 @@
-# Handoff — js-admin-sdk 2026-10-16
+# Handoff — js-admin-sdk 2026-10-18
+
+## Apache-2.0 identifier
+
+- **Done:** `package.json` license, homepage, repository, bugs, keywords, README opening, and an Unreleased CHANGELOG note.
+- **Not done:** No npm publish, version bump, or push to GitHub. This checkout tracks GitLab.
+- **Do not:** Leave the field as MIT. Do not include `.memory` in the public commit. `./command.sh save` until asked.
 
 ## Facebook token login
 

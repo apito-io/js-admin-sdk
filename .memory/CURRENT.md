@@ -1,5 +1,7 @@
 # js-admin-sdk — Current
 
+- **License identifier (2026-10-18, uncommitted):** `package.json` `license` is `Apache-2.0`. CHANGELOG says the published npm identifier moves from MIT to Apache-2.0. The LICENSE file was already Apache text. No version bump and no publish. Origin is still GitLab. Leave `.memory` out of the public diff. Ask before `./command.sh save`.
+
 - **Facebook token (2026-10-16, uncommitted):** `LoginUserParams.accessToken` and `authMethod: facebook_access_token` use the canonical `loginUser` query with optional `access_token`, matching Dart and Go. TypeScript passes. No version bump; dist is gitignored. Ask before commit or `./command.sh save`.
 
 - **Codegen artifacts (2026-10-12):** `apito-codegen --artifacts sdk` writes types and the SDK only. `app` remains the default and still writes hooks and UI. No package bump. Ask before commit.
