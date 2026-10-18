@@ -4,6 +4,39 @@ Not git history — the *reasoning* behind changes. Newest on top.
 Format per entry: date, **Changed**, **Why**, **Affected**.
 
 ---
+## 2026-10-16 — Facebook token login parity
+
+- **Changed:** Added native Facebook `accessToken` support and the optional `access_token` argument to the canonical `loginUser` document.
+- **Why:** JS must match Dart and Go while preserving additive engine evolution for published mobile clients.
+- **Affected:** `src/client.ts`, `src/types.ts`. TypeScript passed. No package bump or dist build. Ask before commit or `./command.sh save`.
+
+## 2026-10-12 — codegen artifact mode
+
+- **Changed:** `--artifacts sdk` omits `hooks.ts`, project hooks, and the resource registry. `--artifacts app` is unchanged.
+- **Why:** `apito gen --framework none` needs types and an SDK without React Query or admin UI files.
+- **Affected:** `scripts/apito-codegen-run.ts`. No package bump. Ask before commit.
+
+---
+## 2026-09-23 — operator panel SDK reads
+
+- **Changed:** `searchTenants` requests `suspended_at`. Added `getProjectPlans` and `downloadInvoiceReceipt`.
+- **Why:** Udb needs suspension, the plan cache, and the Apito receipt PDF.
+- **Affected:** `src/client.ts`, `src/types.ts`. Dist rebuilt. No version bump.
+
+---
+## 2026-09-23 — partner project rate active
+
+- **Changed:** `PartnerProjectRate.active`. Upsert always sends `active` (false when omitted).
+- **Why:** Console and other admin clients can turn monetization on per project share.
+- **Affected:** `src/types.ts`, `src/client.ts`. No version bump.
+
+---
+## 2026-09-21 — X-Use-Cookies false on user JWT
+
+- **Changed:** `authHeaders` for `bearerToken` sets `X-Use-Cookies: false`. GitLab `d6f128e`.
+- **Why:** Engine `/system/graphql` treated the call as console session → `invalid Cookie header. Reload the page` (Chikly post save).
+- **Affected:** `src/client.ts`. Dist gitignored — `pnpm build`. No package version bump.
+
 ## 2026-09-06 — 3.14.2 allFieldRoles + extra import columns
 
 - **Changed:** `BuildCasbinPolicyOptions.allFieldRoles` emits
