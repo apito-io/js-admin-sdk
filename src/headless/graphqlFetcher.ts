@@ -7,34 +7,14 @@ import {
 } from "../types";
 import { ApitoContext } from "./context";
 import { hasUsableGraphQLData, type ApitoFetcher } from "./fetcher";
+import { apitoGraphQLRequest } from "./graphqlRequest";
 import {
   serializeGraphQLQuery,
   type GraphQLQueryInput,
 } from "./serializeGraphQLQuery";
 
 /** Non-hook GraphQL request — use inside mutationFn / callbacks (not useQuery). */
-export async function apitoGraphQLRequest<
-  TData,
-  TVariables extends Record<string, unknown> = Record<string, unknown>,
->(
-  fetcher: ApitoFetcher,
-  document: GraphQLQueryInput,
-  variables?: TVariables,
-): Promise<TData> {
-  const res = await fetcher(
-    serializeGraphQLQuery(document),
-    variables as Record<string, unknown> | undefined,
-  );
-  // Defense in depth if a custom fetcher returns errors without throwing.
-  if (res.errors?.length && !hasUsableGraphQLData(res.data)) {
-    throw new ApitoGraphQLError(
-      res.errors.map((e) => e.message).join(", "),
-      res.errors,
-      res,
-    );
-  }
-  return res.data as TData;
-}
+export { apitoGraphQLRequest };
 
 /** GraphQL-codegen react-query fetcher: returns a queryFn for useQuery. */
 export function useApitoGraphQLFetcher<

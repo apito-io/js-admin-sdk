@@ -44,6 +44,7 @@ export {
 
 export {
   createBearerApitoFetcher,
+  createCookieApitoFetcher,
   hasUsableGraphQLData,
   type ApitoFetcher,
 } from "../headless/fetcher";
@@ -167,6 +168,7 @@ export {
   validateImportRows,
   validateVerticalContinuationRows,
   type ApitoExportConfig,
+  type ApitoExportXlsxSheet,
   type ApitoImportColumn,
   type ApitoImportColumnMapping,
   type ApitoImportConfig,

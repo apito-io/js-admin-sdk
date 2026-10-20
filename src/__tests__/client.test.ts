@@ -9,7 +9,8 @@ import {
 
 // Test constants matching Go SDK
 const BaseURL = 'http://localhost:5050/system/graphql';
-const APIKey = 'EhvreBZvFOKYCxWx3xL9xuW4g1WLx3dhdbCWmPhuIaIVI4zeBMk5gUYfuXM4jccwNGjRqitMaNyK1kt6b3S8NKowNXzwFDL6ivZL4rscGu49w8E3vVEYPeyvAgzT0NeTPO9SiJxmI4nBGkMpcBX789VqEfH1tuwacKKivQ4jhLtGt3PsyfmIXX9';
+const APIKey =
+  'EhvreBZvFOKYCxWx3xL9xuW4g1WLx3dhdbCWmPhuIaIVI4zeBMk5gUYfuXM4jccwNGjRqitMaNyK1kt6b3S8NKowNXzwFDL6ivZL4rscGu49w8E3vVEYPeyvAgzT0NeTPO9SiJxmI4nBGkMpcBX789VqEfH1tuwacKKivQ4jhLtGt3PsyfmIXX9';
 
 // Task interface matching Go SDK
 interface Task {
@@ -135,7 +136,10 @@ describe('ApitoClient', () => {
       };
 
       try {
-        const results = await client.getRelationDocuments('test-id', connection);
+        const results = await client.getRelationDocuments(
+          'test-id',
+          connection
+        );
 
         expect(results).toBeDefined();
         console.log('✅ GetRelationDocuments succeeded:', results);
@@ -218,7 +222,10 @@ describe('ApitoClient', () => {
       const client = getTestClient();
 
       try {
-        await client.deleteResource('task', 'a0d50ad7-3001-4be0-92bd-d0daac0af3a9');
+        await client.deleteResource(
+          'task',
+          'a0d50ad7-3001-4be0-92bd-d0daac0af3a9'
+        );
         console.log('✅ DeleteResource succeeded');
       } catch (error) {
         console.log('DeleteResource failed (may be expected):', error);
@@ -230,10 +237,10 @@ describe('ApitoClient', () => {
     it('rejects planTier client-side', async () => {
       const client = new ApitoClient({
         baseURL: 'http://localhost/system/graphql',
-        apiKey: 'test',
+        apiKey: 'apt_test',
       });
       await expect(
-        client.updateTenant('tid', { planTier: 'paid' } as any),
+        client.updateTenant('tid', { planTier: 'paid' } as any)
       ).rejects.toBeInstanceOf(ValidationError);
     });
   });
@@ -242,13 +249,19 @@ describe('ApitoClient', () => {
     it('createPartner requires email and defaults name from email', async () => {
       const client = new ApitoClient({
         baseURL: BaseURL,
-        apiKey: 'test',
+        apiKey: 'apt_test',
       });
-      await expect(client.createPartner({ email: '', name: 'Acme' })).rejects.toBeInstanceOf(
-        ValidationError,
-      );
+      await expect(
+        client.createPartner({ email: '', name: 'Acme' })
+      ).rejects.toBeInstanceOf(ValidationError);
       const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
-        data: { createPartner: { id: 'p1', name: 'fahim@gmail.com', email: 'fahim@gmail.com' } },
+        data: {
+          createPartner: {
+            id: 'p1',
+            name: 'fahim@gmail.com',
+            email: 'fahim@gmail.com',
+          },
+        },
       } as any);
       const row = await client.createPartner({ email: 'fahim@gmail.com' });
       expect(row.name).toBe('fahim@gmail.com');
@@ -262,7 +275,7 @@ describe('ApitoClient', () => {
     it('updatePartner can send commission_percent alone', async () => {
       const client = new ApitoClient({
         baseURL: BaseURL,
-        apiKey: 'test',
+        apiKey: 'apt_test',
       });
       const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
         data: { updatePartner: { id: 'p1', commission_percent: 20 } },
@@ -279,13 +292,15 @@ describe('ApitoClient', () => {
     it('searchPartners maps GraphQL payload', async () => {
       const client = new ApitoClient({
         baseURL: BaseURL,
-        apiKey: 'test',
+        apiKey: 'apt_test',
       });
       const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
         data: {
           searchPartners: {
             total: 1,
-            results: [{ id: 'direct-workspace', name: 'Direct', is_default: true }],
+            results: [
+              { id: 'direct-workspace', name: 'Direct', is_default: true },
+            ],
           },
         },
       } as any);
@@ -299,7 +314,7 @@ describe('ApitoClient', () => {
     it('createTenantSubscription passes partner_id', async () => {
       const client = new ApitoClient({
         baseURL: BaseURL,
-        apiKey: 'test',
+        apiKey: 'apt_test',
       });
       const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
         data: { createTenantSubscription: { id: 'sub_1', partner_id: 'p1' } },
@@ -317,7 +332,7 @@ describe('ApitoClient', () => {
     it('updateTenantSubscription passes partner_id and current_period_end', async () => {
       const client = new ApitoClient({
         baseURL: BaseURL,
-        apiKey: 'test',
+        apiKey: 'apt_test',
       });
       const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
         data: {
@@ -346,14 +361,17 @@ describe('ApitoClient', () => {
     it('updateTenant allows partnerId alone', async () => {
       const client = new ApitoClient({
         baseURL: BaseURL,
-        apiKey: 'test',
+        apiKey: 'apt_test',
       });
       const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
         data: { updateTenant: { id: 't1', partner_id: 'p1' } },
       } as any);
       const row = await client.updateTenant('t1', { partnerId: 'p1' });
       expect(row.partner_id).toBe('p1');
-      expect(spy.mock.calls[0][1]).toMatchObject({ tenant_id: 't1', partner_id: 'p1' });
+      expect(spy.mock.calls[0][1]).toMatchObject({
+        tenant_id: 't1',
+        partner_id: 'p1',
+      });
       expect(String(spy.mock.calls[0][0])).toContain('partner_id');
       spy.mockRestore();
     });
@@ -361,14 +379,20 @@ describe('ApitoClient', () => {
     it('client app tenant lookup omits partner_id unless includePartner', async () => {
       const client = new ApitoClient({
         baseURL: BaseURL,
-        apiKey: 'test',
+        apiKey: 'apt_test',
       });
       const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
-        data: { searchTenantsByDomain: { tenant: { id: 't1', name: 'HGT', domain: 'hgt' } } },
+        data: {
+          searchTenantsByDomain: {
+            tenant: { id: 't1', name: 'HGT', domain: 'hgt' },
+          },
+        },
       } as any);
       await client.searchTenantsByDomain('proj', 'hgt');
       expect(String(spy.mock.calls[0][0])).not.toContain('partner_id');
-      await client.searchTenantsByDomain('proj', 'hgt', { includePartner: true });
+      await client.searchTenantsByDomain('proj', 'hgt', {
+        includePartner: true,
+      });
       expect(String(spy.mock.calls[1][0])).toContain('partner_id');
       spy.mockRestore();
     });
@@ -376,7 +400,7 @@ describe('ApitoClient', () => {
     it('updateTenant without partnerId omits partner_id from the document', async () => {
       const client = new ApitoClient({
         baseURL: BaseURL,
-        apiKey: 'test',
+        apiKey: 'apt_test',
       });
       const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
         data: { updateTenant: { id: 't1', name: 'HGT' } },
@@ -392,23 +416,29 @@ describe('ApitoClient', () => {
     it('createTenantSubscription requires tenantId and planTier', async () => {
       const client = new ApitoClient({
         baseURL: BaseURL,
-        apiKey: 'test',
+        apiKey: 'apt_test',
       });
-      await expect(client.createTenantSubscription({ tenantId: '', planTier: 'paid' })).rejects.toBeInstanceOf(
-        ValidationError,
-      );
-      await expect(client.createTenantSubscription({ tenantId: 't1', planTier: '' })).rejects.toBeInstanceOf(
-        ValidationError,
-      );
+      await expect(
+        client.createTenantSubscription({ tenantId: '', planTier: 'paid' })
+      ).rejects.toBeInstanceOf(ValidationError);
+      await expect(
+        client.createTenantSubscription({ tenantId: 't1', planTier: '' })
+      ).rejects.toBeInstanceOf(ValidationError);
     });
 
     it('createTenantSubscription maps GraphQL payload', async () => {
       const client = new ApitoClient({
         baseURL: BaseURL,
-        apiKey: 'test',
+        apiKey: 'apt_test',
       });
       const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
-        data: { createTenantSubscription: { id: 'sub_1', plan_tier: 'paid', tenant_id: 't1' } },
+        data: {
+          createTenantSubscription: {
+            id: 'sub_1',
+            plan_tier: 'paid',
+            tenant_id: 't1',
+          },
+        },
       } as any);
       const row = await client.createTenantSubscription({
         tenantId: 't1',
@@ -431,12 +461,15 @@ describe('ApitoClient', () => {
     it('cancelTenantSubscription without projectId uses GraphQL', async () => {
       const client = new ApitoClient({
         baseURL: BaseURL,
-        apiKey: 'test',
+        apiKey: 'apt_test',
       });
       const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
         data: { cancelTenantSubscription: { id: 'sub_1', status: 'canceled' } },
       } as any);
-      const row = await client.cancelTenantSubscription({ subscriptionId: 'sub_1', mode: 'cancel' });
+      const row = await client.cancelTenantSubscription({
+        subscriptionId: 'sub_1',
+        mode: 'cancel',
+      });
       expect(row.id).toBe('sub_1');
       expect(spy.mock.calls[0][1]).toMatchObject({
         subscription_id: 'sub_1',
@@ -448,7 +481,7 @@ describe('ApitoClient', () => {
     it('listTenantInvoices maps list payload', async () => {
       const client = new ApitoClient({
         baseURL: BaseURL,
-        apiKey: 'test',
+        apiKey: 'apt_test',
       });
       const spy = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
         data: {
@@ -470,7 +503,9 @@ describe('ApitoClient', () => {
       const client = getTestClient();
 
       try {
-        const token = await client.generateTenantToken('ba0ee756-6aea-43a6-b052-c7baab3da91c');
+        const token = await client.generateTenantToken(
+          'ba0ee756-6aea-43a6-b052-c7baab3da91c'
+        );
 
         expect(token).toBeDefined();
         expect(typeof token).toBe('string');
@@ -491,7 +526,13 @@ describe('ApitoClient', () => {
       }
       const client = getTestClient();
       try {
-        const { count, users } = await client.searchUsers(projectId, 10, 0, undefined, 'alice');
+        const { count, users } = await client.searchUsers(
+          projectId,
+          10,
+          0,
+          undefined,
+          'alice'
+        );
         expect(count).toBeGreaterThanOrEqual(0);
         console.log('✅ searchUsers:', count, users?.length);
       } catch (error) {
@@ -507,7 +548,10 @@ describe('ApitoClient', () => {
       }
       const client = getTestClient();
       try {
-        const { tenant } = await client.searchTenantsByDomain(projectId, 'example.invalid');
+        const { tenant } = await client.searchTenantsByDomain(
+          projectId,
+          'example.invalid'
+        );
         expect(tenant === null || typeof tenant?.id === 'string').toBe(true);
         console.log('✅ searchTenantsByDomain:', tenant ? 'match' : 'no match');
       } catch (error) {
@@ -535,7 +579,9 @@ describe('ApitoClient', () => {
       const projectId = process.env.APITO_PROJECT_ID;
       const tenantId = process.env.APITO_TENANT_ID;
       if (!projectId || !tenantId) {
-        console.log('getTenant: skipped — set APITO_PROJECT_ID and APITO_TENANT_ID');
+        console.log(
+          'getTenant: skipped — set APITO_PROJECT_ID and APITO_TENANT_ID'
+        );
         return;
       }
       const client = getTestClient();
@@ -735,14 +781,20 @@ describe('TypedOperations Integration Tests', () => {
           },
         };
 
-        const results = await typed.searchResourcesTyped<Task>('task', filter, false);
+        const results = await typed.searchResourcesTyped<Task>(
+          'task',
+          filter,
+          false
+        );
 
         console.log(`Found ${results.count} tasks`);
 
         // All results are strongly typed
         for (let i = 0; i < Math.min(3, results.results.length); i++) {
           const task = results.results[i];
-          console.log(`Task ${i + 1}: ${task.data.name} - ${task.data.progress}`);
+          console.log(
+            `Task ${i + 1}: ${task.data.name} - ${task.data.progress}`
+          );
 
           // Type safety verification - no need for type assertions!
           expect(typeof task.data.name).toBe('string');
@@ -807,7 +859,11 @@ describe('Error Handling', () => {
 
 describe('Unified access token auth headers', () => {
   it('sends only Authorization: Bearer (no X-Apito-Key) for apt_ access tokens', () => {
-    const client = new ApitoClient({ baseURL: BaseURL, accessToken: 'apt_abc123', timeout: 30000 });
+    const client = new ApitoClient({
+      baseURL: BaseURL,
+      accessToken: 'apt_abc123',
+      timeout: 30000,
+    });
     const headers = (client as any).authHeaders();
     expect(headers.Authorization).toBe('Bearer apt_abc123');
     expect(headers['X-Use-Cookies']).toBe('false');
@@ -815,7 +871,11 @@ describe('Unified access token auth headers', () => {
   });
 
   it('accepts apt_ via the legacy apiKey field too', () => {
-    const client = new ApitoClient({ baseURL: BaseURL, apiKey: 'apt_abc123', timeout: 30000 });
+    const client = new ApitoClient({
+      baseURL: BaseURL,
+      apiKey: 'apt_abc123',
+      timeout: 30000,
+    });
     const headers = (client as any).authHeaders();
     expect(headers.Authorization).toBe('Bearer apt_abc123');
     expect(headers['X-Apito-Key']).toBeUndefined();
@@ -830,9 +890,14 @@ describe('Unified access token auth headers', () => {
 
   it('rejects retired cli-/sdk-/mcp- token prefixes with TOKEN_FORMAT_RETIRED', () => {
     for (const prefix of ['cli-', 'sdk-', 'mcp-']) {
-      expect(() => new ApitoClient({ baseURL: BaseURL, apiKey: `${prefix}legacy`, timeout: 30000 })).toThrow(
-        /TOKEN_FORMAT_RETIRED/
-      );
+      expect(
+        () =>
+          new ApitoClient({
+            baseURL: BaseURL,
+            apiKey: `${prefix}legacy`,
+            timeout: 30000,
+          })
+      ).toThrow(/TOKEN_FORMAT_RETIRED/);
     }
   });
 
@@ -848,12 +913,17 @@ describe('Unified access token auth headers', () => {
     expect(configured['X-Apito-Project-Id']).toBe('project-config');
     expect(configured['X-Apito-Key']).toBeUndefined();
 
-    const overridden = (client as any).authHeaders({ projectId: 'project-request' });
+    const overridden = (client as any).authHeaders({
+      projectId: 'project-request',
+    });
     expect(overridden['X-Apito-Project-Id']).toBe('project-request');
   });
 
   it('passes explicit project and tenant ids as matching request scopes', async () => {
-    const client = new ApitoClient({ baseURL: BaseURL, accessToken: 'apt_abc123' });
+    const client = new ApitoClient({
+      baseURL: BaseURL,
+      accessToken: 'apt_abc123',
+    });
     const execute = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
       data: { searchUsers: { count: 0, users: [] } },
     });
@@ -862,7 +932,10 @@ describe('Unified access token auth headers', () => {
 
     expect(execute).toHaveBeenCalledWith(
       expect.any(String),
-      expect.objectContaining({ project_id: 'project-method', tenant_id: 'tenant-method' }),
+      expect.objectContaining({
+        project_id: 'project-method',
+        tenant_id: 'tenant-method',
+      }),
       { projectId: 'project-method', tenantId: 'tenant-method' }
     );
   });
@@ -883,5 +956,125 @@ describe('Example Usage', () => {
     // const taskProgress = task.data.progress;
 
     expect(client).toBeDefined();
+  });
+});
+
+describe('Operator credential guards', () => {
+  it('rejects every privileged SDK surface before it can execute with a bootstrap key', async () => {
+    const client = new ApitoClient({
+      baseURL: BaseURL,
+      apiKey: 'ak_bootstrap',
+    });
+    const execute = jest.spyOn(client, 'executeGraphQL');
+
+    const calls = [
+      () => client.searchUsers('project'),
+      () => client.searchTenants('project'),
+      () => client.getTenants(),
+      () => client.createTenant({ name: 'tenant' }),
+      () => client.updateTenant('tenant', { name: 'renamed' }),
+      () => client.deleteTenant('tenant'),
+      () => client.restoreTenant('tenant'),
+      () => client.createUser('project', { password: 'password' }),
+      () => client.updateUser('user', { role: 'admin' }),
+      () => client.resetUserPassword('user', 'password'),
+      () => client.deleteUser('user'),
+      () => client.getSingleResource('model', 'row'),
+      () => client.searchResources('model'),
+      () => client.getRelationDocuments('row', { model: 'model' }),
+      () => client.createNewResource({ model: 'model', payload: { value: 1 } }),
+      () =>
+        client.updateResource({
+          model: 'model',
+          id: 'row',
+          payload: { value: 1 },
+        }),
+      () => client.deleteResource('model', 'row'),
+      () => client.debug('stage'),
+      () =>
+        client.createTenantSubscription({
+          tenantId: 'tenant',
+          planTier: 'pro',
+        }),
+      () =>
+        client.updateTenantSubscription({
+          subscriptionId: 'subscription',
+          status: 'active',
+        }),
+      () => client.cancelTenantSubscription({ subscriptionId: 'subscription' }),
+      () =>
+        client.createTenantInvoice({
+          subscriptionId: 'subscription',
+          amount: 1,
+        }),
+      () => client.listTenantSubscribers(),
+      () => client.listTenantInvoices(),
+      () => client.getProjectPlans(),
+      () => client.markInvoicePaid('invoice'),
+      () => client.getInvoiceProfile(),
+      () => client.updateInvoiceProfile({ legalName: 'Apito' }),
+      () => client.getProjectPaymentProviders(),
+      () => client.searchPartners(),
+      () => client.createPartner({ email: 'operator@example.com' }),
+      () => client.updatePartner('partner', { name: 'Operator' }),
+      () => client.listPartnerProjectRates(),
+      () =>
+        client.upsertPartnerProjectRate({
+          partnerId: 'partner',
+          projectId: 'project',
+        }),
+      () =>
+        client.verifyProjectPayment({
+          projectId: 'project',
+          tenantId: 'tenant',
+          productId: 'product',
+          purchaseToken: 'purchase',
+          packageName: 'package',
+        }),
+      () => client.getTenantSubscription('project', 'tenant'),
+      () => client.downloadInvoiceReceipt('project', 'invoice'),
+    ];
+
+    for (const call of calls) {
+      await expect(call()).rejects.toThrow(/OPERATOR_CREDENTIAL_REQUIRED/);
+    }
+    expect(execute).not.toHaveBeenCalled();
+  });
+
+  it('lets an app-user session call project-payment without an operator token', async () => {
+    const client = new ApitoClient({
+      baseURL: 'http://127.0.0.1:1/system/graphql',
+      apiKey: 'session-jwt',
+    });
+    await expect(
+      client.submitCustomPayment({
+        projectId: 'project',
+        tenantId: 'tenant',
+        plan: 'pro',
+        amount: 200,
+        currency: 'BDT',
+        periodMonths: 1,
+        paymentReference: 'AbCdEf',
+      })
+    ).rejects.not.toThrow(/OPERATOR_CREDENTIAL_REQUIRED/);
+  });
+
+  it('keeps self-service auth and exact-domain lookup available to a bootstrap key', async () => {
+    const client = new ApitoClient({
+      baseURL: BaseURL,
+      apiKey: 'ak_bootstrap',
+    });
+    const execute = jest.spyOn(client, 'executeGraphQL').mockResolvedValue({
+      data: {
+        searchTenantsByDomain: { tenant: null },
+      },
+    } as any);
+
+    await expect(
+      client.searchTenantsByDomain('project', 'example.invalid')
+    ).resolves.toEqual({
+      tenant: null,
+    });
+    expect(execute).toHaveBeenCalledTimes(1);
   });
 });

@@ -100,7 +100,7 @@ export interface User {
   updated_at?: string;
 }
 
-/** Login via system GraphQL `loginUser`. Password path: use `email` or `phone` per project settings. OAuth code path: `authMethod` `google`|`facebook`|`github`|`x`|`linkedin` with `code`+`state` (get `state` via `oauthState` / `googleOAuthState`). Native mobile Google: `authMethod: 'google_id_token'`, `idToken`. SaaS per-tenant separate DB: pass `tenantId`. */
+/** Login via system GraphQL `loginUser`. Password path: use `email` or `phone` per project settings. OAuth code path: `authMethod` `google`|`facebook`|`github`|`x`|`linkedin` with `code`+`state` (get `state` via `oauthState` / `googleOAuthState`). Native mobile Google: `authMethod: 'google_id_token'`, `idToken`. Native mobile Facebook: `authMethod: 'facebook_access_token'`, `accessToken`. SaaS per-tenant separate DB: pass `tenantId`. */
 export interface LoginUserParams {
   projectId: string;
   tenantId?: string;
@@ -111,10 +111,26 @@ export interface LoginUserParams {
   code?: string;
   state?: string;
   idToken?: string;
+  /** Facebook user access token from the native Facebook SDK. */
+  accessToken?: string;
 }
 
 export interface GoogleOAuthStateResponse {
   state: string;
+}
+
+/** Pre-login project runtime for one platform. Extras are one-key objects. */
+export interface ClientRuntime {
+  platform: string;
+  min_version_name: string;
+  min_build_number: number;
+  force_update: boolean;
+  store_url: string;
+  message_en: string;
+  message_bn: string;
+  maintenance: boolean;
+  maintenance_hours: number;
+  extras: Array<Record<string, string>>;
 }
 
 export interface CreateUserParams {
@@ -190,6 +206,8 @@ export interface TenantCatalogSearchRow {
    * Client apps (Astro, Flutter) never request it — omit `includePartner`.
    */
   partner_id?: string;
+  suspended_at?: string | null;
+  suspension_reason?: string | null;
   icon?: string;
   data?: string;
   created_at?: string;
@@ -274,6 +292,7 @@ export interface ProjectTenantSubscription {
   created_by?: string;
   notes?: string;
   partner_id?: string;
+  billing_interval_months?: number;
   manage_url?: string;
   created_at?: string;
   updated_at?: string;
@@ -326,8 +345,27 @@ export interface ProjectPaymentProviders {
   project_id?: string;
   google_play?: Record<string, unknown> | null;
   paddle?: Record<string, unknown> | null;
+  custom?: Record<string, unknown> | null;
   webhook_urls?: Record<string, string> | null;
   updated_at?: string;
+}
+
+export interface UpdateProjectPaymentProvidersParams {
+  googlePlay?: Record<string, unknown>;
+  paddle?: Record<string, unknown>;
+  custom?: Record<string, unknown>;
+}
+
+/** Body for POST .../providers/custom/submit. The app-user session calls this. */
+export interface SubmitCustomPaymentParams {
+  projectId: string;
+  tenantId: string;
+  email?: string;
+  plan: string;
+  amount: number;
+  currency: string;
+  periodMonths: number;
+  paymentReference: string;
 }
 
 export interface ListTenantSubscribersResponse {
@@ -351,6 +389,8 @@ export interface CreateTenantSubscriptionParams {
   billingPurpose?: string;
   /** Workspace partner id. Empty uses tenant.partner_id or Direct. */
   partnerId?: string;
+  /** Manual renewal length. Allowed: 1, 3, 4, 6, 12. Omit for monthly. */
+  billingIntervalMonths?: number;
 }
 
 export interface UpdateTenantSubscriptionParams {
@@ -363,6 +403,8 @@ export interface UpdateTenantSubscriptionParams {
   partnerId?: string;
   /** RFC3339 UTC. Empty string clears the period end. */
   currentPeriodEnd?: string;
+  /** Manual renewal length. Allowed: 1, 3, 4, 6, 12. */
+  billingIntervalMonths?: number;
 }
 
 export interface CreateTenantInvoiceParams {
@@ -381,6 +423,8 @@ export interface ProPartner {
   organization_id?: string;
   name?: string;
   email?: string;
+  phone?: string;
+  avatar_url?: string;
   status?: string;
   is_default?: boolean;
   /** Partner share of tenant subscription revenue (0–100). Direct is always 0. */
@@ -394,11 +438,41 @@ export interface SearchPartnersResponse {
   total: number;
 }
 
+export interface InvoiceProfile {
+  organization_id?: string;
+  legal_name?: string;
+  logo_url?: string;
+  address?: string;
+  phone?: string;
+  extra_lines?: string;
+  updated_at?: string;
+}
+
+export interface ProjectPlan {
+  id?: string;
+  name?: string;
+  description?: string;
+  currency?: string;
+  price_monthly?: number;
+  quotas?: unknown;
+  provider_products?: unknown;
+}
+
+export interface PartnerProjectRate {
+  partner_id?: string;
+  project_id?: string;
+  organization_id?: string;
+  commission_percent?: number;
+  active?: boolean;
+}
+
 export interface CreatePartnerParams {
   /** Required. Channel partners are keyed by this Google/contact email. */
   email: string;
   /** Optional. Defaults to email when Google (or the caller) omits a name. */
   name?: string;
+  phone?: string;
+  avatarUrl?: string;
   status?: string;
   /** Optional partner share 0–100. Defaults to 0. */
   commissionPercent?: number;
@@ -407,6 +481,8 @@ export interface CreatePartnerParams {
 export interface UpdatePartnerParams {
   name?: string;
   email?: string;
+  phone?: string;
+  avatarUrl?: string;
   status?: string;
   commissionPercent?: number;
 }
@@ -421,6 +497,11 @@ export interface ClientConfig {
   accessToken?: string;
   /** Staff session token for `/secured/*` routes (`Authorization: Bearer`). */
   bearerToken?: string;
+  /**
+   * Console session cookies (`userToken=…; accessToken=…`).
+   * Omits `X-Use-Cookies: false` so the engine can switch project via `X-Apito-Project-Id`.
+   */
+  sessionCookie?: string;
   timeout?: number;
   httpClient?: any;
   /** Default project scope sent as `X-Apito-Project-Id`. */
@@ -492,6 +573,8 @@ export interface InjectedDBOperationInterface {
   createTenant(params: CreateTenantParams): Promise<TenantCatalogSearchRow>;
   updateTenant(tenantId: string, params: UpdateTenantParams): Promise<TenantCatalogSearchRow>;
   deleteTenant(tenantId: string): Promise<boolean>;
+  /** Restore a soft-deleted catalog tenant (status=active). Content and owner stay. */
+  restoreTenant(tenantId: string): Promise<boolean>;
   /** Public GraphQL: requires app-user JWT against secured/public endpoint. */
   myTenant(): Promise<MyTenant>;
   /** Public GraphQL: role ∩ plan ceiling for app-user JWT. */

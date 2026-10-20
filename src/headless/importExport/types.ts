@@ -113,6 +113,14 @@ export type ApitoImportConfig<TRow extends Record<string, unknown> = Record<stri
   verticalGroups?: ApitoImportVerticalGroups;
 };
 
+/** Extra workbook sheet for XLSX export only (CSV ignores these). */
+export type ApitoExportXlsxSheet = {
+  /** Worksheet tab name (Excel limit ~31 chars). */
+  name: string;
+  headers: string[];
+  rows: Array<Record<string, string>>;
+};
+
 export type ApitoExportConfig<TRow extends Record<string, unknown> = Record<string, unknown>> = {
   resource: string;
   columns: ApitoImportColumn[];

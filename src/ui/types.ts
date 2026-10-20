@@ -2,6 +2,7 @@ import type { ComponentType, ReactNode } from "react";
 
 import type {
   ApitoExportConfig,
+  ApitoExportXlsxSheet,
   ApitoImportConfig,
   ApitoImportRowsContext,
   ApitoParsedImportFile,
@@ -191,6 +192,13 @@ export type ApitoExportButtonProps = {
   icon?: ReactNode;
   /** Allowed export formats. Default both CSV and XLSX. */
   formats?: Array<"csv" | "xlsx">;
+  /**
+   * Extra XLSX workbook sheets (tabs). Ignored for CSV.
+   * Use for lookup tabs (e.g. transaction category id + name).
+   */
+  onXlsxExtraSheets?: (
+    records: Array<Record<string, unknown>>,
+  ) => ApitoExportXlsxSheet[] | Promise<ApitoExportXlsxSheet[]>;
 };
 
 export type ApitoImportModalProps = {

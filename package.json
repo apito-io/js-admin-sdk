@@ -106,6 +106,7 @@
     "axios": "^1.14.0"
   },
   "devDependencies": {
+    "graphql": "16.11.0",
     "@graphql-codegen/cli": "^5.0.7",
     "@graphql-codegen/typescript": "^4.1.6",
     "@graphql-codegen/typescript-generic-sdk": "^4.0.3",

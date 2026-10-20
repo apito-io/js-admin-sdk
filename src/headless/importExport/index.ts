@@ -1,5 +1,6 @@
 export type {
   ApitoExportConfig,
+  ApitoExportXlsxSheet,
   ApitoImportColumn,
   ApitoImportColumnMapping,
   ApitoImportConfig,

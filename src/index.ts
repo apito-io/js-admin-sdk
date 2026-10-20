@@ -7,6 +7,7 @@
 
 // Export main client and types
 export { ApitoClient, createClient, deriveSystemAPIBaseURL } from './client';
+export type { ClientRuntime } from './types';
 export { TypedOperations } from './typed-operations';
 export { Version, getVersion } from './version';
 export {
@@ -67,8 +68,24 @@ export {
 } from "./headless/mutationConnect";
 export {
   createBearerApitoFetcher,
+  createCookieApitoFetcher,
+  createVerifiedStaffApitoFetcher,
   hasUsableGraphQLData,
+  type ApitoFetcher,
+  type VerifiedStaffFetcherOptions,
 } from './headless/fetcher';
+export { apitoGraphQLRequest } from './headless/graphqlRequest';
+export {
+  createApitoResourceClient,
+  type ApitoResourceClient,
+  type ApitoResourceListParams,
+  type ApitoResourceMutationParams,
+  type ApitoResourceRegistry,
+} from './headless/resourceClient';
+export {
+  ApitoStaffDataClient,
+  type ApitoStaffDataClientOptions,
+} from './headless/staffDataClient';
 export * from './headless/serializeGraphQLQuery';
 
 // Re-export commonly used types for convenience
@@ -95,6 +112,8 @@ export type {
   ProjectTenantSubscription,
   ProjectTenantInvoice,
   ProjectPaymentProviders,
+  SubmitCustomPaymentParams,
+  UpdateProjectPaymentProvidersParams,
   CreateTenantSubscriptionParams,
   UpdateTenantSubscriptionParams,
   CreateTenantInvoiceParams,

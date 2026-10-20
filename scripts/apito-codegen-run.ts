@@ -3,6 +3,7 @@
  * apito-codegen — introspection → operations → types/sdk/hooks → models/{model} facades.
  *
  * Usage:
+ *   apito-codegen --schema introspection.json --out src/lib/apito-generated
  *   apito-codegen --config apito.config.ts --out src/lib/apito-generated
  */
 import { spawnSync } from 'node:child_process';
@@ -15,6 +16,7 @@ import { formatApitoConnectionSubselections } from '../src/naming/apitoGraphqlNa
 import { introspectionToSdl, parseIntrospection } from '../src/naming/schemaReader';
 import { normalizeIntrospection } from './normalize-introspection';
 import { buildConnectionMetaTypes } from './codegen-meta';
+import { buildCodegenConfigFromSchema, defaultCodegenUiPackage } from './schema-model-plan';
 
 export type ApitoModelConfig = {
   name: string;
@@ -50,15 +52,40 @@ function gqlResourceName(model: string): string {
     .join('');
 }
 
+function flagValue(argv: string[], name: string): string | undefined {
+  const index = argv.indexOf(name);
+  if (index === -1 || index + 1 >= argv.length) return undefined;
+  const value = argv[index + 1];
+  if (!value || value.startsWith('--')) return undefined;
+  return value;
+}
+
 function parseArgs(argv: string[]) {
-  const configIdx = argv.indexOf('--config');
-  const outIdx = argv.indexOf('--out');
-  if (configIdx === -1 || outIdx === -1) {
-    throw new Error('Usage: apito-codegen --config <apito.config.ts> --out <dir>');
+  const configValue = flagValue(argv, '--config');
+  const schemaValue = flagValue(argv, '--schema');
+  const outValue = flagValue(argv, '--out');
+  const artifacts = flagValue(argv, '--artifacts') ?? 'app';
+  if (!outValue || (!configValue && !schemaValue)) {
+    throw new Error(
+      'Usage: apito-codegen (--config <file> | --schema <introspection.json>) --out <dir> [--artifacts app|sdk] [--models a,b] [--ui-package <pkg>] [--no-relations] [--skip-document-validation]',
+    );
   }
+  if (artifacts !== 'app' && artifacts !== 'sdk') {
+    throw new Error('--artifacts must be app or sdk');
+  }
+  const relationsFlag = flagValue(argv, '--relations');
   return {
-    configPath: path.resolve(process.cwd(), argv[configIdx + 1]),
-    outDir: path.resolve(process.cwd(), argv[outIdx + 1]),
+    configPath: configValue ? path.resolve(process.cwd(), configValue) : '',
+    schemaPath: schemaValue ? path.resolve(process.cwd(), schemaValue) : '',
+    outDir: path.resolve(process.cwd(), outValue),
+    skipDocumentsValidation: argv.includes('--skip-document-validation'),
+    artifacts,
+    models: (flagValue(argv, '--models') ?? '')
+      .split(',')
+      .map((name) => name.trim())
+      .filter(Boolean),
+    includeRelations: !argv.includes('--no-relations') && relationsFlag !== 'false',
+    uiPackage: flagValue(argv, '--ui-package') ?? '',
   };
 }
 
@@ -119,19 +146,19 @@ function writeCodegenConfig(
   outDir: string,
   schemaDir: string,
   opsDir: string,
+  skipDocumentsValidation = false,
+  artifacts: 'app' | 'sdk' = 'app',
 ): string {
   const cfgPath = path.join(outDir, '.codegen.apito.ts');
   const relSchema = path.relative(outDir, path.join(schemaDir, 'introspection.normalized.json'));
   const relOps = path.relative(outDir, path.join(opsDir, '**/*.graphql'));
 
-  const body = `import type { CodegenConfig } from '@graphql-codegen/cli';
-
-const config: CodegenConfig = {
+  const body = `const config = {
   schema: '${relSchema.replace(/\\/g, '/')}',
   documents: '${relOps.replace(/\\/g, '/')}',
   ignoreNoDocuments: true,
   config: {
-    skipDocumentsValidation: true,
+    skipDocumentsValidation: ${skipDocumentsValidation},
   },
   generates: {
     'types.ts': {
@@ -141,7 +168,7 @@ const config: CodegenConfig = {
     'sdk.ts': {
       plugins: ['typescript', 'typescript-operations', 'typescript-generic-sdk'],
       config: { documentMode: 'string', skipTypename: true, avoidOptionals: true },
-    },
+    },${artifacts === 'sdk' ? '' : `
     'hooks.ts': {
       plugins: ['typescript', 'typescript-operations', 'typescript-react-query'],
       config: {
@@ -153,7 +180,7 @@ const config: CodegenConfig = {
         exposeQueryKeys: true,
         exposeMutationKeys: true,
       },
-    },
+    },`}
   },
 };
 
@@ -190,8 +217,11 @@ function writeProjectHooks(
       `/** AUTO-GENERATED — do not edit. */
 import type { Get${pascal}ListQuery, Get${pascal}Query } from "../../types";
 
-export type ${pascal}Meta = NonNullable<Get${pascal}ListQuery["${gql}List"][number]["meta"]>;
-export type ${pascal}Data = NonNullable<Get${pascal}ListQuery["${gql}List"][number]["data"]>;
+type ${pascal}ListItem = NonNullable<
+  NonNullable<Get${pascal}ListQuery["${gql}List"]>[number]
+>;
+export type ${pascal}Meta = NonNullable<${pascal}ListItem["meta"]>;
+export type ${pascal}Data = NonNullable<${pascal}ListItem["data"]>;
 ${connectionMeta.relationTypeLines ? `${connectionMeta.relationTypeLines}\n` : ''}export type ${pascal} = {
   id: string;
   data: ${pascal}Data;
@@ -431,6 +461,7 @@ const RESOURCE = "${model.name}";
 export * from "./types";
 export * from "./hooks";
 export * from "./sdk";
+export * from "./resource-documents";
 export * from "./resource-registry";
 ${config.models.map((m) => `export * from "./models/${m.name}";`).join('\n')}
 `,
@@ -442,6 +473,120 @@ function gqlResourceNameFromModel(model: string): string {
     .split('_')
     .map((part, i) => (i === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
     .join('');
+}
+
+function writeResourceDocuments(config: ApitoCodegenConfig, outDir: string): void {
+  const entries = config.models.map((model) => {
+    const pascal = pascalCase(model.name);
+    const gql = gqlResourceNameFromModel(model.name);
+    const supportsConn = model.supportsConnection !== false;
+    return { model, pascal, gql, supportsConn };
+  });
+
+  const documentImports = entries
+    .map(
+      ({ pascal }) =>
+        `  Create${pascal}Document,
+  Update${pascal}Document,
+  Delete${pascal}Document,
+  Get${pascal}ListDocument,
+  Get${pascal}Document,`,
+    )
+    .join('\n');
+  const createDocs = entries
+    .map(({ model, pascal }) => `  ${model.name}: Create${pascal}Document,`)
+    .join('\n');
+  const updateDocs = entries
+    .map(({ model, pascal }) => `  ${model.name}: Update${pascal}Document,`)
+    .join('\n');
+  const deleteDocs = entries
+    .map(({ model, pascal }) => `  ${model.name}: Delete${pascal}Document,`)
+    .join('\n');
+  const listDocuments = entries
+    .map(({ model, pascal }) => `  ${model.name}: Get${pascal}ListDocument,`)
+    .join('\n');
+  const oneDocuments = entries
+    .map(({ model, pascal }) => `  ${model.name}: Get${pascal}Document,`)
+    .join('\n');
+  const listKeys = entries
+    .map(({ model, gql }) => `  ${model.name}: "${gql}List",`)
+    .join('\n');
+  const countKeys = entries
+    .map(({ model, gql }) => `  ${model.name}: "${gql}ListCount",`)
+    .join('\n');
+  const oneKeys = entries
+    .map(({ model, gql }) => `  ${model.name}: "${gql}",`)
+    .join('\n');
+  const supportsConnection = entries
+    .map(({ model, supportsConn }) => `  ${model.name}: ${supportsConn},`)
+    .join('\n');
+  const resourceNames = entries.map((entry) => `"${entry.model.name}"`).join(' | ');
+
+  fs.writeFileSync(
+    path.join(outDir, 'resource-documents.ts'),
+    `/** AUTO-GENERATED — do not edit. */
+import type {
+  ApitoResourceRegistry,
+  GraphQLQueryInput,
+} from "@apito-io/js-admin-sdk";
+import {
+${documentImports}
+} from "./sdk";
+export {
+${documentImports}
+} from "./sdk";
+
+export type ApitoResourceName = ${resourceNames};
+
+export const APITO_CREATE_DOCUMENTS = {
+${createDocs}
+} as unknown as Record<string, GraphQLQueryInput>;
+
+export const APITO_UPDATE_DOCUMENTS = {
+${updateDocs}
+} as unknown as Record<string, GraphQLQueryInput>;
+
+export const APITO_DELETE_DOCUMENTS = {
+${deleteDocs}
+} as unknown as Record<string, GraphQLQueryInput>;
+
+export const APITO_LIST_DOCUMENTS = {
+${listDocuments}
+} as unknown as Record<string, GraphQLQueryInput>;
+
+export const APITO_ONE_DOCUMENTS = {
+${oneDocuments}
+} as unknown as Record<string, GraphQLQueryInput>;
+
+const LIST_KEYS: Record<string, string> = {
+${listKeys}
+};
+
+const COUNT_KEYS: Record<string, string> = {
+${countKeys}
+};
+
+const ONE_KEYS: Record<string, string> = {
+${oneKeys}
+};
+
+const SUPPORTS_CONNECTION: Record<string, boolean> = {
+${supportsConnection}
+};
+
+export const apitoServerResourceRegistry: ApitoResourceRegistry = {
+  getListDocument: (resource) => APITO_LIST_DOCUMENTS[resource],
+  getOneDocument: (resource) => APITO_ONE_DOCUMENTS[resource],
+  getCreateDocument: (resource) => APITO_CREATE_DOCUMENTS[resource],
+  getUpdateDocument: (resource) => APITO_UPDATE_DOCUMENTS[resource],
+  getDeleteDocument: (resource) => APITO_DELETE_DOCUMENTS[resource],
+  getListKey: (resource) => LIST_KEYS[resource] ?? \`\${resource}List\`,
+  getCountKey: (resource) => COUNT_KEYS[resource] ?? \`\${resource}ListCount\`,
+  getOneKey: (resource) => ONE_KEYS[resource] ?? resource,
+  supportsConnection: (resource) => SUPPORTS_CONNECTION[resource] !== false,
+};
+`,
+  );
 }
 
 function writeResourceRegistry(config: ApitoCodegenConfig, outDir: string): void {
@@ -529,7 +674,7 @@ import type {
 ${hookImports}
 import {
 ${documentImports}
-} from "./hooks";
+} from "./resource-documents";
 
 export type ApitoResourceName = ${resourceNames};
 
@@ -619,9 +764,75 @@ export function useApitoResourceDelete(resource: ApitoResourceName) {
   );
 }
 
+/**
+ * Some GraphQL Codegen plugin combinations emit String-backed documents but
+ * leave their runtime helper to another preset. Keep the generated SDK
+ * self-contained so server registries can import it without relying on the
+ * React hooks artifact (or a bundler-provided global).
+ */
+function ensureTypedDocumentStringRuntime(outDir: string): void {
+  const sdkPath = path.join(outDir, 'sdk.ts');
+  if (!fs.existsSync(sdkPath)) return;
+  const source = fs.readFileSync(sdkPath, 'utf8');
+  if (!source.includes('new TypedDocumentString') || source.includes('class TypedDocumentString')) {
+    return;
+  }
+  const helper = `/** Runtime wrapper emitted for String-backed GraphQL documents. */
+class TypedDocumentString extends String {
+  private readonly value: string;
+
+  constructor(value: string) {
+    super(value);
+    this.value = value;
+  }
+
+  override toString(): string {
+    return this.value;
+  }
+}
+
+`;
+  fs.writeFileSync(sdkPath, helper + source);
+}
+
 async function main() {
-  const { configPath, outDir } = parseArgs(process.argv.slice(2));
-  const config = await loadConfig(configPath);
+  const args = parseArgs(process.argv.slice(2));
+  const { outDir, skipDocumentsValidation, artifacts } = args;
+  let config: ApitoCodegenConfig;
+  if (args.schemaPath && !args.configPath) {
+    const raw = JSON.parse(fs.readFileSync(args.schemaPath, 'utf8')) as unknown;
+    const planned = buildCodegenConfigFromSchema(raw, {
+      schemaPath: args.schemaPath,
+      models: args.models,
+      includeRelations: args.includeRelations,
+      uiPackage: args.uiPackage || defaultCodegenUiPackage,
+    });
+    config = planned;
+  } else {
+    config = await loadConfig(args.configPath);
+    if (args.schemaPath) config = { ...config, schema: args.schemaPath };
+    if (args.uiPackage) config = { ...config, uiPackage: args.uiPackage };
+    if (!args.includeRelations) {
+      config = {
+        ...config,
+        models: config.models.map((model) => ({ ...model, connectionFields: undefined })),
+      };
+    }
+    if (args.models.length) {
+      const found = new Set(config.models.map((model) => model.name));
+      const missing = args.models.filter((name) => !found.has(name));
+      if (missing.length) {
+        throw new Error(`published schema has no model: ${missing.join(', ')}`);
+      }
+      config = {
+        ...config,
+        models: config.models.filter((model) => args.models.includes(model.name)),
+      };
+    }
+  }
+  if (!config.models.length) {
+    throw new Error('published schema did not contain any models');
+  }
 
   const workDir = path.join(outDir, '.codegen-work');
   const opsDir = path.join(workDir, 'operations');
@@ -630,26 +841,56 @@ async function main() {
   fs.mkdirSync(outDir, { recursive: true });
   writeOperations(config, opsDir, schemaDir);
 
-  const codegenConfig = writeCodegenConfig(outDir, schemaDir, opsDir);
+  if (skipDocumentsValidation) {
+    console.warn(
+      '[apito-codegen] --skip-document-validation: GraphQL documents will not be schema-checked',
+    );
+  }
+
+  const codegenConfig = writeCodegenConfig(
+    outDir,
+    schemaDir,
+    opsDir,
+    skipDocumentsValidation,
+    artifacts,
+  );
+  const sdkRoot = path.resolve(__dirname, '..');
+  const codegenBin = path.join(sdkRoot, 'node_modules/@graphql-codegen/cli/cjs/bin.js');
+  const sdkModules = path.join(sdkRoot, 'node_modules');
   const gen = spawnSync(
-    'npx',
-    ['graphql-codegen', '--config', codegenConfig],
-    { stdio: 'inherit', cwd: outDir },
+    process.execPath,
+    [codegenBin, '--config', codegenConfig],
+    {
+      stdio: 'inherit',
+      cwd: outDir,
+      env: {
+        ...process.env,
+        NODE_PATH: process.env.NODE_PATH
+          ? `${sdkModules}${path.delimiter}${process.env.NODE_PATH}`
+          : sdkModules,
+      },
+    },
   );
   if (gen.status !== 0) process.exit(gen.status ?? 1);
 
-  const hooksPath = path.join(outDir, 'hooks.ts');
-  if (fs.existsSync(hooksPath)) {
-    const hooksSrc = fs.readFileSync(hooksPath, 'utf8');
-    const fixed = hooksSrc.replace(
-      /import \{ useQuery, useMutation, UseQueryOptions, UseMutationOptions \} from '@tanstack\/react-query';/,
-      "import { useQuery, useMutation } from '@tanstack/react-query';\nimport type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';",
-    );
-    if (fixed !== hooksSrc) fs.writeFileSync(hooksPath, fixed);
-  }
+  ensureTypedDocumentStringRuntime(outDir);
+  writeResourceDocuments(config, outDir);
 
-  writeProjectHooks(config, outDir);
-  writeResourceRegistry(config, outDir);
+  if (artifacts !== 'sdk') {
+    const hooksPath = path.join(outDir, 'hooks.ts');
+    if (fs.existsSync(hooksPath)) {
+      const hooksSrc = fs.readFileSync(hooksPath, 'utf8');
+      const fixed = hooksSrc.replace(
+        /import \{ useQuery, useMutation, UseQueryOptions, UseMutationOptions \} from '@tanstack\/react-query';/,
+        "import { useQuery, useMutation } from '@tanstack/react-query';\nimport type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';",
+      );
+      if (fixed !== hooksSrc) fs.writeFileSync(hooksPath, fixed);
+    }
+
+    writeProjectHooks(config, outDir);
+    writeResourceRegistry(config, outDir);
+  }
+  fs.rmSync(workDir, { recursive: true, force: true });
   console.log(`apito-codegen complete → ${outDir}`);
 }
 

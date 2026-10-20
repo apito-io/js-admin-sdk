@@ -45,6 +45,7 @@ export type { ApitoFetcher } from "../headless/fetcher";
 
 export type {
   ApitoExportConfig,
+  ApitoExportXlsxSheet,
   ApitoImportColumn,
   ApitoImportColumnMapping,
   ApitoImportConfig,

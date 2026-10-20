@@ -1,4 +1,4 @@
-import { apitoGraphQLRequest } from "./graphqlFetcher";
+import { apitoGraphQLRequest } from "./graphqlRequest";
 import { buildListQueryVariables } from "./filterVariables";
 import type { ApitoFetcher } from "./fetcher";
 import {

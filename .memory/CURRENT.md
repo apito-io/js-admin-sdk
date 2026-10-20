@@ -1,5 +1,7 @@
 # js-admin-sdk — Current
 
+- **Codegen binary (2026-10-19, uncommitted):** `apito-codegen` runs the SDK's own `@graphql-codegen/cli` with GraphQL 16.11.0. Apps no longer need `@graphql-codegen/*`. No package bump. Ask before commit.
+
 - **License identifier (2026-10-18, uncommitted):** `package.json` `license` is `Apache-2.0`. CHANGELOG says the published npm identifier moves from MIT to Apache-2.0. The LICENSE file was already Apache text. No version bump and no publish. Origin is still GitLab. Leave `.memory` out of the public diff. Ask before `./command.sh save`.
 
 - **Facebook token (2026-10-16, uncommitted):** `LoginUserParams.accessToken` and `authMethod: facebook_access_token` use the canonical `loginUser` query with optional `access_token`, matching Dart and Go. TypeScript passes. No version bump; dist is gitignored. Ask before commit or `./command.sh save`.

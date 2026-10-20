@@ -17,8 +17,9 @@ Keeps `src/generated/` in sync with engine introspection. Produces GraphQL opera
 
 - **Full regen**: `npm run gen` → `gen:operations` then `gen:types`.
 - **Project hooks**: `npm run gen:project-hooks` — consumer-app hook stubs via `scripts/gen-project-hooks.ts`.
-- **CLI**: `npx apito-codegen` (or global bin) delegates to `scripts/apito-codegen-run.ts`.
-- **Consumer app**: point CLI at live introspection or checked-in `schema/apito_introspection.json`.
+- **CLI**: `npx apito-codegen --schema introspection.json --out <dir>` delegates to `scripts/apito-codegen-run.ts`. `--config` remains for an explicit offline config. With `--schema`, `scripts/schema-model-plan.ts` discovers every published model, selects fields from `*_Raw_Model`, and applies `scripts/relation-policy.ts`. Relations outside that policy are not expanded.
+- **Apito CLI**: `apito types` fetches `/secured/graphql` with the local account and runs this same generator. Apps pass only the output directory.
+- **Suchok** is the first app on that command. Protiva, Prottoy, and Rosna follow later. Go generation is unchanged.
 
 Pipeline details: [introspection-codegen-pipeline](../../../../.knowledge/features/introspection-codegen-pipeline.md).
 
@@ -26,6 +27,8 @@ Pipeline details: [introspection-codegen-pipeline](../../../../.knowledge/featur
 
 - `bin/apito-codegen.mjs` — CLI entry
 - `scripts/apito-codegen-run.ts` — orchestration
+- `scripts/schema-model-plan.ts` — model and field discovery
+- `scripts/relation-policy.ts` — bounded relation selections
 - `scripts/gen-operations.ts` — 5-op documents per model
 - `codegen.ts` — graphql-codegen config
 - `src/generated/` — `types.ts`, `sdk.ts`, `hooks.ts`, `fetcher.ts` (generated)
